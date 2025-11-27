@@ -1,0 +1,826 @@
+/* ============================================
+   ARDUINO EXAM REFERENCE - PROFESSIONAL DARK THEME
+   VS Code Inspired Color Scheme
+   ============================================ */
+
+/* === ROOT VARIABLES === */
+:root {
+    /* VS Code Dark Theme Colors */
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #252526;
+    --bg-tertiary: #2d2d30;
+    --bg-hover: #37373d;
+
+    --text-primary: #d4d4d4;
+    --text-secondary: #9d9d9d;
+    --text-bright: #ffffff;
+
+    --keyword-blue: #569cd6;
+    --string-orange: #ce9178;
+    --comment-green: #6a9955;
+    --number-green: #b5cea8;
+    --function-yellow: #dcdcaa;
+
+    --critical-red: #f44747;
+    --high-orange: #ff9800;
+    --medium-blue: #4fc3f7;
+
+    --border-color: #3e3e42;
+    --shadow: rgba(0, 0, 0, 0.5);
+}
+
+/* === RESET & BASE STYLES === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+/* === TYPOGRAPHY === */
+h1 {
+    font-size: 2.5em;
+    color: var(--text-bright);
+    margin-bottom: 0.3em;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 1.8em;
+    color: var(--keyword-blue);
+    margin: 1.5em 0 0.8em 0;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.3em;
+}
+
+h3 {
+    font-size: 1.3em;
+    color: var(--function-yellow);
+    margin-bottom: 0.5em;
+}
+
+h4 {
+    font-size: 1.1em;
+    color: var(--text-bright);
+    margin-bottom: 0.3em;
+}
+
+p {
+    margin-bottom: 1em;
+}
+
+a {
+    color: var(--keyword-blue);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--string-orange);
+    text-decoration: underline;
+}
+
+code {
+    background-color: var(--bg-tertiary);
+    color: var(--string-orange);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.95em;
+}
+
+pre {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 1em;
+    overflow-x: auto;
+    margin: 1em 0;
+    line-height: 1.4;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    color: var(--text-primary);
+}
+
+/* === HEADER === */
+header {
+    background-color: var(--bg-secondary);
+    padding: 2em 2em 1.5em 2em;
+    border-bottom: 3px solid var(--keyword-blue);
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px var(--shadow);
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1em;
+    margin-bottom: 1em;
+}
+
+.search-container {
+    max-width: 600px;
+    margin: 1.5em auto 0 auto;
+}
+
+#searchBox {
+    width: 100%;
+    padding: 0.8em 1em;
+    background-color: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    border-radius: 5px;
+    color: var(--text-primary);
+    font-family: 'Consolas', monospace;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+#searchBox:focus {
+    outline: none;
+    border-color: var(--keyword-blue);
+}
+
+#searchBox::placeholder {
+    color: var(--text-secondary);
+}
+
+/* === NAVIGATION === */
+.quick-links {
+    background-color: var(--bg-tertiary);
+    padding: 1em;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1em;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 140px;
+    z-index: 99;
+}
+
+.btn-primary,
+.btn-critical,
+.btn-high,
+.btn-medium {
+    padding: 0.7em 1.5em;
+    border-radius: 5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.btn-primary {
+    background-color: var(--keyword-blue);
+    color: var(--text-bright);
+}
+
+.btn-primary:hover {
+    background-color: var(--function-yellow);
+    color: var(--bg-primary);
+    text-decoration: none;
+}
+
+.btn-critical {
+    background-color: var(--critical-red);
+    color: var(--text-bright);
+}
+
+.btn-critical:hover {
+    background-color: transparent;
+    border-color: var(--critical-red);
+    text-decoration: none;
+}
+
+.btn-high {
+    background-color: var(--high-orange);
+    color: var(--text-bright);
+}
+
+.btn-high:hover {
+    background-color: transparent;
+    border-color: var(--high-orange);
+    text-decoration: none;
+}
+
+.btn-medium {
+    background-color: var(--medium-blue);
+    color: var(--bg-primary);
+}
+
+.btn-medium:hover {
+    background-color: transparent;
+    border-color: var(--medium-blue);
+    color: var(--medium-blue);
+    text-decoration: none;
+}
+
+/* === MAIN CONTENT === */
+main {
+    max-width: 1400px;
+    margin: 2em auto;
+    padding: 0 2em;
+}
+
+/* === SECTIONS === */
+.tier-section {
+    margin-bottom: 3em;
+}
+
+.tier-description {
+    background-color: var(--bg-secondary);
+    padding: 1em;
+    border-left: 4px solid var(--keyword-blue);
+    margin-bottom: 1.5em;
+    font-size: 1.05em;
+}
+
+/* === EXAM STRATEGY === */
+.exam-strategy {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    padding: 2em;
+    border-radius: 10px;
+    margin-bottom: 3em;
+    border: 2px solid var(--keyword-blue);
+}
+
+.strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5em;
+    margin-top: 1.5em;
+}
+
+.strategy-card {
+    background-color: var(--bg-primary);
+    padding: 1.5em;
+    border-radius: 8px;
+    border-left: 4px solid var(--function-yellow);
+}
+
+.strategy-card h3 {
+    color: var(--function-yellow);
+    margin-bottom: 1em;
+    font-size: 1.2em;
+}
+
+.strategy-card ul {
+    list-style-position: inside;
+    padding-left: 0;
+}
+
+.strategy-card li {
+    margin-bottom: 0.7em;
+    padding-left: 1.5em;
+    text-indent: -1.5em;
+}
+
+.strategy-card strong {
+    color: var(--string-orange);
+}
+
+.strategy-card em {
+    color: var(--comment-green);
+    font-style: italic;
+}
+
+/* === CIRCUIT GRID === */
+.circuit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5em;
+    margin-top: 1.5em;
+}
+
+.circuit-card {
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 1.5em;
+    border: 2px solid var(--border-color);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.circuit-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--shadow);
+}
+
+.circuit-card.critical {
+    border-color: var(--critical-red);
+}
+
+.circuit-card.critical:hover {
+    border-color: var(--critical-red);
+    box-shadow: 0 8px 20px rgba(244, 71, 71, 0.3);
+}
+
+.circuit-card.high {
+    border-color: var(--high-orange);
+}
+
+.circuit-card.high:hover {
+    border-color: var(--high-orange);
+    box-shadow: 0 8px 20px rgba(255, 152, 0, 0.3);
+}
+
+.circuit-card.medium {
+    border-color: var(--medium-blue);
+}
+
+.circuit-card.medium:hover {
+    border-color: var(--medium-blue);
+    box-shadow: 0 8px 20px rgba(79, 195, 247, 0.3);
+}
+
+.circuit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5em;
+}
+
+.circuit-desc {
+    color: var(--text-secondary);
+    margin-bottom: 1em;
+    flex-grow: 1;
+}
+
+/* === BADGES === */
+.badge {
+    display: inline-block;
+    padding: 0.3em 0.8em;
+    border-radius: 20px;
+    font-size: 0.75em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-critical {
+    background-color: var(--critical-red);
+    color: var(--text-bright);
+}
+
+.badge-high {
+    background-color: var(--high-orange);
+    color: var(--text-bright);
+}
+
+.badge-medium {
+    background-color: var(--medium-blue);
+    color: var(--bg-primary);
+}
+
+/* === TOPICS === */
+.circuit-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-bottom: 1em;
+}
+
+.topic {
+    background-color: var(--bg-tertiary);
+    color: var(--comment-green);
+    padding: 0.3em 0.7em;
+    border-radius: 4px;
+    font-size: 0.85em;
+    border: 1px solid var(--border-color);
+}
+
+/* === BUTTONS === */
+.btn {
+    display: inline-block;
+    padding: 0.7em 1.5em;
+    background-color: var(--keyword-blue);
+    color: var(--text-bright);
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-top: auto;
+}
+
+.btn:hover {
+    background-color: var(--function-yellow);
+    color: var(--bg-primary);
+    text-decoration: none;
+    transform: scale(1.05);
+}
+
+/* === CIRCUIT DETAIL PAGES === */
+.back-link {
+    display: inline-block;
+    margin-bottom: 1.5em;
+    padding: 0.5em 1em;
+    background-color: var(--bg-secondary);
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+}
+
+.back-link:hover {
+    background-color: var(--bg-hover);
+}
+
+.circuit-hero {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    padding: 2em;
+    border-radius: 10px;
+    margin-bottom: 2em;
+    border-left: 5px solid var(--keyword-blue);
+}
+
+.circuit-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    margin-top: 1em;
+}
+
+.meta-item {
+    background-color: var(--bg-primary);
+    padding: 0.5em 1em;
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+.meta-label {
+    color: var(--text-secondary);
+    margin-right: 0.5em;
+}
+
+.meta-value {
+    color: var(--function-yellow);
+    font-weight: 600;
+}
+
+/* === CONTENT SECTIONS === */
+.content-section {
+    background-color: var(--bg-secondary);
+    padding: 1.5em;
+    border-radius: 8px;
+    margin-bottom: 2em;
+    border: 1px solid var(--border-color);
+}
+
+.content-section h2 {
+    margin-top: 0;
+}
+
+.connections-list {
+    background-color: var(--bg-primary);
+    padding: 1em;
+    border-radius: 5px;
+    margin: 1em 0;
+}
+
+.component {
+    margin-bottom: 1.5em;
+}
+
+.component-name {
+    color: var(--function-yellow);
+    font-weight: 600;
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+    display: block;
+}
+
+.connection {
+    color: var(--text-primary);
+    padding-left: 1.5em;
+    margin-bottom: 0.3em;
+    line-height: 1.8;
+}
+
+.connection::before {
+    content: "→ ";
+    color: var(--keyword-blue);
+    font-weight: bold;
+    margin-right: 0.5em;
+}
+
+.pin-note {
+    background-color: var(--bg-tertiary);
+    border-left: 3px solid var(--string-orange);
+    padding: 0.8em;
+    margin: 1em 0;
+    font-size: 0.95em;
+}
+
+/* === CODE BLOCKS === */
+.code-container {
+    position: relative;
+    margin: 1.5em 0;
+}
+
+.code-header {
+    background-color: var(--bg-tertiary);
+    padding: 0.5em 1em;
+    border-radius: 5px 5px 0 0;
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.code-lang {
+    color: var(--keyword-blue);
+    font-weight: 600;
+}
+
+.code-container pre {
+    margin: 0;
+    border-radius: 0 0 5px 5px;
+    border-top: none;
+}
+
+/* Syntax Highlighting for Arduino Code */
+.keyword {
+    color: var(--keyword-blue);
+}
+
+.string {
+    color: var(--string-orange);
+}
+
+.comment {
+    color: var(--comment-green);
+}
+
+.number {
+    color: var(--number-green);
+}
+
+.function-name {
+    color: var(--function-yellow);
+}
+
+/* === TIPS & WARNINGS === */
+.tip-box {
+    background-color: var(--bg-tertiary);
+    border-left: 4px solid var(--comment-green);
+    padding: 1em;
+    margin: 1em 0;
+    border-radius: 0 5px 5px 0;
+}
+
+.warning-box {
+    background-color: rgba(244, 71, 71, 0.1);
+    border-left: 4px solid var(--critical-red);
+    padding: 1em;
+    margin: 1em 0;
+    border-radius: 0 5px 5px 0;
+}
+
+.info-box {
+    background-color: rgba(86, 156, 214, 0.1);
+    border-left: 4px solid var(--keyword-blue);
+    padding: 1em;
+    margin: 1em 0;
+    border-radius: 0 5px 5px 0;
+}
+
+.box-title {
+    font-weight: 700;
+    margin-bottom: 0.5em;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 0.5px;
+}
+
+/* === TABLES === */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0;
+    background-color: var(--bg-secondary);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+thead {
+    background-color: var(--bg-tertiary);
+}
+
+th {
+    padding: 1em;
+    text-align: left;
+    color: var(--function-yellow);
+    font-weight: 600;
+    border-bottom: 2px solid var(--border-color);
+}
+
+td {
+    padding: 0.8em 1em;
+    border-bottom: 1px solid var(--border-color);
+}
+
+tr:hover {
+    background-color: var(--bg-hover);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* === LISTS === */
+ul, ol {
+    margin: 1em 0;
+    padding-left: 2em;
+}
+
+li {
+    margin-bottom: 0.5em;
+}
+
+/* === FOOTER === */
+footer {
+    background-color: var(--bg-secondary);
+    padding: 2em;
+    text-align: center;
+    border-top: 3px solid var(--keyword-blue);
+    margin-top: 4em;
+    color: var(--text-secondary);
+}
+
+footer strong {
+    color: var(--function-yellow);
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+    body {
+        font-size: 13px;
+    }
+
+    header {
+        padding: 1.5em 1em;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    main {
+        padding: 0 1em;
+    }
+
+    .circuit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .strategy-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-links {
+        flex-direction: column;
+        position: relative;
+        top: 0;
+    }
+
+    .content-section {
+        padding: 1em;
+    }
+
+    table {
+        font-size: 0.9em;
+    }
+
+    th, td {
+        padding: 0.5em;
+    }
+}
+
+/* === PRINT STYLES === */
+@media print {
+    body {
+        background-color: white;
+        color: black;
+    }
+
+    header,
+    footer,
+    .quick-links,
+    .search-container {
+        display: none;
+    }
+
+    .circuit-card,
+    .content-section {
+        break-inside: avoid;
+        border: 1px solid #ccc;
+    }
+
+    a {
+        color: black;
+        text-decoration: underline;
+    }
+
+    pre {
+        border: 1px solid #ccc;
+    }
+}
+
+/* === QUICK REFERENCE SPECIFIC STYLES === */
+.quick-ref-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5em;
+    margin: 2em 0;
+}
+
+.ref-card {
+    background-color: var(--bg-secondary);
+    padding: 1.5em;
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+}
+
+.ref-card h3 {
+    color: var(--keyword-blue);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
+}
+
+.formula {
+    background-color: var(--bg-primary);
+    padding: 1em;
+    border-radius: 5px;
+    margin: 0.5em 0;
+    font-family: 'Consolas', monospace;
+}
+
+.formula-label {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    display: block;
+    margin-bottom: 0.3em;
+}
+
+.formula-code {
+    color: var(--string-orange);
+    font-size: 1.05em;
+}
+
+.formula-example {
+    color: var(--comment-green);
+    font-size: 0.85em;
+    margin-top: 0.5em;
+    font-style: italic;
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.circuit-card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* === UTILITY CLASSES === */
+.text-center {
+    text-align: center;
+}
+
+.mt-1 { margin-top: 1em; }
+.mt-2 { margin-top: 2em; }
+.mb-1 { margin-bottom: 1em; }
+.mb-2 { margin-bottom: 2em; }
+
+.highlight {
+    background-color: var(--function-yellow);
+    color: var(--bg-primary);
+    padding: 2px 5px;
+    border-radius: 3px;
+}

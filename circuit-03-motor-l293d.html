@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuit 03: DC Motor + L293D H-Bridge - Arduino Exam Reference</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Circuit 03: DC Motor + L293D H-Bridge</h1>
+        <p class="subtitle">Full Motor Control - On/Off, Direction, Speed</p>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="quick-reference.html" class="btn-primary">Quick Reference</a>
+        <a href="circuit-02-ldr-servo-led.html" class="btn">← Previous</a>
+        <a href="circuit-04-force-sensor-led.html" class="btn">Next Circuit →</a>
+    </nav>
+
+    <main>
+        <div class="circuit-hero">
+            <div class="circuit-header">
+                <h2 style="margin: 0; border: none;">DC Motor with L293D H-Bridge</h2>
+                <span class="badge badge-critical">CRITICAL - WEEK 10</span>
+            </div>
+            <p style="margin-top: 1em;"><strong>Function:</strong> Control DC motor with 3 parameters: On/Off (switch 1), Direction (switch 2), Speed (potentiometer). Most complex Week 10 circuit!</p>
+
+            <div class="circuit-meta">
+                <div class="meta-item"><span class="meta-label">Probability:</span> <span class="meta-value">90%+</span></div>
+                <div class="meta-item"><span class="meta-label">Difficulty:</span> <span class="meta-value">HARD</span></div>
+                <div class="meta-item"><span class="meta-label">Key Concepts:</span> <span class="meta-value">H-Bridge, PWM Speed, Toggle Logic, Multiple Inputs</span></div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Why This is the MOST CRITICAL Circuit</h2>
+            <ul>
+                <li><strong>Most Complex Week 10 Circuit:</strong> Tests ALL your Arduino skills in one circuit</li>
+                <li><strong>H-Bridge IC:</strong> Real-world motor driver - crucial for robotics/mechatronics</li>
+                <li><strong>Multiple Inputs:</strong> 2 digital (switches) + 1 analog (pot) - tests input handling</li>
+                <li><strong>PWM Speed Control:</strong> analogWrite() for variable speed</li>
+                <li><strong>Toggle State Logic:</strong> Button pressed once = toggle on/off or forward/reverse</li>
+                <li><strong>External Power:</strong> 9V battery for motor (separate from Arduino 5V)</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Components Required</h2>
+            <table>
+                <thead><tr><th>Component</th><th>Qty</th><th>Notes</th></tr></thead>
+                <tbody>
+                    <tr><td>Arduino Uno</td><td>1</td><td>Main microcontroller</td></tr>
+                    <tr><td>L293D Motor Driver IC</td><td>1</td><td>16-pin DIP IC - H-bridge driver</td></tr>
+                    <tr><td>DC Motor</td><td>1</td><td>6-12V hobby motor</td></tr>
+                    <tr><td>Potentiometer (10kΩ)</td><td>1</td><td>Speed control - any value 1k-100k works</td></tr>
+                    <tr><td>Push Button (Switch)</td><td>2</td><td>On/Off switch + Direction switch</td></tr>
+                    <tr><td>10kΩ Resistor</td><td>2</td><td>Pull-down resistors for buttons</td></tr>
+                    <tr><td>9V Battery + Connector</td><td>1</td><td>External power for motor</td></tr>
+                    <tr><td>Breadboard</td><td>1</td><td>Large breadboard recommended</td></tr>
+                    <tr><td>Jumper Wires</td><td>15+</td><td>Many connections!</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h2>Detailed Circuit Connections</h2>
+
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">L293D Motor Driver IC (16-pin):</span>
+                    <div class="connection">Pin 1 (Enable 1) → Arduino Pin 9 (PWM - speed control)</div>
+                    <div class="connection">Pin 2 (Input 1) → Arduino Pin 2 (direction control A)</div>
+                    <div class="connection">Pin 3 (Output 1) → DC Motor wire 1</div>
+                    <div class="connection">Pin 4 (GND) → Arduino GND</div>
+                    <div class="connection">Pin 5 (GND) → Arduino GND</div>
+                    <div class="connection">Pin 6 (Output 2) → DC Motor wire 2</div>
+                    <div class="connection">Pin 7 (Input 2) → Arduino Pin 3 (direction control B)</div>
+                    <div class="connection">Pin 8 (VCC2) → 9V Battery Positive (+)</div>
+                    <div class="connection">Pin 9-15 → (Not used for single motor)</div>
+                    <div class="connection">Pin 16 (VCC1) → Arduino 5V (logic power)</div>
+                </div>
+
+                <div class="component">
+                    <span class="component-name">9V Battery:</span>
+                    <div class="connection">Positive (+) → L293D Pin 8 (VCC2)</div>
+                    <div class="connection">Negative (-) → Arduino GND (CRITICAL: common ground!)</div>
+                </div>
+
+                <div class="component">
+                    <span class="component-name">DC Motor:</span>
+                    <div class="connection">Wire 1 → L293D Pin 3 (Output 1)</div>
+                    <div class="connection">Wire 2 → L293D Pin 6 (Output 2)</div>
+                </div>
+
+                <div class="component">
+                    <span class="component-name">Potentiometer (Speed Control):</span>
+                    <div class="connection">Left pin → Arduino 5V</div>
+                    <div class="connection">Middle pin (wiper) → Arduino Analog A0</div>
+                    <div class="connection">Right pin → Arduino GND</div>
+                </div>
+
+                <div class="component">
+                    <span class="component-name">Switch 1 (On/Off - Pin 5):</span>
+                    <div class="connection">One terminal → Arduino 5V</div>
+                    <div class="connection">Other terminal → Arduino Pin 5 AND 10kΩ resistor to GND (pull-down)</div>
+                </div>
+
+                <div class="component">
+                    <span class="component-name">Switch 2 (Direction - Pin 4):</span>
+                    <div class="connection">One terminal → Arduino 5V</div>
+                    <div class="connection">Other terminal → Arduino Pin 4 AND 10kΩ resistor to GND (pull-down)</div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">CRITICAL Wiring Notes:</div>
+                <ul>
+                    <li>⚠️ <strong>Common Ground:</strong> 9V battery negative MUST connect to Arduino GND</li>
+                    <li>⚠️ <strong>L293D Pin 8 vs Pin 16:</strong> Pin 8=motor power (9V), Pin 16=logic power (5V)</li>
+                    <li>⚠️ <strong>Two GND pins (4&5):</strong> Connect BOTH to Arduino GND</li>
+                    <li>⚠️ <strong>PWM Pin 9:</strong> Enable pin MUST be PWM for speed control</li>
+                    <li>⚠️ <strong>Motor polarity:</strong> Doesn't matter - swapping wires just reverses default direction</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <div class="box-title">L293D H-Bridge Explanation</div>
+                <p><strong>What is an H-Bridge?</strong> An H-Bridge allows bidirectional motor control (forward/reverse) by switching current direction.</p>
+                <p><strong>How L293D works:</strong></p>
+                <ul>
+                    <li><strong>Input 1 HIGH, Input 2 LOW:</strong> Motor spins forward (current: Out1→Out2)</li>
+                    <li><strong>Input 1 LOW, Input 2 HIGH:</strong> Motor spins reverse (current: Out2→Out1)</li>
+                    <li><strong>Both inputs same:</strong> Motor brake/stop</li>
+                    <li><strong>Enable pin PWM:</strong> Controls speed (0-255 → 0-100%)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Complete Arduino Code</h2>
+            <p><strong>Most complex Week 10 code - study this carefully!</strong></p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span class="code-lang">Arduino C++</span>
+                    <span>Full Motor Control with Toggles</span>
+                </div>
+                <pre><code>// ============================================
+// CIRCUIT 03: DC MOTOR + L293D H-BRIDGE
+// Full Control: On/Off, Direction, Speed
+// ============================================
+
+// ===== PIN DEFINITIONS =====
+const int enablePin = 9;      // L293D Enable (Pin 1) - PWM for speed control
+const int input1Pin = 2;      // L293D Input 1 (Pin 2) - direction control A
+const int input2Pin = 3;      // L293D Input 2 (Pin 7) - direction control B
+
+const int onOffSwitch = 5;    // Button 1: On/Off toggle
+const int directionSwitch = 4; // Button 2: Direction toggle
+const int potPin = A0;        // Potentiometer: Speed control
+
+// ===== GLOBAL VARIABLES =====
+int motorSpeed = 0;           // Motor speed (0-255 for PWM)
+int potValue = 0;             // Raw potentiometer reading (0-1023)
+
+// ===== STATE VARIABLES (Toggle Logic) =====
+bool motorOn = false;         // TRUE = motor running, FALSE = motor stopped
+bool motorDirection = true;   // TRUE = forward, FALSE = reverse
+
+// ===== BUTTON STATE TRACKING =====
+// These prevent multiple toggles from one button press
+bool onOffLastState = LOW;   // Previous state of on/off button
+bool dirLastState = LOW;      // Previous state of direction button
+
+// ===== SETUP FUNCTION =====
+void setup() {
+  Serial.begin(9600);
+
+  // Configure L293D control pins as outputs
+  pinMode(enablePin, OUTPUT);
+  pinMode(input1Pin, OUTPUT);
+  pinMode(input2Pin, OUTPUT);
+
+  // Configure button pins as inputs
+  pinMode(onOffSwitch, INPUT);
+  pinMode(directionSwitch, INPUT);
+
+  // Initial motor state: OFF
+  digitalWrite(enablePin, LOW);
+  digitalWrite(input1Pin, LOW);
+  digitalWrite(input2Pin, LOW);
+
+  Serial.println("===== DC Motor Controller =====");
+  Serial.println("Switch 1: On/Off Toggle");
+  Serial.println("Switch 2: Direction Toggle");
+  Serial.println("Potentiometer: Speed Control");
+  Serial.println("===============================");
+}
+
+// ===== MAIN LOOP =====
+void loop() {
+
+  // ===== STEP 1: Read button states =====
+  bool onOffCurrent = digitalRead(onOffSwitch);
+  bool dirCurrent = digitalRead(directionSwitch);
+
+
+  // ===== STEP 2: Check ON/OFF button for toggle =====
+  // Trigger on button PRESS (LOW→HIGH transition)
+  if (onOffCurrent == HIGH && onOffLastState == LOW) {
+    motorOn = !motorOn;  // Toggle state: true↔false
+    Serial.print(">>> Motor ");
+    Serial.println(motorOn ? "ON" : "OFF");
+    delay(50);  // Debounce delay
+  }
+  onOffLastState = onOffCurrent;  // Save current state for next loop
+
+
+  // ===== STEP 3: Check DIRECTION button for toggle =====
+  // Only process if motor is ON
+  if (dirCurrent == HIGH && dirLastState == LOW && motorOn) {
+    motorDirection = !motorDirection;  // Toggle direction
+    Serial.print(">>> Direction: ");
+    Serial.println(motorDirection ? "FORWARD" : "REVERSE");
+    delay(50);  // Debounce delay
+  }
+  dirLastState = dirCurrent;  // Save current state
+
+
+  // ===== STEP 4: Read potentiometer for speed =====
+  potValue = analogRead(potPin);  // Read 0-1023
+
+  // Convert to PWM range (0-255)
+  // Divide by 4 because: 1023 / 4 ≈ 255
+  motorSpeed = potValue / 4;
+
+
+  // ===== STEP 5: Control motor based on state =====
+  if (motorOn) {
+    // Motor is ON - apply speed and direction
+
+    // Set direction using Input1 and Input2
+    if (motorDirection) {
+      // FORWARD: Input1 HIGH, Input2 LOW
+      digitalWrite(input1Pin, HIGH);
+      digitalWrite(input2Pin, LOW);
+    } else {
+      // REVERSE: Input1 LOW, Input2 HIGH
+      digitalWrite(input1Pin, LOW);
+      digitalWrite(input2Pin, HIGH);
+    }
+
+    // Set speed using PWM on Enable pin
+    analogWrite(enablePin, motorSpeed);
+
+  } else {
+    // Motor is OFF - stop motor
+    analogWrite(enablePin, 0);  // Speed = 0
+    digitalWrite(input1Pin, LOW);
+    digitalWrite(input2Pin, LOW);
+  }
+
+
+  // ===== STEP 6: Display status on Serial Monitor =====
+  Serial.print("Motor: ");
+  Serial.print(motorOn ? "ON " : "OFF");
+  Serial.print(" | Direction: ");
+  Serial.print(motorDirection ? "FWD" : "REV");
+  Serial.print(" | Speed: ");
+  Serial.print(motorSpeed);
+  Serial.print("/255 (");
+  Serial.print((motorSpeed * 100) / 255);  // Convert to percentage
+  Serial.println("%)");
+
+
+  // ===== STEP 7: Small delay =====
+  delay(200);  // Adjust for responsiveness vs Serial spam
+}
+
+// ===== END OF CODE =====</code></pre>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>How It Works - Complete Breakdown</h2>
+
+            <h3>1. Toggle Button Logic:</h3>
+            <div class="tip-box">
+                <div class="box-title">Edge Detection Pattern</div>
+                <p>Detects button PRESS (LOW→HIGH transition), not just button being held:</p>
+                <ul>
+                    <li>Read current button state</li>
+                    <li>Compare to last loop's state</li>
+                    <li>If changed from LOW→HIGH: button was just pressed!</li>
+                    <li>Toggle the state variable: <code>motorOn = !motorOn</code></li>
+                    <li>Save current state for next loop</li>
+                </ul>
+            </div>
+
+            <h3>2. H-Bridge Direction Control:</h3>
+            <table>
+                <thead><tr><th>Input 1</th><th>Input 2</th><th>Result</th></tr></thead>
+                <tbody>
+                    <tr><td>HIGH</td><td>LOW</td><td>Motor Forward</td></tr>
+                    <tr><td>LOW</td><td>HIGH</td><td>Motor Reverse</td></tr>
+                    <tr><td>LOW</td><td>LOW</td><td>Motor Stop/Brake</td></tr>
+                    <tr><td>HIGH</td><td>HIGH</td><td>Motor Brake (not recommended)</td></tr>
+                </tbody>
+            </table>
+
+            <h3>3. PWM Speed Control:</h3>
+            <ul>
+                <li>Potentiometer: 0-1023 (analog input)</li>
+                <li>Divide by 4: 1023/4 ≈ 255 (PWM range)</li>
+                <li>analogWrite(enablePin, speed) sets duty cycle</li>
+                <li>0 = 0% (stop), 128 = 50% (half speed), 255 = 100% (full speed)</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Common Mistakes</h2>
+            <div class="warning-box">
+                <div class="box-title">Wiring Errors (CRITICAL):</div>
+                <ul>
+                    <li>❌ <strong>No common ground:</strong> Motor won't work, possible damage to IC</li>
+                    <li>❌ <strong>9V to Pin 16 (VCC1):</strong> Destroys Arduino! Pin 16 = 5V logic only</li>
+                    <li>❌ <strong>Enable on non-PWM pin:</strong> No speed control (full speed or off only)</li>
+                    <li>❌ <strong>Forgetting pull-down resistors:</strong> Buttons read random values</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">Code Errors:</div>
+                <ul>
+                    <li>❌ <strong>No button state tracking:</strong> Toggles multiple times per press</li>
+                    <li>❌ <strong>analogWrite on input pins:</strong> Should be digitalWrite for direction</li>
+                    <li>❌ <strong>Divide by 10 instead of 4:</strong> Max speed only ~100/255 (too slow)</li>
+                    <li>❌ <strong>No debounce delay:</strong> Buttons may trigger multiple times</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Testing Checklist</h2>
+            <ol>
+                <li>✅ Motor OFF initially</li>
+                <li>✅ Switch 1 pressed once → Motor starts at pot speed</li>
+                <li>✅ Pot turned → Speed changes smoothly</li>
+                <li>✅ Switch 2 pressed → Motor reverses direction</li>
+                <li>✅ Switch 1 pressed again → Motor stops</li>
+                <li>✅ Serial Monitor shows current state</li>
+                <li>✅ No smoke (serious!)</li>
+            </ol>
+        </div>
+
+    </main>
+
+    <footer>
+        <p><a href="circuit-02-ldr-servo-led.html">← Previous: Circuit 02</a> | <a href="index.html">Back to List</a> | <a href="circuit-04-force-sensor-led.html">Next: Circuit 04 →</a></p>
+    </footer>
+</body>
+</html>

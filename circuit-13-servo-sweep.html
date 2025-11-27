@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Circuit 13: Servo Sweep - Arduino Exam Reference</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Circuit 13: Servo Sweep</h1>
+        <p class="subtitle">Automatic Servo Movement 0° to 180°</p>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="circuit-12-traffic-light.html" class="btn">← Previous</a>
+        <a href="circuit-14-rgb-pot.html" class="btn">Next Circuit →</a>
+    </nav>
+
+    <main>
+        <div class="circuit-hero">
+            <div class="circuit-header">
+                <h2 style="margin: 0; border: none;">Servo Sweep</h2>
+                <span class="badge badge-medium">TIER 3 - MEDIUM PRIORITY</span>
+            </div>
+            <p><strong>Function:</strong> Servo automatically sweeps from 0° to 180° and back repeatedly. Tests for loops and servo control.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Connections</h2>
+            <ul>
+                <li><strong>Servo Red:</strong> 5V</li>
+                <li><strong>Servo Brown:</strong> GND</li>
+                <li><strong>Servo Orange:</strong> Pin 9 (PWM)</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Complete Arduino Code</h2>
+            <pre><code>// Servo Sweep - Automatic Movement
+
+#include <Servo.h>
+
+Servo myServo;
+const int servoPin = 9;
+
+void setup() {
+  myServo.attach(servoPin);
+}
+
+void loop() {
+  // Sweep from 0° to 180°
+  for (int angle = 0; angle <= 180; angle++) {
+    myServo.write(angle);
+    delay(15);  // 15ms per degree = smooth movement
+  }
+
+  // Sweep from 180° back to 0°
+  for (int angle = 180; angle >= 0; angle--) {
+    myServo.write(angle);
+    delay(15);
+  }
+}</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Key Concepts</h2>
+            <div class="formula">
+                <div class="formula-label">For loop - increment:</div>
+                <div class="formula-code">for (int i = 0; i <= 180; i++) { /* code */ }</div>
+                <div class="formula-example">Runs from 0, 1, 2... up to 180</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">For loop - decrement:</div>
+                <div class="formula-code">for (int i = 180; i >= 0; i--) { /* code */ }</div>
+                <div class="formula-example">Runs from 180, 179, 178... down to 0</div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Variations</h2>
+            <ul>
+                <li>🔄 <strong>Faster sweep:</strong> Reduce delay (e.g., delay(5))</li>
+                <li>🔄 <strong>Slower sweep:</strong> Increase delay (e.g., delay(30))</li>
+                <li>🔄 <strong>Larger steps:</strong> angle += 5 (sweeps in 5° increments)</li>
+                <li>🔄 <strong>Limited range:</strong> for (int angle = 45; angle <= 135; angle++)</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Testing Checklist</h2>
+            <ol>
+                <li>✅ Servo sweeps smoothly from 0° to 180°</li>
+                <li>✅ Servo sweeps back from 180° to 0°</li>
+                <li>✅ Continuous loop (no stops)</li>
+                <li>✅ Servo attached in setup()</li>
+            </ol>
+        </div>
+
+    </main>
+
+    <footer>
+        <p><a href="circuit-12-traffic-light.html">← Previous</a> | <a href="index.html">Back to List</a> | <a href="circuit-14-rgb-pot.html">Next: Circuit 14 →</a></p>
+    </footer>
+</body>
+</html>

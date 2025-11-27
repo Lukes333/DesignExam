@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuit 07: Potentiometer + LED PWM - Arduino Exam Reference</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Circuit 07: Potentiometer + LED (PWM Brightness)</h1>
+        <p class="subtitle">Variable LED Brightness Control</p>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="quick-reference.html" class="btn-primary">Quick Reference</a>
+        <a href="circuit-06-pot-servo.html" class="btn">← Previous</a>
+        <a href="circuit-08-button-led-toggle.html" class="btn">Next Circuit →</a>
+    </nav>
+
+    <main>
+        <div class="circuit-hero">
+            <div class="circuit-header">
+                <h2 style="margin: 0; border: none;">Potentiometer + LED (PWM)</h2>
+                <span class="badge badge-high">TIER 2 - HIGH PRIORITY</span>
+            </div>
+            <p style="margin-top: 1em;"><strong>Function:</strong> Turn potentiometer to control LED brightness from fully OFF to fully ON using PWM. Tests analogWrite() and value conversion.</p>
+
+            <div class="circuit-meta">
+                <div class="meta-item"><span class="meta-label">Probability:</span> <span class="meta-value">80%</span></div>
+                <div class="meta-item"><span class="meta-label">Difficulty:</span> <span class="meta-value">Easy</span></div>
+                <div class="meta-item"><span class="meta-label">Key Concepts:</span> <span class="meta-value">PWM, analogWrite(), Value Conversion</span></div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Components & Connections</h2>
+            <table>
+                <thead><tr><th>Component</th><th>Connection</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Potentiometer Left</strong></td><td>→ 5V</td></tr>
+                    <tr><td><strong>Pot Middle (Wiper)</strong></td><td>→ Analog A0</td></tr>
+                    <tr><td><strong>Pot Right</strong></td><td>→ GND</td></tr>
+                    <tr><td><strong>LED Anode (+)</strong></td><td>→ 220Ω Resistor → Digital Pin 9 (PWM)</td></tr>
+                    <tr><td><strong>LED Cathode (-)</strong></td><td>→ GND</td></tr>
+                </tbody>
+            </table>
+
+            <div class="pin-note">
+                <strong>Critical:</strong> LED must be on PWM pin (3, 5, 6, 9, 10, or 11) for brightness control!
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Complete Arduino Code</h2>
+            <div class="code-container">
+                <div class="code-header"><span class="code-lang">Arduino C++</span></div>
+                <pre><code>// ============================================
+// CIRCUIT 07: POTENTIOMETER + LED (PWM)
+// Variable Brightness Control
+// ============================================
+
+const int potPin = A0;   // Potentiometer on analog pin A0
+const int ledPin = 9;    // LED on PWM pin 9 (MUST be PWM: 3,5,6,9,10,11)
+
+int potValue = 0;        // Raw pot reading (0-1023)
+int brightness = 0;      // LED brightness (0-255 for PWM)
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);  // LED pin as output
+
+  Serial.println("=== Potentiometer + LED PWM ===");
+  Serial.println("Turn pot to change brightness");
+  Serial.println("==============================");
+}
+
+void loop() {
+  // Read potentiometer (returns 0-1023)
+  potValue = analogRead(potPin);
+
+  // Convert to PWM range (0-255)
+  // Method 1: Divide by 4 (fastest)
+  brightness = potValue / 4;  // 1023 / 4 ≈ 255
+
+  // Method 2: Using map() (more flexible)
+  // brightness = map(potValue, 0, 1023, 0, 255);
+
+  // Set LED brightness using PWM
+  // analogWrite() outputs PWM signal with duty cycle 0-255
+  // 0 = fully OFF, 128 = 50% brightness, 255 = fully ON
+  analogWrite(ledPin, brightness);
+
+  // Display values
+  Serial.print("Pot: ");
+  Serial.print(potValue);
+  Serial.print(" | Brightness: ");
+  Serial.print(brightness);
+  Serial.print("/255 (");
+  Serial.print((brightness * 100) / 255);  // Convert to percentage
+  Serial.println("%)");
+
+  delay(50);  // Small delay for stability
+}
+
+// Expected behavior:
+// - Pot fully left → LED fully OFF (0%)
+// - Pot middle → LED at 50% brightness
+// - Pot fully right → LED fully ON (100%)</code></pre>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Key Concepts</h2>
+
+            <h3>PWM (Pulse Width Modulation):</h3>
+            <ul>
+                <li><strong>What it is:</strong> Rapid on/off switching to simulate analog voltage</li>
+                <li><strong>Duty cycle:</strong> Percentage of time signal is HIGH</li>
+                <li><strong>0:</strong> Always OFF (0% duty cycle) = 0V average</li>
+                <li><strong>128:</strong> Half time ON (50% duty cycle) = 2.5V average</li>
+                <li><strong>255:</strong> Always ON (100% duty cycle) = 5V average</li>
+            </ul>
+
+            <h3>Value Conversion:</h3>
+            <div class="formula">
+                <div class="formula-label">Method 1 - Divide by 4 (fast):</div>
+                <div class="formula-code">brightness = potValue / 4;  // 0-1023 → 0-255</div>
+                <div class="formula-example">1023 / 4 = 255 (perfect fit!)</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Method 2 - map() function (flexible):</div>
+                <div class="formula-code">brightness = map(potValue, 0, 1023, 0, 255);</div>
+                <div class="formula-example">More flexible if you need custom ranges</div>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">Common Mistakes:</div>
+                <ul>
+                    <li>❌ LED on non-PWM pin → Won't work! Must be 3, 5, 6, 9, 10, or 11</li>
+                    <li>❌ Using digitalWrite() instead of analogWrite() → Only fully ON/OFF</li>
+                    <li>❌ Forgetting pinMode(ledPin, OUTPUT) → May not work</li>
+                    <li>❌ No resistor with LED → LED burns out</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Exam Variations</h2>
+            <ul>
+                <li>🔄 <strong>Inverted control:</strong> Left=bright, Right=dim → <code>brightness = 255 - (potValue / 4);</code></li>
+                <li>🔄 <strong>Limited range:</strong> 25-75% brightness → <code>map(potValue, 0, 1023, 64, 191)</code></li>
+                <li>🔄 <strong>Multiple LEDs:</strong> Control red, green, blue separately with 3 pots</li>
+                <li>🔄 <strong>Different pins:</strong> Any PWM pin works (3,5,6,9,10,11)</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Testing Checklist</h2>
+            <ol>
+                <li>✅ LED on PWM pin (check for ~ symbol on Arduino board)</li>
+                <li>✅ LED has 220Ω resistor</li>
+                <li>✅ Pot fully left → LED completely OFF</li>
+                <li>✅ Pot fully right → LED fully bright</li>
+                <li>✅ Smooth dimming as pot turns</li>
+                <li>✅ Serial Monitor shows 0-255 brightness values</li>
+            </ol>
+        </div>
+
+        <div class="content-section">
+            <h2>Quick Reference</h2>
+            <table>
+                <thead><tr><th>Item</th><th>Value</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>PWM Pins</strong></td><td>3, 5, 6, 9, 10, 11 (have ~ symbol)</td></tr>
+                    <tr><td><strong>analogWrite Range</strong></td><td>0-255</td></tr>
+                    <tr><td><strong>analogRead Range</strong></td><td>0-1023</td></tr>
+                    <tr><td><strong>Conversion</strong></td><td>Divide by 4, or use map()</td></tr>
+                    <tr><td><strong>PWM Frequency</strong></td><td>~490 Hz (pins 3,9,10,11), ~980 Hz (pins 5,6)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <footer>
+        <p><a href="circuit-06-pot-servo.html">← Previous</a> | <a href="index.html">Back to List</a> | <a href="circuit-08-button-led-toggle.html">Next: Circuit 08 →</a></p>
+    </footer>
+</body>
+</html>

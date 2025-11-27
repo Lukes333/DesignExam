@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuit 02: LDR + Servo + LED - Arduino Exam Reference</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Circuit 02: LDR + Servo Motor + LED</h1>
+        <p class="subtitle">Light-Controlled Servo with State Machine</p>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="quick-reference.html" class="btn-primary">Quick Reference</a>
+        <a href="circuit-01-ultrasonic-led.html" class="btn">← Previous</a>
+        <a href="circuit-03-motor-l293d.html" class="btn">Next Circuit →</a>
+    </nav>
+
+    <main>
+        <!-- Circuit Hero Section -->
+        <div class="circuit-hero">
+            <div class="circuit-header">
+                <h2 style="margin: 0; border: none;">LDR + Servo Motor + LED</h2>
+                <span class="badge badge-critical">CRITICAL - WEEK 10</span>
+            </div>
+            <p style="margin-top: 1em;"><strong>Function:</strong> Servo motor rotates based on light level (dark=0°, bright=180°). LED turns ON in darkness. Uses state machine with flags to prevent repeated actions.</p>
+
+            <div class="circuit-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Probability:</span>
+                    <span class="meta-value">90%+</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Difficulty:</span>
+                    <span class="meta-value">Medium-Hard</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Key Concepts:</span>
+                    <span class="meta-value">Servo Library, Voltage Divider, State Flags, map()</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Why This Circuit? -->
+        <div class="content-section">
+            <h2>Why This Circuit is Critical for Your Exam</h2>
+            <ul>
+                <li><strong>Library Usage:</strong> Tests your understanding of #include and Servo library functions</li>
+                <li><strong>Analog Input:</strong> LDR voltage divider circuit - common sensor pattern</li>
+                <li><strong>State Machine:</strong> Uses boolean flags to prevent repeated actions - advanced concept</li>
+                <li><strong>map() Function:</strong> Converts one range to another (0-1023 → 0-180°)</li>
+                <li><strong>Week 10 Content:</strong> One of the 5 fully worked examples from your lectures</li>
+                <li><strong>Multi-Component:</strong> Combines sensor, actuator, and indicator - tests integration skills</li>
+            </ul>
+        </div>
+
+        <!-- Components List -->
+        <div class="content-section">
+            <h2>Components Required</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Quantity</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Arduino Uno</td>
+                        <td>1</td>
+                        <td>Main microcontroller</td>
+                    </tr>
+                    <tr>
+                        <td>LDR (Photoresistor)</td>
+                        <td>1</td>
+                        <td>Light Dependent Resistor - resistance decreases with light</td>
+                    </tr>
+                    <tr>
+                        <td>10kΩ Resistor</td>
+                        <td>1</td>
+                        <td>For voltage divider with LDR</td>
+                    </tr>
+                    <tr>
+                        <td>Servo Motor</td>
+                        <td>1</td>
+                        <td>Standard hobby servo (e.g., SG90, TowerPro MG90S)</td>
+                    </tr>
+                    <tr>
+                        <td>LED (any color)</td>
+                        <td>1</td>
+                        <td>Indicator for darkness</td>
+                    </tr>
+                    <tr>
+                        <td>220Ω Resistor</td>
+                        <td>1</td>
+                        <td>Current limiting for LED</td>
+                    </tr>
+                    <tr>
+                        <td>Jumper Wires</td>
+                        <td>8-10</td>
+                        <td>For connections</td>
+                    </tr>
+                    <tr>
+                        <td>Breadboard</td>
+                        <td>1</td>
+                        <td>For assembly</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Detailed Connections -->
+        <div class="content-section">
+            <h2>Detailed Circuit Connections</h2>
+
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">LDR (Photoresistor) - Voltage Divider Configuration:</span>
+                    <div class="connection">One end → Arduino 5V (Power)</div>
+                    <div class="connection">Other end → Arduino Analog Pin A0 AND 10kΩ resistor</div>
+                    <div class="connection">10kΩ resistor (other end) → Arduino GND</div>
+                </div>
+
+                <div class="component">
+                    <span class="component-name">Servo Motor (3-wire connector):</span>
+                    <div class="connection">Red wire (Power) → Arduino 5V</div>
+                    <div class="connection">Brown/Black wire (Ground) → Arduino GND</div>
+                    <div class="connection">Orange/Yellow wire (Signal) → Arduino Digital Pin 9 (PWM)</div>
+                </div>
+
+                <div class="component">
+                    <span class="component-name">LED:</span>
+                    <div class="connection">Anode (+ long leg) → 220Ω Resistor → Arduino Digital Pin 13</div>
+                    <div class="connection">Cathode (- short leg) → Arduino GND</div>
+                </div>
+            </div>
+
+            <div class="pin-note">
+                <strong>Pin Selection Notes:</strong>
+                <ul>
+                    <li><strong>Pin A0 (LDR):</strong> Analog input - reads voltage from divider (0-1023)</li>
+                    <li><strong>Pin 9 (Servo):</strong> PWM pin - servo library requires PWM-capable pin (3,5,6,9,10,11)</li>
+                    <li><strong>Pin 13 (LED):</strong> Any digital pin works - simple on/off control</li>
+                    <li><strong>Why 10kΩ?</strong> Creates voltage divider with LDR (typically 1kΩ bright, 100kΩ dark)</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <div class="box-title">Voltage Divider Explanation</div>
+                <p><strong>How the LDR circuit works:</strong></p>
+                <p>The LDR and 10kΩ resistor form a voltage divider:</p>
+                <ul>
+                    <li><strong>Bright light:</strong> LDR resistance ≈ 1kΩ → High voltage at A0 (≈4.5V) → analogRead() ≈ 920</li>
+                    <li><strong>Darkness:</strong> LDR resistance ≈ 100kΩ → Low voltage at A0 (≈0.45V) → analogRead() ≈ 92</li>
+                    <li><strong>Formula:</strong> Vout = 5V × (R2 / (R1 + R2)) where R1=LDR, R2=10kΩ</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">Common Connection Mistakes:</div>
+                <ul>
+                    <li>❌ LDR not in voltage divider - won't read properly</li>
+                    <li>❌ Servo on non-PWM pin - won't work with Servo library</li>
+                    <li>❌ Servo wires swapped - check color code: Red=5V, Brown=GND, Orange=Signal</li>
+                    <li>❌ Forgetting LED resistor - LED burns out</li>
+                    <li>❌ LDR backwards - doesn't matter! LDRs are non-polar</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Complete Arduino Code -->
+        <div class="content-section">
+            <h2>Complete Arduino Code</h2>
+            <p><strong>Copy-paste ready code with state machine implementation!</strong></p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span class="code-lang">Arduino C++</span>
+                    <span>Includes Servo Library</span>
+                </div>
+                <pre><code>// ============================================
+// CIRCUIT 02: LDR + SERVO MOTOR + LED
+// Light-Controlled Servo with State Machine
+// ============================================
+
+// ===== LIBRARY INCLUDES =====
+// Servo library is REQUIRED for servo motor control
+// This library handles the PWM signal generation for servo positioning
+#include <Servo.h>
+
+// ===== OBJECT CREATION =====
+// Create a Servo object to control the servo motor
+Servo myServo;  // "myServo" is the name we'll use to control the servo
+
+// ===== PIN DEFINITIONS =====
+const int ldrPin = A0;     // LDR connected to analog pin A0 (voltage divider)
+const int servoPin = 9;    // Servo signal wire connected to PWM pin 9
+const int ledPin = 13;     // LED connected to digital pin 13 (via 220Ω resistor)
+
+// ===== GLOBAL VARIABLES =====
+int lightLevel = 0;        // Stores analog reading from LDR (0-1023)
+int servoAngle = 0;        // Stores calculated servo angle (0-180 degrees)
+
+// ===== STATE MACHINE FLAGS =====
+// Boolean flags prevent repeated actions when crossing thresholds
+// This is IMPORTANT for clean state transitions!
+bool darkActionDone = false;   // TRUE when we've already handled dark state
+bool lightActionDone = false;  // TRUE when we've already handled light state
+
+// ===== THRESHOLD CONSTANT =====
+const int DARK_THRESHOLD = 300;  // Below this value = "dark"
+                                 // Above this value = "light"
+                                 // Adjust based on testing (typical range: 200-500)
+
+
+// ===== SETUP FUNCTION =====
+void setup() {
+  // Initialize Serial communication for debugging
+  Serial.begin(9600);
+
+  // Attach servo to pin 9
+  // This tells the Servo library which pin controls the servo
+  myServo.attach(servoPin);
+
+  // Configure LED pin as output
+  pinMode(ledPin, OUTPUT);
+
+  // Initial LED state: OFF
+  digitalWrite(ledPin, LOW);
+
+  // Move servo to middle position (90 degrees) on startup
+  myServo.write(90);
+
+  // Startup message for Serial Monitor
+  Serial.println("===== LDR + Servo + LED System =====");
+  Serial.println("Dark Threshold: 300");
+  Serial.println("Dark: Servo 0°, LED ON");
+  Serial.println("Light: Servo 180°, LED OFF");
+  Serial.println("====================================");
+  Serial.println();
+}
+
+
+// ===== MAIN LOOP FUNCTION =====
+void loop() {
+
+  // ===== STEP 1: Read light level from LDR =====
+  // analogRead() returns value 0-1023 based on voltage at A0
+  // Lower value = darker (less voltage from voltage divider)
+  // Higher value = brighter (more voltage from voltage divider)
+  lightLevel = analogRead(ldrPin);
+
+
+  // ===== STEP 2: Map light level to servo angle =====
+  // map(value, fromLow, fromHigh, toLow, toHigh)
+  // Converts light level (0-1023) to servo angle (0-180 degrees)
+  // Dark (0) → 0°, Bright (1023) → 180°
+  servoAngle = map(lightLevel, 0, 1023, 0, 180);
+
+  // Constrain angle to valid servo range (safety check)
+  // Ensures angle stays within 0-180 even if map() produces outliers
+  servoAngle = constrain(servoAngle, 0, 180);
+
+
+  // ===== STEP 3: Move servo to calculated angle =====
+  // write() command positions the servo to specified angle
+  // Servo library handles the PWM signal automatically
+  myServo.write(servoAngle);
+
+
+  // ===== STEP 4: State machine for LED control =====
+  // This prevents LED from being repeatedly turned ON/OFF in the same state
+  // Only triggers action when crossing the threshold boundary
+
+  if (lightLevel < DARK_THRESHOLD) {
+    // ===== DARK STATE =====
+    if (!darkActionDone) {
+      // First time entering dark state since being light
+      digitalWrite(ledPin, HIGH);  // Turn LED ON
+      Serial.println(">>> State Change: DARK - LED ON");
+      darkActionDone = true;       // Mark dark action as complete
+      lightActionDone = false;     // Reset light flag for next transition
+    }
+
+  } else {
+    // ===== LIGHT STATE =====
+    if (!lightActionDone) {
+      // First time entering light state since being dark
+      digitalWrite(ledPin, LOW);   // Turn LED OFF
+      Serial.println(">>> State Change: LIGHT - LED OFF");
+      lightActionDone = true;      // Mark light action as complete
+      darkActionDone = false;      // Reset dark flag for next transition
+    }
+  }
+
+
+  // ===== STEP 5: Display values on Serial Monitor =====
+  Serial.print("Light Level: ");
+  Serial.print(lightLevel);
+  Serial.print("  |  Servo Angle: ");
+  Serial.print(servoAngle);
+  Serial.print("°  |  LED: ");
+
+  if (lightLevel < DARK_THRESHOLD) {
+    Serial.println("ON (Dark)");
+  } else {
+    Serial.println("OFF (Light)");
+  }
+
+
+  // ===== STEP 6: Short delay before next reading =====
+  delay(100);  // 100ms delay - prevents Serial Monitor spam
+               // Also gives servo time to reach target position
+}
+
+
+// ===== END OF CODE =====
+// Expected behavior in Tinkercad:
+// 1. Cover LDR (simulate darkness) → Servo moves to 0°, LED turns ON
+// 2. Uncover LDR (simulate light) → Servo moves to 180°, LED turns OFF
+// 3. Serial Monitor shows real-time light level and servo position</code></pre>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="content-section">
+            <h2>How the Circuit Works - Step by Step</h2>
+
+            <h3>1. Light Sensing (LDR Voltage Divider):</h3>
+            <ul>
+                <li>LDR resistance changes with light: bright = low resistance, dark = high resistance</li>
+                <li>Voltage divider creates varying voltage at A0 based on LDR resistance</li>
+                <li>analogRead(A0) converts voltage to digital value (0-1023)</li>
+            </ul>
+
+            <h3>2. Servo Control:</h3>
+            <ul>
+                <li><code>myServo.attach(9)</code> - Links servo object to pin 9</li>
+                <li><code>map(lightLevel, 0, 1023, 0, 180)</code> - Converts light value to angle</li>
+                <li><code>myServo.write(angle)</code> - Positions servo shaft to specified angle</li>
+                <li>Servo library automatically generates 50Hz PWM signal (1-2ms pulse width)</li>
+            </ul>
+
+            <h3>3. State Machine Logic:</h3>
+            <div class="tip-box">
+                <div class="box-title">Why Use State Flags?</div>
+                <p><strong>Without flags:</strong> LED would be set HIGH/LOW every loop iteration (wasteful)</p>
+                <p><strong>With flags:</strong> LED only changes when crossing threshold (efficient, clean Serial output)</p>
+                <p><strong>How it works:</strong></p>
+                <ol>
+                    <li>Start in light state, both flags FALSE</li>
+                    <li>Light level drops below 300 → darkActionDone = FALSE, so execute dark actions</li>
+                    <li>Set darkActionDone = TRUE, lightActionDone = FALSE</li>
+                    <li>Subsequent loops in dark state do nothing (darkActionDone already TRUE)</li>
+                    <li>Light level rises above 300 → lightActionDone = FALSE, so execute light actions</li>
+                    <li>Repeat cycle...</li>
+                </ol>
+            </div>
+
+            <h3>4. Complete Code Flow:</h3>
+            <ol>
+                <li><strong>Setup:</strong> Initialize Serial, attach servo to pin 9, LED pin as OUTPUT, servo to 90°</li>
+                <li><strong>Read LDR:</strong> analogRead(A0) gets light level (0-1023)</li>
+                <li><strong>Calculate Angle:</strong> map() converts light level to servo angle (0-180°)</li>
+                <li><strong>Move Servo:</strong> myServo.write() positions servo</li>
+                <li><strong>Check State:</strong> Compare light level to threshold (300)</li>
+                <li><strong>Update LED:</strong> Use flags to change LED only when crossing threshold</li>
+                <li><strong>Output:</strong> Print values to Serial Monitor</li>
+                <li><strong>Delay:</strong> Wait 100ms, repeat from Step 2</li>
+            </ol>
+        </div>
+
+        <!-- Key Concepts -->
+        <div class="content-section">
+            <h2>Key Concepts & Functions</h2>
+
+            <h3>Servo Library Functions:</h3>
+            <div class="formula">
+                <div class="formula-label">Include library:</div>
+                <div class="formula-code">#include &lt;Servo.h&gt;</div>
+                <div class="formula-example">Must be at top of code, before any other code</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Create servo object:</div>
+                <div class="formula-code">Servo myServo;</div>
+                <div class="formula-example">Creates object named "myServo" to control one servo</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Attach servo to pin:</div>
+                <div class="formula-code">myServo.attach(9);</div>
+                <div class="formula-example">Links servo object to pin 9 (must be PWM pin)</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Position servo:</div>
+                <div class="formula-code">myServo.write(90);</div>
+                <div class="formula-example">Moves servo to 90° (0-180 valid range)</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Read servo position:</div>
+                <div class="formula-code">int pos = myServo.read();</div>
+                <div class="formula-example">Returns current servo angle (0-180)</div>
+            </div>
+
+            <h3>map() Function:</h3>
+            <div class="formula">
+                <div class="formula-label">Syntax:</div>
+                <div class="formula-code">map(value, fromLow, fromHigh, toLow, toHigh)</div>
+                <div class="formula-example">Linearly maps value from one range to another</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Example:</div>
+                <div class="formula-code">servoAngle = map(512, 0, 1023, 0, 180); // Returns 90</div>
+                <div class="formula-example">512 is halfway in 0-1023 range → maps to 90 (halfway in 0-180)</div>
+            </div>
+
+            <h3>Voltage Divider Formula:</h3>
+            <div class="formula">
+                <div class="formula-label">Vout calculation:</div>
+                <div class="formula-code">Vout = Vin × (R2 / (R1 + R2))</div>
+                <div class="formula-example">R1=LDR, R2=10kΩ, Vin=5V</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Bright example (LDR = 1kΩ):</div>
+                <div class="formula-code">Vout = 5V × (10kΩ / (1kΩ + 10kΩ)) = 4.54V → analogRead ≈ 930</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Dark example (LDR = 100kΩ):</div>
+                <div class="formula-code">Vout = 5V × (10kΩ / (100kΩ + 10kΩ)) = 0.45V → analogRead ≈ 92</div>
+            </div>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div class="content-section">
+            <h2>Common Mistakes to Avoid</h2>
+
+            <div class="warning-box">
+                <div class="box-title">Code Errors:</div>
+                <ul>
+                    <li>❌ <strong>Forgetting #include &lt;Servo.h&gt;:</strong> Compiler error "Servo was not declared"</li>
+                    <li>❌ <strong>Not calling myServo.attach():</strong> Servo won't move</li>
+                    <li>❌ <strong>Calling attach() in loop():</strong> Should be in setup() only</li>
+                    <li>❌ <strong>Using analogWrite() for servo:</strong> Wrong! Use myServo.write() instead</li>
+                    <li>❌ <strong>No state flags:</strong> LED flickers, Serial Monitor floods with repeats</li>
+                    <li>❌ <strong>Wrong map() parameters:</strong> Check order: (value, fromLow, fromHigh, toLow, toHigh)</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">Wiring Errors:</div>
+                <ul>
+                    <li>❌ <strong>Servo on non-PWM pin:</strong> Library won't work properly</li>
+                    <li>❌ <strong>LDR without 10kΩ resistor:</strong> No voltage divider, won't read light changes</li>
+                    <li>❌ <strong>LDR directly to 5V and GND:</strong> No analog input connection!</li>
+                    <li>❌ <strong>Servo wires swapped:</strong> Double-check color code</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">Logic Errors:</div>
+                <ul>
+                    <li>❌ <strong>Threshold too high/low:</strong> Adjust DARK_THRESHOLD based on testing (200-500 typical)</li>
+                    <li>❌ <strong>Inverted logic:</strong> If LED turns on in light, swap threshold comparison</li>
+                    <li>❌ <strong>No constrain():</strong> Servo could receive invalid angles (>180 or <0)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Exam Variations -->
+        <div class="content-section">
+            <h2>Possible Exam Variations</h2>
+
+            <div class="tip-box">
+                <div class="box-title">Likely Modifications:</div>
+                <ul>
+                    <li>🔄 <strong>Different threshold:</strong> "LED ON when light level < 500" instead of 300</li>
+                    <li>🔄 <strong>Reverse mapping:</strong> Dark=180°, Light=0° (swap in map function)</li>
+                    <li>🔄 <strong>Limited servo range:</strong> "Move servo between 45° and 135°" (change map parameters)</li>
+                    <li>🔄 <strong>No LED:</strong> Just servo control based on light</li>
+                    <li>🔄 <strong>Multiple thresholds:</strong> 3 states: dark (0-30°), medium (60-90°), bright (150-180°)</li>
+                    <li>🔄 <strong>Button override:</strong> Button pressed = servo to 90° regardless of light</li>
+                </ul>
+            </div>
+
+            <h3>How to Adapt:</h3>
+
+            <div class="formula">
+                <div class="formula-label">Reverse servo mapping (dark=180°, light=0°):</div>
+                <div class="formula-code">servoAngle = map(lightLevel, 0, 1023, 180, 0);  // Swap last two params</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Limited range (45-135°):</div>
+                <div class="formula-code">servoAngle = map(lightLevel, 0, 1023, 45, 135);</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Different threshold:</div>
+                <div class="formula-code">const int DARK_THRESHOLD = 500;  // Change this value</div>
+            </div>
+        </div>
+
+        <!-- Testing Checklist -->
+        <div class="content-section">
+            <h2>Testing Checklist for Exam</h2>
+            <ol>
+                <li>✅ <strong>Code compiles:</strong> No errors about Servo library or syntax</li>
+                <li>✅ <strong>Servo attached:</strong> Check myServo.attach(9) is in setup()</li>
+                <li>✅ <strong>LDR responds:</strong> Cover LDR, Serial Monitor shows low values</li>
+                <li>✅ <strong>Servo moves:</strong> Should sweep full range as light changes</li>
+                <li>✅ <strong>LED toggles:</strong> ON in dark, OFF in light (check once per state change)</li>
+                <li>✅ <strong>Serial output clean:</strong> State change messages appear only when crossing threshold</li>
+                <li>✅ <strong>Thresholds correct:</strong> LED changes at specified light level</li>
+                <li>✅ <strong>Comments added:</strong> Explain library usage, map function, state machine!</li>
+            </ol>
+        </div>
+
+        <!-- Quick Reference -->
+        <div class="content-section">
+            <h2>Quick Reference Summary</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Value/Detail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Library</strong></td>
+                        <td>#include &lt;Servo.h&gt;</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LDR Pin</strong></td>
+                        <td>Analog A0 (with 10kΩ to GND)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Servo Pin</strong></td>
+                        <td>Digital Pin 9 (PWM)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LED Pin</strong></td>
+                        <td>Digital Pin 13 (with 220Ω resistor)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Servo Range</strong></td>
+                        <td>0° to 180°</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dark Threshold</strong></td>
+                        <td>300 (adjust based on testing)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Key Function</strong></td>
+                        <td>map(value, 0, 1023, 0, 180)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>State Flags</strong></td>
+                        <td>darkActionDone, lightActionDone</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <footer>
+        <p><a href="circuit-01-ultrasonic-led.html">← Previous: Circuit 01</a> | <a href="index.html">Back to Circuit List</a> | <a href="circuit-03-motor-l293d.html">Next: Circuit 03 →</a></p>
+        <p>Arduino Exam Reference for MEU33EM3 Design II</p>
+    </footer>
+</body>
+</html>

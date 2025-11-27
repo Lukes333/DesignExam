@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Circuit 09: Ultrasonic + Buzzer (Parking Sensor) - Arduino Exam Reference</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Circuit 09: Ultrasonic + Buzzer (Parking Sensor)</h1>
+        <p class="subtitle">Variable Beep Rate Based on Distance</p>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="circuit-08-button-led-toggle.html" class="btn">← Previous</a>
+        <a href="circuit-10-temperature-alert.html" class="btn">Next Circuit →</a>
+    </nav>
+
+    <main>
+        <div class="circuit-hero">
+            <div class="circuit-header">
+                <h2 style="margin: 0; border: none;">Ultrasonic + Buzzer (Parking Sensor)</h2>
+                <span class="badge badge-high">TIER 2 - HIGH PRIORITY</span>
+            </div>
+            <p><strong>Function:</strong> Buzzer beeps faster as object gets closer - realistic parking sensor simulation!</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Components & Connections</h2>
+            <table>
+                <thead><tr><th>Component</th><th>Connection</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>HC-SR04 VCC</strong></td><td>→ 5V</td></tr>
+                    <tr><td><strong>HC-SR04 GND</strong></td><td>→ GND</td></tr>
+                    <tr><td><strong>HC-SR04 TRIG</strong></td><td>→ Pin 9</td></tr>
+                    <tr><td><strong>HC-SR04 ECHO</strong></td><td>→ Pin 10</td></tr>
+                    <tr><td><strong>Buzzer Positive (+)</strong></td><td>→ Pin 8</td></tr>
+                    <tr><td><strong>Buzzer Negative (-)</strong></td><td>→ GND</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h2>Complete Arduino Code</h2>
+            <pre><code>// Ultrasonic + Buzzer Parking Sensor
+
+const int trigPin = 9;
+const int echoPin = 10;
+const int buzzerPin = 8;
+
+long duration;
+int distance;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(buzzerPin, OUTPUT);
+}
+
+void loop() {
+  // Trigger ultrasonic pulse
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Measure echo duration
+  duration = pulseIn(echoPin, HIGH);
+
+  // Calculate distance (cm)
+  distance = duration * 0.034 / 2;
+
+  // Control buzzer based on distance
+  if (distance < 10) {
+    // Very close: continuous beep
+    tone(buzzerPin, 2000);  // 2000 Hz tone
+  } else if (distance < 30) {
+    // Close: fast beeping
+    tone(buzzerPin, 1500, 100);  // 100ms tone
+    delay(150);  // Short pause
+  } else if (distance < 50) {
+    // Medium distance: slower beeping
+    tone(buzzerPin, 1000, 100);
+    delay(300);  // Longer pause
+  } else {
+    // Far: no beep
+    noTone(buzzerPin);
+  }
+
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  delay(50);
+}
+
+// Behavior:
+// <10cm: Continuous beep (danger!)
+// 10-30cm: Fast beeping
+// 30-50cm: Slow beeping
+// >50cm: Silent</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Key Functions</h2>
+            <div class="formula">
+                <div class="formula-label">Generate tone:</div>
+                <div class="formula-code">tone(pin, frequency);  // Continuous until noTone()</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Tone with duration:</div>
+                <div class="formula-code">tone(pin, frequency, duration_ms);  // Auto-stops</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Stop tone:</div>
+                <div class="formula-code">noTone(pin);  // Stops sound on pin</div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Testing Checklist</h2>
+            <ol>
+                <li>✅ Move object close (<10cm) → Continuous beep</li>
+                <li>✅ Medium distance (20cm) → Fast beeping</li>
+                <li>✅ Far distance (40cm) → Slow beeping</li>
+                <li>✅ Very far (>50cm) → Silent</li>
+            </ol>
+        </div>
+
+    </main>
+
+    <footer>
+        <p><a href="circuit-08-button-led-toggle.html">← Previous</a> | <a href="index.html">Back to List</a> | <a href="circuit-10-temperature-alert.html">Next: Circuit 10 →</a></p>
+    </footer>
+</body>
+</html>

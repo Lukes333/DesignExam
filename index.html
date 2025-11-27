@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arduino Exam Reference - MEU33EM3 Design II</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Arduino Exam Reference</h1>
+        <p class="subtitle">MEU33EM3 - Design II | December 1, 2025</p>
+        <div class="search-container">
+            <input type="text" id="searchBox" placeholder="Search circuits... (e.g., 'ultrasonic', 'servo', 'motor')" onkeyup="searchCircuits()">
+        </div>
+    </header>
+
+    <nav class="quick-links">
+        <a href="quick-reference.html" class="btn-primary">Quick Reference</a>
+        <a href="#tier1" class="btn-critical">Critical Circuits</a>
+        <a href="#tier2" class="btn-high">High Priority</a>
+        <a href="#tier3" class="btn-medium">Medium Priority</a>
+    </nav>
+
+    <main>
+        <!-- Exam Strategy Section -->
+        <section class="exam-strategy">
+            <h2>Exam Strategy - Read This First!</h2>
+            <div class="strategy-grid">
+                <div class="strategy-card">
+                    <h3>Before Exam (Now - Dec 1)</h3>
+                    <ul>
+                        <li><strong>Master Tier 1 circuits first</strong> - 90%+ exam probability</li>
+                        <li>Build each circuit in Tinkercad 2-3 times</li>
+                        <li>Understand the <em>why</em>, not just copy code</li>
+                        <li>Memorize pin types: PWM (3,5,6,9,10,11), Digital (0-13), Analog (A0-A5)</li>
+                        <li>Bookmark this site: <code>https://[your-username].github.io/arduino-exam-ref/</code></li>
+                    </ul>
+                </div>
+                <div class="strategy-card">
+                    <h3>During Exam (2 hours = 120 min)</h3>
+                    <ul>
+                        <li><strong>Time per circuit: 30-35 minutes max</strong></li>
+                        <li>Read requirements twice before starting</li>
+                        <li>Build circuit → Write code → Test → Add comments</li>
+                        <li>Use Ctrl+F to search this site quickly</li>
+                        <li>If stuck after 10 min, move to next section</li>
+                        <li>Leave 10 min at end to review and add comments</li>
+                    </ul>
+                </div>
+                <div class="strategy-card">
+                    <h3>Comment Strategy (For Marks!)</h3>
+                    <ul>
+                        <li>Comments are worth marks - be generous!</li>
+                        <li>Explain WHAT, HOW, and WHY for each section</li>
+                        <li>Include expected value ranges (e.g., "0-1023", "30cm")</li>
+                        <li>Cite formulas (e.g., "distance = duration × 0.034 / 2")</li>
+                        <li>Use block comments for sections, inline for tricky lines</li>
+                        <li>Template: <code>// ===== STEP X: [Action] =====</code></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- TIER 1: CRITICAL PRIORITY -->
+        <section id="tier1" class="tier-section">
+            <h2><span class="badge badge-critical">TIER 1: CRITICAL</span> Week 10 Circuits - Master These First!</h2>
+            <p class="tier-description">These 5 circuits have complete working code from Week 10 lectures. <strong>90%+ probability</strong> of appearing on exam. Build each one at least 3 times!</p>
+
+            <div class="circuit-grid">
+                <div class="circuit-card critical">
+                    <div class="circuit-header">
+                        <h3>Circuit 01</h3>
+                        <span class="badge badge-critical">CRITICAL</span>
+                    </div>
+                    <h4>Ultrasonic Sensor + LED</h4>
+                    <p class="circuit-desc">Measure distance with HC-SR04, turn LED on when object closer than 30cm</p>
+                    <div class="circuit-topics">
+                        <span class="topic">Distance Measurement</span>
+                        <span class="topic">Digital Output</span>
+                        <span class="topic">Serial Monitor</span>
+                        <span class="topic">Formulas</span>
+                    </div>
+                    <a href="circuit-01-ultrasonic-led.html" class="btn">View Circuit</a>
+                </div>
+
+                <div class="circuit-card critical">
+                    <div class="circuit-header">
+                        <h3>Circuit 02</h3>
+                        <span class="badge badge-critical">CRITICAL</span>
+                    </div>
+                    <h4>LDR + Servo Motor + LED</h4>
+                    <p class="circuit-desc">Servo rotates based on light level, LED indicates darkness, uses state machine</p>
+                    <div class="circuit-topics">
+                        <span class="topic">Servo Control</span>
+                        <span class="topic">Analog Input</span>
+                        <span class="topic">State Machine</span>
+                        <span class="topic">Library Usage</span>
+                    </div>
+                    <a href="circuit-02-ldr-servo-led.html" class="btn">View Circuit</a>
+                </div>
+
+                <div class="circuit-card critical">
+                    <div class="circuit-header">
+                        <h3>Circuit 03</h3>
+                        <span class="badge badge-critical">CRITICAL</span>
+                    </div>
+                    <h4>DC Motor + L293D H-Bridge</h4>
+                    <p class="circuit-desc">Control motor on/off, direction, and speed with switches and potentiometer</p>
+                    <div class="circuit-topics">
+                        <span class="topic">H-Bridge</span>
+                        <span class="topic">PWM Speed Control</span>
+                        <span class="topic">Toggle Logic</span>
+                        <span class="topic">Multiple Inputs</span>
+                    </div>
+                    <a href="circuit-03-motor-l293d.html" class="btn">View Circuit</a>
+                </div>
+
+                <div class="circuit-card critical">
+                    <div class="circuit-header">
+                        <h3>Circuit 04</h3>
+                        <span class="badge badge-critical">CRITICAL</span>
+                    </div>
+                    <h4>Force Sensor (FSR) + LED</h4>
+                    <p class="circuit-desc">LED turns on when pressure applied, Serial Monitor shows force value</p>
+                    <div class="circuit-topics">
+                        <span class="topic">Analog Sensor</span>
+                        <span class="topic">Threshold Logic</span>
+                        <span class="topic">Voltage Divider</span>
+                        <span class="topic">Serial Output</span>
+                    </div>
+                    <a href="circuit-04-force-sensor-led.html" class="btn">View Circuit</a>
+                </div>
+
+                <div class="circuit-card critical">
+                    <div class="circuit-header">
+                        <h3>Circuit 05</h3>
+                        <span class="badge badge-critical">CRITICAL</span>
+                    </div>
+                    <h4>Accelerometer (GY-61) + LED</h4>
+                    <p class="circuit-desc">3-axis acceleration measurement, LED alerts when motion exceeds ±1.5g</p>
+                    <div class="circuit-topics">
+                        <span class="topic">Multi-Axis Input</span>
+                        <span class="topic">G-Force Conversion</span>
+                        <span class="topic">Serial Plotter</span>
+                        <span class="topic">abs() Function</span>
+                    </div>
+                    <a href="circuit-05-accelerometer-led.html" class="btn">View Circuit</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- TIER 2: HIGH PRIORITY -->
+        <section id="tier2" class="tier-section">
+            <h2><span class="badge badge-high">TIER 2: HIGH PRIORITY</span> Very Likely Variations</h2>
+            <p class="tier-description"><strong>70-85% probability</strong> - Common circuit patterns from course material</p>
+
+            <div class="circuit-grid">
+                <div class="circuit-card high">
+                    <div class="circuit-header">
+                        <h3>Circuit 06</h3>
+                        <span class="badge badge-high">HIGH</span>
+                    </div>
+                    <h4>Potentiometer + Servo</h4>
+                    <p class="circuit-desc">Direct control - turn pot to change servo angle 0-180°</p>
+                    <div class="circuit-topics">
+                        <span class="topic">map() Function</span>
+                        <span class="topic">Analog Input</span>
+                        <span class="topic">Servo Library</span>
+                    </div>
+                    <a href="circuit-06-pot-servo.html" class="btn">View Circuit</a>
+                </div>
+
+                <div class="circuit-card high">
+                    <div class="circuit-header">
+                        <h3>Circuit 07</h3>
+                        <span class="badge badge-high">HIGH</span>
+                    </div>
+                    <h4>Potentiometer + LED (PWM)</h4>
+                    <p class="circuit-desc">Turn pot to control LED brightness using PWM</p>
+                    <div class="circuit-topics">
+                        <span class="topic">PWM Control</span>
+                        <span class="topic">analogWrite()</span>
+                        <span class="topic">Value Conversion</span>
+                    </div>
+                    <a href="circuit-07-pot-led-pwm.html" class="btn">View Circuit</a>
+                </div>
+
+                <div class="circuit-card high">
+                    <div class="circuit-header">
+                        <h3>Circuit 08</h3>
+                        <span class="badge badge-high">HIGH</span>
+                    </div>
+                    <h4>Button + LED Toggle</h4>
+                    <p class="circuit-desc">Press button to toggle LED on/off with debouncing</p>
+                    <div class="circuit-topics">
+                        <span class="topic">Digital Input</span>
+                        <span class="topic">Debouncing</span>
+                        <span class="topic">State Toggle</span>
+                    </div>
+                    <a href="circuit-08-button-led-toggle.html" class="btn">View Circuit</a>
+                </div>
+
+                <div class="circuit-card high">
+                    <div class="circuit-header">
+                        <h3>Circuit 09</h3>
+                        <span class="badge badge-high">HIGH</span>
+                    </div>
+                    <h4>Ultrasonic + Buzzer (Parking)</h4>
+                    <p class="circuit-desc">Buzzer beeps faster as object gets closer - parking sensor simulation</p>
+                    <div class="circuit-topics">
+                        <span class="topic">Variable Delay</span>
+                        <span class="topic">tone() Function</span>
+                        <span class="topic">Distance Sensing</span>
+                    </div>
+                    <a href="circuit-09-ultrasonic-buzzer.html" class="btn">View Circuit</a>
+                </div>
+
+                <div class="circuit-card high">
+                    <div class="circuit-header">
+                        <h3>Circuit 10</h3>
+                        <span class="badge badge-high">HIGH</span>
+                    </div>
+                    <h4>Temperature Sensor + Alert</h4>
+                    <p class="circuit-desc">TMP36 temperature sensor with LED/buzzer alert at threshold</p>
+                    <div class="circuit-topics">
+                        <span class="topic">Analog Sensor</span>
+                        <span class="topic">Temperature Conversion</span>
+                        <span class="topic">Threshold Alert</span>
+                    </div>
+                    <a href="circuit-10-temperature-alert.html" class="btn">View Circuit</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- TIER 3: MEDIUM PRIORITY -->
+        <section id="tier3" class="tier-section">
+            <h2><span class="badge badge-medium">TIER 3: MEDIUM PRIORITY</span> Possible Variations</h2>
+            <p class="tier-description"><strong>50-65% probability</strong> - Additional concepts worth knowing</p>
+
+            <div class="circuit-grid">
+                <div class="circuit-card medium">
+                    <div class="circuit-header">
+                        <h3>Circuit 11</h3>
+                        <span class="badge badge-medium">MEDIUM</span>
+                    </div>
+                    <h4>Two Buttons + LED (Logic Gates)</h4>
+                    <p class="circuit-desc">LED responds to button combinations - AND/OR logic</p>
+                    <div class="circuit-topics">
+                        <span class="topic">Boolean Logic</span>
+                        <span class="topic">Multiple Inputs</span>
+                        <span class="topic">Logic Gates</span>
+                    </div>
+                    <a href="circuit-11-buttons-logic.html" class="btn">View Circuit</a>
+                </div>
+
+                <div class="circuit-card medium">
+                    <div class="circuit-header">
+                        <h3>Circuit 12</h3>
+                        <span class="badge badge-medium">MEDIUM</span>
+                    </div>
+                    <h4>Traffic Light Pattern (3 LEDs)</h4>
+                    <p class="circuit-desc">Sequential LED pattern - Red → Yellow → Green with timing</p>
+                    <div class="circuit-topics">
+                        <span class="topic">Arrays</span>
+                        <span class="topic">For Loops</span>
+                        <span class="topic">Sequential Logic</span>
+                    </div>
+                    <a href="circuit-12-traffic-light.html" class="btn">View Circuit</a>
+                </div>
+
+                <div class="circuit-card medium">
+                    <div class="circuit-header">
+                        <h3>Circuit 13</h3>
+                        <span class="badge badge-medium">MEDIUM</span>
+                    </div>
+                    <h4>Servo Sweep</h4>
+                    <p class="circuit-desc">Servo automatically sweeps 0° to 180° back and forth</p>
+                    <div class="circuit-topics">
+                        <span class="topic">For Loops</span>
+                        <span class="topic">Servo Control</span>
+                        <span class="topic">Incremental Movement</span>
+                    </div>
+                    <a href="circuit-13-servo-sweep.html" class="btn">View Circuit</a>
+                </div>
+
+                <div class="circuit-card medium">
+                    <div class="circuit-header">
+                        <h3>Circuit 14</h3>
+                        <span class="badge badge-medium">MEDIUM</span>
+                    </div>
+                    <h4>RGB LED + Potentiometer</h4>
+                    <p class="circuit-desc">Change LED color by turning potentiometer - red/green/blue transitions</p>
+                    <div class="circuit-topics">
+                        <span class="topic">RGB LED</span>
+                        <span class="topic">Multiple PWM</span>
+                        <span class="topic">Color Mixing</span>
+                    </div>
+                    <a href="circuit-14-rgb-pot.html" class="btn">View Circuit</a>
+                </div>
+
+                <div class="circuit-card medium">
+                    <div class="circuit-header">
+                        <h3>Circuit 15</h3>
+                        <span class="badge badge-medium">MEDIUM</span>
+                    </div>
+                    <h4>PIR Motion Sensor + LED</h4>
+                    <p class="circuit-desc">LED turns on when motion detected by PIR sensor</p>
+                    <div class="circuit-topics">
+                        <span class="topic">Digital Sensor</span>
+                        <span class="topic">Motion Detection</span>
+                        <span class="topic">Simple I/O</span>
+                    </div>
+                    <a href="circuit-15-pir-motion.html" class="btn">View Circuit</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Arduino Exam Reference for MEU33EM3 Design II | Created for December 1, 2025 Exam</p>
+        <p><strong>Good luck!</strong> You've got this! Remember: Build → Code → Test → Comment</p>
+    </footer>
+
+    <script>
+        function searchCircuits() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            const circuits = document.querySelectorAll('.circuit-card');
+
+            circuits.forEach(circuit => {
+                const title = circuit.querySelector('h4').textContent.toLowerCase();
+                const desc = circuit.querySelector('.circuit-desc').textContent.toLowerCase();
+                const topics = Array.from(circuit.querySelectorAll('.topic'))
+                    .map(t => t.textContent.toLowerCase())
+                    .join(' ');
+
+                const matches = title.includes(searchTerm) ||
+                               desc.includes(searchTerm) ||
+                               topics.includes(searchTerm);
+
+                circuit.style.display = matches ? 'block' : 'none';
+            });
+        }
+
+        // Allow Enter key to work in search
+        document.getElementById('searchBox').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchCircuits();
+            }
+        });
+    </script>
+</body>
+</html>

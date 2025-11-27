@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Circuit 14: RGB LED + Potentiometer - Arduino Exam Reference</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Circuit 14: RGB LED + Potentiometer</h1>
+        <p class="subtitle">Color Control with Single Pot</p>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="circuit-13-servo-sweep.html" class="btn">← Previous</a>
+        <a href="circuit-15-pir-motion.html" class="btn">Next Circuit →</a>
+    </nav>
+
+    <main>
+        <div class="circuit-hero">
+            <div class="circuit-header">
+                <h2 style="margin: 0; border: none;">RGB LED + Potentiometer</h2>
+                <span class="badge badge-medium">TIER 3 - MEDIUM PRIORITY</span>
+            </div>
+            <p><strong>Function:</strong> Turn potentiometer to change RGB LED color through spectrum. Tests multiple PWM outputs and color mixing.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Components & Connections (Common Cathode RGB LED)</h2>
+            <ul>
+                <li><strong>RGB LED Cathode (longest pin):</strong> GND</li>
+                <li><strong>Red Anode:</strong> 220Ω → Pin 9 (PWM)</li>
+                <li><strong>Green Anode:</strong> 220Ω → Pin 10 (PWM)</li>
+                <li><strong>Blue Anode:</strong> 220Ω → Pin 11 (PWM)</li>
+                <li><strong>Potentiometer:</strong> Left → 5V, Middle → A0, Right → GND</li>
+            </ul>
+
+            <div class="pin-note">
+                <strong>Note:</strong> All LED pins must be PWM (3, 5, 6, 9, 10, 11) for color mixing!
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Complete Arduino Code</h2>
+            <pre><code>// RGB LED Color Control
+
+const int potPin = A0;
+const int redPin = 9;
+const int greenPin = 10;
+const int bluePin = 11;
+
+int potValue = 0;
+
+void setup() {
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+}
+
+void loop() {
+  potValue = analogRead(potPin);  // 0-1023
+
+  // Map pot to color spectrum (0-765)
+  // 0-255: Red to Yellow
+  // 256-511: Yellow to Green
+  // 512-767: Green to Cyan
+  // 768-1023: Cyan to Blue
+
+  int colorValue = map(potValue, 0, 1023, 0, 765);
+
+  int red, green, blue;
+
+  if (colorValue < 256) {
+    // Red to Yellow (increase green)
+    red = 255;
+    green = colorValue;
+    blue = 0;
+  } else if (colorValue < 512) {
+    // Yellow to Green (decrease red)
+    red = 255 - (colorValue - 256);
+    green = 255;
+    blue = 0;
+  } else {
+    // Green to Blue (increase blue, decrease green)
+    red = 0;
+    green = 255 - (colorValue - 512);
+    blue = (colorValue - 512);
+  }
+
+  // Set RGB LED
+  analogWrite(redPin, red);
+  analogWrite(greenPin, green);
+  analogWrite(bluePin, blue);
+
+  delay(10);
+}
+
+// Pot left: Red
+// Pot middle: Yellow/Green
+// Pot right: Blue</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Simple Version (Fixed Colors)</h2>
+            <pre><code>// Simpler: Switch between 5 fixed colors
+
+void loop() {
+  potValue = analogRead(potPin);
+
+  if (potValue < 205) {
+    // RED
+    analogWrite(redPin, 255);
+    analogWrite(greenPin, 0);
+    analogWrite(bluePin, 0);
+  } else if (potValue < 410) {
+    // YELLOW
+    analogWrite(redPin, 255);
+    analogWrite(greenPin, 255);
+    analogWrite(bluePin, 0);
+  } else if (potValue < 615) {
+    // GREEN
+    analogWrite(redPin, 0);
+    analogWrite(greenPin, 255);
+    analogWrite(bluePin, 0);
+  } else if (potValue < 820) {
+    // CYAN
+    analogWrite(redPin, 0);
+    analogWrite(greenPin, 255);
+    analogWrite(bluePin, 255);
+  } else {
+    // BLUE
+    analogWrite(redPin, 0);
+    analogWrite(greenPin, 0);
+    analogWrite(bluePin, 255);
+  }
+
+  delay(10);
+}</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Color Mixing Basics</h2>
+            <table>
+                <thead><tr><th>Color</th><th>Red</th><th>Green</th><th>Blue</th></tr></thead>
+                <tbody>
+                    <tr><td>Red</td><td>255</td><td>0</td><td>0</td></tr>
+                    <tr><td>Green</td><td>0</td><td>255</td><td>0</td></tr>
+                    <tr><td>Blue</td><td>0</td><td>0</td><td>255</td></tr>
+                    <tr><td>Yellow</td><td>255</td><td>255</td><td>0</td></tr>
+                    <tr><td>Cyan</td><td>0</td><td>255</td><td>255</td></tr>
+                    <tr><td>Magenta</td><td>255</td><td>0</td><td>255</td></tr>
+                    <tr><td>White</td><td>255</td><td>255</td><td>255</td></tr>
+                    <tr><td>OFF</td><td>0</td><td>0</td><td>0</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h2>Testing Checklist</h2>
+            <ol>
+                <li>✅ All 3 LED pins are PWM</li>
+                <li>✅ Each LED pin has 220Ω resistor</li>
+                <li>✅ Common cathode to GND (or common anode to 5V)</li>
+                <li>✅ Pot turns → LED color changes</li>
+                <li>✅ Can produce red, green, blue, yellow, cyan</li>
+            </ol>
+        </div>
+
+    </main>
+
+    <footer>
+        <p><a href="circuit-13-servo-sweep.html">← Previous</a> | <a href="index.html">Back to List</a> | <a href="circuit-15-pir-motion.html">Next: Circuit 15 →</a></p>
+    </footer>
+</body>
+</html>

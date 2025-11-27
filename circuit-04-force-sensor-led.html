@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuit 04: Force Sensor + LED - Arduino Exam Reference</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Circuit 04: Force Sensor (FSR) + LED</h1>
+        <p class="subtitle">Pressure-Activated LED with Analog Sensing</p>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="quick-reference.html" class="btn-primary">Quick Reference</a>
+        <a href="circuit-03-motor-l293d.html" class="btn">← Previous</a>
+        <a href="circuit-05-accelerometer-led.html" class="btn">Next Circuit →</a>
+    </nav>
+
+    <main>
+        <div class="circuit-hero">
+            <div class="circuit-header">
+                <h2 style="margin: 0; border: none;">Force Sensitive Resistor (FSR) + LED</h2>
+                <span class="badge badge-critical">CRITICAL - WEEK 10</span>
+            </div>
+            <p style="margin-top: 1em;"><strong>Function:</strong> LED turns ON when pressure is applied to FSR sensor. Serial Monitor displays force value (0-1023). Simple but important analog sensor pattern.</p>
+
+            <div class="circuit-meta">
+                <div class="meta-item"><span class="meta-label">Probability:</span> <span class="meta-value">90%+</span></div>
+                <div class="meta-item"><span class="meta-label">Difficulty:</span> <span class="meta-value">Easy</span></div>
+                <div class="meta-item"><span class="meta-label">Key Concepts:</span> <span class="meta-value">Analog Input, Threshold, Voltage Divider</span></div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Why This Circuit is Critical</h2>
+            <ul>
+                <li><strong>Analog Sensor Pattern:</strong> Same voltage divider principle used in many sensors</li>
+                <li><strong>Simple Threshold Logic:</strong> Foundation for more complex sensor responses</li>
+                <li><strong>Week 10 Content:</strong> One of 5 worked examples</li>
+                <li><strong>Real Applications:</strong> Touch sensors, weight detection, pressure pads</li>
+                <li><strong>Quick to Build:</strong> Perfect if time-limited during exam</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Components Required</h2>
+            <table>
+                <thead><tr><th>Component</th><th>Qty</th><th>Notes</th></tr></thead>
+                <tbody>
+                    <tr><td>Arduino Uno</td><td>1</td><td>Microcontroller</td></tr>
+                    <tr><td>FSR (Force Sensitive Resistor)</td><td>1</td><td>Variable resistor based on pressure</td></tr>
+                    <tr><td>10kΩ Resistor</td><td>1</td><td>Voltage divider with FSR</td></tr>
+                    <tr><td>LED</td><td>1</td><td>Pressure indicator</td></tr>
+                    <tr><td>220Ω Resistor</td><td>1</td><td>LED current limiter</td></tr>
+                    <tr><td>Jumper Wires</td><td>6</td><td>Connections</td></tr>
+                    <tr><td>Breadboard</td><td>1</td><td>Assembly</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h2>Detailed Circuit Connections</h2>
+
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">FSR (Force Sensitive Resistor) - Voltage Divider:</span>
+                    <div class="connection">One terminal → Arduino 5V</div>
+                    <div class="connection">Other terminal → Arduino Analog A0 AND 10kΩ resistor</div>
+                    <div class="connection">10kΩ resistor (other end) → Arduino GND</div>
+                </div>
+
+                <div class="component">
+                    <span class="component-name">LED:</span>
+                    <div class="connection">Anode (+ long leg) → 220Ω Resistor → Arduino Digital Pin 8</div>
+                    <div class="connection">Cathode (- short leg) → Arduino GND</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="box-title">FSR Voltage Divider Principle</div>
+                <p><strong>How FSR works:</strong> Resistance DECREASES when pressure applied</p>
+                <ul>
+                    <li><strong>No pressure:</strong> FSR resistance ≈ infinite (open circuit) → Low voltage at A0 → analogRead ≈ 0-100</li>
+                    <li><strong>Light pressure:</strong> FSR ≈ 100kΩ → Medium voltage → analogRead ≈ 300-500</li>
+                    <li><strong>Strong pressure:</strong> FSR ≈ 1kΩ → High voltage → analogRead ≈ 800-1000</li>
+                </ul>
+                <p><strong>Voltage divider formula:</strong> Vout = 5V × (10kΩ / (FSR + 10kΩ))</p>
+            </div>
+
+            <div class="pin-note">
+                <strong>Pin Notes:</strong>
+                <ul>
+                    <li><strong>Pin A0:</strong> Analog input - reads voltage from divider (0-1023)</li>
+                    <li><strong>Pin 8:</strong> Any digital pin works - simple LED control</li>
+                    <li><strong>FSR polarity:</strong> None! FSR is non-polar like regular resistor</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Complete Arduino Code</h2>
+
+            <div class="code-container">
+                <div class="code-header"><span class="code-lang">Arduino C++</span></div>
+                <pre><code>// ============================================
+// CIRCUIT 04: FORCE SENSOR (FSR) + LED
+// Pressure-Activated LED Indicator
+// ============================================
+
+// ===== PIN DEFINITIONS =====
+const int fsrPin = A0;   // FSR connected to analog pin A0 (voltage divider)
+const int ledPin = 8;    // LED connected to digital pin 8 (via 220Ω resistor)
+
+// ===== GLOBAL VARIABLES =====
+int forceValue = 0;      // Stores FSR reading (0-1023)
+
+// ===== THRESHOLD CONSTANT =====
+const int FORCE_THRESHOLD = 300;  // LED turns ON when force > 300
+                                  // Adjust based on FSR sensitivity
+
+
+// ===== SETUP FUNCTION =====
+void setup() {
+  // Initialize Serial communication
+  Serial.begin(9600);
+
+  // Configure LED pin as output
+  pinMode(ledPin, OUTPUT);
+
+  // Initial LED state: OFF
+  digitalWrite(ledPin, LOW);
+
+  // Startup message
+  Serial.println("===== Force Sensor + LED =====");
+  Serial.println("Apply pressure to FSR");
+  Serial.println("LED ON when force > 300");
+  Serial.println("==============================");
+  Serial.println();
+}
+
+
+// ===== MAIN LOOP =====
+void loop() {
+
+  // ===== STEP 1: Read force value from FSR =====
+  // analogRead() returns value 0-1023 based on voltage at A0
+  // Higher value = more pressure applied
+  forceValue = analogRead(fsrPin);
+
+
+  // ===== STEP 2: Control LED based on force threshold =====
+  if (forceValue > FORCE_THRESHOLD) {
+    // Pressure applied → Turn LED ON
+    digitalWrite(ledPin, HIGH);
+  } else {
+    // No pressure or light pressure → Turn LED OFF
+    digitalWrite(ledPin, LOW);
+  }
+
+
+  // ===== STEP 3: Display force value on Serial Monitor =====
+  Serial.print("Force Value: ");
+  Serial.print(forceValue);
+  Serial.print("  |  LED: ");
+
+  if (forceValue > FORCE_THRESHOLD) {
+    Serial.println("ON (Pressure detected!)");
+  } else {
+    Serial.println("OFF (No pressure)");
+  }
+
+
+  // ===== STEP 4: Delay before next reading =====
+  delay(100);  // 100ms = 10 readings per second
+}
+
+
+// ===== END OF CODE =====
+// Expected behavior:
+// 1. Apply pressure to FSR → Force value increases, LED turns ON
+// 2. Release pressure → Force value decreases, LED turns OFF
+// 3. Serial Monitor shows real-time force readings</code></pre>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>How It Works</h2>
+            <ol>
+                <li><strong>FSR as Variable Resistor:</strong> Resistance changes with applied force (high resistance = no force, low resistance = strong force)</li>
+                <li><strong>Voltage Divider:</strong> FSR + 10kΩ create voltage divider → voltage at A0 varies with FSR resistance</li>
+                <li><strong>analogRead():</strong> Converts voltage (0-5V) to digital value (0-1023)</li>
+                <li><strong>Threshold Comparison:</strong> If force > 300, LED ON; else LED OFF</li>
+                <li><strong>Serial Output:</strong> Display real-time force value for debugging</li>
+            </ol>
+
+            <div class="tip-box">
+                <div class="box-title">Adjusting Sensitivity</div>
+                <p>Change <code>FORCE_THRESHOLD</code> value to adjust sensitivity:</p>
+                <ul>
+                    <li><strong>Lower threshold (e.g., 100):</strong> More sensitive - LED turns on with light touch</li>
+                    <li><strong>Higher threshold (e.g., 500):</strong> Less sensitive - requires firm pressure</li>
+                    <li><strong>Test in Tinkercad:</strong> Watch Serial Monitor to see typical values, then set threshold</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Common Mistakes</h2>
+            <div class="warning-box">
+                <div class="box-title">Errors to Avoid:</div>
+                <ul>
+                    <li>❌ <strong>FSR without 10kΩ resistor:</strong> No voltage divider, won't read properly</li>
+                    <li>❌ <strong>FSR directly to 5V and GND:</strong> No connection to A0 for reading!</li>
+                    <li>❌ <strong>LED without resistor:</strong> Burns out</li>
+                    <li>❌ <strong>LED backwards:</strong> Won't light (check anode/cathode)</li>
+                    <li>❌ <strong>Wrong threshold:</strong> Too high (never triggers) or too low (always on)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Exam Variations</h2>
+            <div class="tip-box">
+                <div class="box-title">Possible Modifications:</div>
+                <ul>
+                    <li>🔄 <strong>Different threshold:</strong> "LED ON when force > 500" instead of 300</li>
+                    <li>🔄 <strong>Buzzer instead of LED:</strong> Same logic, different output component</li>
+                    <li>🔄 <strong>Multiple thresholds:</strong> Green LED (light), Yellow (medium), Red (strong)</li>
+                    <li>🔄 <strong>Reverse logic:</strong> LED ON when NO pressure (alarm when object removed)</li>
+                    <li>🔄 <strong>Range detection:</strong> LED ON only when 200 < force < 600</li>
+                </ul>
+            </div>
+
+            <h3>Quick Code Adaptations:</h3>
+            <div class="formula">
+                <div class="formula-label">Different threshold:</div>
+                <div class="formula-code">const int FORCE_THRESHOLD = 500;  // Change this line</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Reverse logic (LED ON when no pressure):</div>
+                <div class="formula-code">if (forceValue < FORCE_THRESHOLD) { digitalWrite(ledPin, HIGH); }</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Range detection:</div>
+                <div class="formula-code">if (forceValue > 200 && forceValue < 600) { digitalWrite(ledPin, HIGH); }</div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Testing Checklist</h2>
+            <ol>
+                <li>✅ Code compiles without errors</li>
+                <li>✅ Serial Monitor opens at 9600 baud</li>
+                <li>✅ No pressure: Force value low (0-100), LED OFF</li>
+                <li>✅ Light pressure: Force value medium (200-500)</li>
+                <li>✅ Strong pressure: Force value high (600-1000), LED ON</li>
+                <li>✅ LED toggles correctly at threshold</li>
+                <li>✅ Serial output shows real-time values</li>
+                <li>✅ Comments explain voltage divider and threshold logic</li>
+            </ol>
+        </div>
+
+        <div class="content-section">
+            <h2>Quick Reference Summary</h2>
+            <table>
+                <thead><tr><th>Item</th><th>Value</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>FSR Pin</strong></td><td>Analog A0 (with 10kΩ to GND)</td></tr>
+                    <tr><td><strong>LED Pin</strong></td><td>Digital 8 (with 220Ω resistor)</td></tr>
+                    <tr><td><strong>Threshold</strong></td><td>300 (adjust as needed)</td></tr>
+                    <tr><td><strong>Reading Range</strong></td><td>0-1023</td></tr>
+                    <tr><td><strong>Key Function</strong></td><td>analogRead(fsrPin)</td></tr>
+                    <tr><td><strong>Baud Rate</strong></td><td>9600</td></tr>
+                    <tr><td><strong>Loop Delay</strong></td><td>100 ms</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <footer>
+        <p><a href="circuit-03-motor-l293d.html">← Previous: Circuit 03</a> | <a href="index.html">Back to List</a> | <a href="circuit-05-accelerometer-led.html">Next: Circuit 05 →</a></p>
+    </footer>
+</body>
+</html>

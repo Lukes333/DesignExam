@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Circuit 08: Button + LED Toggle - Arduino Exam Reference</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Circuit 08: Button + LED Toggle</h1>
+        <p class="subtitle">Toggle LED On/Off with Button Press</p>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="quick-reference.html" class="btn-primary">Quick Reference</a>
+        <a href="circuit-07-pot-led-pwm.html" class="btn">← Previous</a>
+        <a href="circuit-09-ultrasonic-buzzer.html" class="btn">Next Circuit →</a>
+    </nav>
+
+    <main>
+        <div class="circuit-hero">
+            <div class="circuit-header">
+                <h2 style="margin: 0; border: none;">Push Button + LED Toggle</h2>
+                <span class="badge badge-high">TIER 2 - HIGH PRIORITY</span>
+            </div>
+            <p style="margin-top: 1em;"><strong>Function:</strong> Press button once → LED turns ON. Press again → LED turns OFF. Tests toggle logic and button debouncing.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Components & Connections</h2>
+            <table>
+                <thead><tr><th>Component</th><th>Connection</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Button Terminal 1</strong></td><td>→ 5V</td></tr>
+                    <tr><td><strong>Button Terminal 2</strong></td><td>→ Digital Pin 2 AND 10kΩ resistor to GND</td></tr>
+                    <tr><td><strong>LED Anode (+)</strong></td><td>→ 220Ω → Digital Pin 13</td></tr>
+                    <tr><td><strong>LED Cathode (-)</strong></td><td>→ GND</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h2>Complete Arduino Code</h2>
+            <div class="code-container">
+                <pre><code>// Button + LED Toggle with Debouncing
+
+const int buttonPin = 2;
+const int ledPin = 13;
+
+bool ledState = false;         // Current LED state (false=OFF, true=ON)
+bool lastButtonState = LOW;    // Previous button reading
+
+void setup() {
+  pinMode(buttonPin, INPUT);   // Button pin as input (pull-down resistor used)
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, LOW);   // LED starts OFF
+}
+
+void loop() {
+  bool currentButtonState = digitalRead(buttonPin);
+
+  // Detect button PRESS (LOW → HIGH transition)
+  if (currentButtonState == HIGH && lastButtonState == LOW) {
+    ledState = !ledState;  // Toggle: true↔false
+    digitalWrite(ledPin, ledState ? HIGH : LOW);
+    delay(50);  // Debounce delay (prevents multiple triggers)
+  }
+
+  lastButtonState = currentButtonState;  // Save for next loop
+  delay(10);  // Small delay for stability
+}
+
+// Behavior:
+// Press button → LED toggles state
+// Release button → Nothing happens
+// Press again → LED toggles again</code></pre>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Key Concepts</h2>
+            <div class="formula">
+                <div class="formula-label">Toggle Logic:</div>
+                <div class="formula-code">ledState = !ledState;  // Flips true↔false</div>
+                <div class="formula-example">If true, becomes false. If false, becomes true.</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Edge Detection (Button Press):</div>
+                <div class="formula-code">if (current == HIGH && last == LOW) { /* just pressed! */ }</div>
+                <div class="formula-example">Only triggers when button goes from not-pressed to pressed</div>
+            </div>
+
+            <div class="tip-box">
+                <div class="box-title">Debouncing Explained</div>
+                <p><strong>Problem:</strong> Mechanical buttons "bounce" - make/break contact multiple times</p>
+                <p><strong>Solution:</strong> 50ms delay after detecting press prevents multiple toggles</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Common Mistakes</h2>
+            <ul>
+                <li>❌ No pull-down resistor → Button reads random values</li>
+                <li>❌ No state tracking → LED flickers instead of toggling</li>
+                <li>❌ No debounce delay → Multiple toggles per press</li>
+                <li>❌ Using delay in wrong place → Misses button presses</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Testing Checklist</h2>
+            <ol>
+                <li>✅ Press button once → LED turns ON</li>
+                <li>✅ Press again → LED turns OFF</li>
+                <li>✅ No flickering or multiple toggles</li>
+                <li>✅ 10kΩ pull-down resistor connected</li>
+            </ol>
+        </div>
+
+    </main>
+
+    <footer>
+        <p><a href="circuit-07-pot-led-pwm.html">← Previous</a> | <a href="index.html">Back to List</a> | <a href="circuit-09-ultrasonic-buzzer.html">Next: Circuit 09 →</a></p>
+    </footer>
+</body>
+</html>

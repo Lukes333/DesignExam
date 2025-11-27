@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Circuit 12: Traffic Light Pattern - Arduino Exam Reference</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Circuit 12: Traffic Light Pattern (3 LEDs)</h1>
+        <p class="subtitle">Sequential LED Control with Timing</p>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="circuit-11-buttons-logic.html" class="btn">← Previous</a>
+        <a href="circuit-13-servo-sweep.html" class="btn">Next Circuit →</a>
+    </nav>
+
+    <main>
+        <div class="circuit-hero">
+            <div class="circuit-header">
+                <h2 style="margin: 0; border: none;">Traffic Light Pattern</h2>
+                <span class="badge badge-medium">TIER 3 - MEDIUM PRIORITY</span>
+            </div>
+            <p><strong>Function:</strong> 3 LEDs (Red, Yellow, Green) cycle in traffic light sequence. Tests arrays and sequential control.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Components & Connections</h2>
+            <ul>
+                <li><strong>Red LED:</strong> Pin 11 (via 220Ω) → GND</li>
+                <li><strong>Yellow LED:</strong> Pin 10 (via 220Ω) → GND</li>
+                <li><strong>Green LED:</strong> Pin 9 (via 220Ω) → GND</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Complete Arduino Code</h2>
+            <pre><code>// Traffic Light Pattern
+
+const int redPin = 11;
+const int yellowPin = 10;
+const int greenPin = 9;
+
+void setup() {
+  pinMode(redPin, OUTPUT);
+  pinMode(yellowPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+}
+
+void loop() {
+  // RED light (STOP)
+  digitalWrite(redPin, HIGH);
+  digitalWrite(yellowPin, LOW);
+  digitalWrite(greenPin, LOW);
+  delay(5000);  // 5 seconds
+
+  // YELLOW light (PREPARE)
+  digitalWrite(redPin, LOW);
+  digitalWrite(yellowPin, HIGH);
+  digitalWrite(greenPin, LOW);
+  delay(2000);  // 2 seconds
+
+  // GREEN light (GO)
+  digitalWrite(redPin, LOW);
+  digitalWrite(yellowPin, LOW);
+  digitalWrite(greenPin, HIGH);
+  delay(5000);  // 5 seconds
+
+  // Cycle repeats
+}
+
+// Sequence:
+// RED (5s) → YELLOW (2s) → GREEN (5s) → repeat</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Alternative: Using Arrays</h2>
+            <pre><code>// More efficient using arrays
+
+const int leds[] = {11, 10, 9};  // Red, Yellow, Green
+const int times[] = {5000, 2000, 5000};  // Timing for each
+
+void setup() {
+  for (int i = 0; i < 3; i++) {
+    pinMode(leds[i], OUTPUT);
+  }
+}
+
+void loop() {
+  for (int i = 0; i < 3; i++) {
+    // Turn all LEDs OFF
+    for (int j = 0; j < 3; j++) {
+      digitalWrite(leds[j], LOW);
+    }
+
+    // Turn current LED ON
+    digitalWrite(leds[i], HIGH);
+    delay(times[i]);
+  }
+}</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Exam Variations</h2>
+            <ul>
+                <li>🔄 <strong>Different sequence:</strong> Red → Red+Yellow → Green (UK style)</li>
+                <li>🔄 <strong>Pedestrian crossing:</strong> Add button to trigger green</li>
+                <li>🔄 <strong>Different timings:</strong> Adjust delay values</li>
+                <li>🔄 <strong>Flashing yellow:</strong> Blink yellow LED (use shorter delays)</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Testing Checklist</h2>
+            <ol>
+                <li>✅ Only one LED on at a time</li>
+                <li>✅ Sequence: Red → Yellow → Green → repeat</li>
+                <li>✅ Correct timing (5s, 2s, 5s)</li>
+                <li>✅ All 3 LEDs have resistors</li>
+            </ol>
+        </div>
+
+    </main>
+
+    <footer>
+        <p><a href="circuit-11-buttons-logic.html">← Previous</a> | <a href="index.html">Back to List</a> | <a href="circuit-13-servo-sweep.html">Next: Circuit 13 →</a></p>
+    </footer>
+</body>
+</html>

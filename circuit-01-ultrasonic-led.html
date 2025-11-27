@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuit 01: Ultrasonic Sensor + LED - Arduino Exam Reference</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Circuit 01: Ultrasonic Sensor + LED</h1>
+        <p class="subtitle">HC-SR04 Distance Measurement with LED Alert</p>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="quick-reference.html" class="btn-primary">Quick Reference</a>
+        <a href="circuit-02-ldr-servo-led.html" class="btn">Next Circuit →</a>
+    </nav>
+
+    <main>
+        <!-- Circuit Hero Section -->
+        <div class="circuit-hero">
+            <div class="circuit-header">
+                <h2 style="margin: 0; border: none;">HC-SR04 Ultrasonic Distance Sensor + LED</h2>
+                <span class="badge badge-critical">CRITICAL - WEEK 10</span>
+            </div>
+            <p style="margin-top: 1em;"><strong>Function:</strong> Measure distance to objects using ultrasonic sensor. Turn LED ON when object is closer than 30cm, OFF when farther. Display distance on Serial Monitor.</p>
+
+            <div class="circuit-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Probability:</span>
+                    <span class="meta-value">90%+</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Difficulty:</span>
+                    <span class="meta-value">Medium</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Key Concepts:</span>
+                    <span class="meta-value">Distance Formula, pulseIn(), Threshold Logic</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Why This Circuit? -->
+        <div class="content-section">
+            <h2>Why This Circuit is Critical for Your Exam</h2>
+            <ul>
+                <li><strong>Tests Multiple Concepts:</strong> Combines analog measurement, digital output, Serial communication, and formula application</li>
+                <li><strong>Common Real-World Application:</strong> Used in parking sensors, robotics, object detection</li>
+                <li><strong>Formula-Based:</strong> Requires understanding of distance calculation from time measurement</li>
+                <li><strong>Week 10 Content:</strong> This is one of the 5 fully worked examples from your most recent lectures</li>
+                <li><strong>Moderate Complexity:</strong> Not too simple, not too complex - perfect exam material</li>
+            </ul>
+        </div>
+
+        <!-- Components List -->
+        <div class="content-section">
+            <h2>Components Required</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Quantity</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Arduino Uno</td>
+                        <td>1</td>
+                        <td>Main microcontroller</td>
+                    </tr>
+                    <tr>
+                        <td>HC-SR04 Ultrasonic Sensor</td>
+                        <td>1</td>
+                        <td>4-pin module (VCC, GND, TRIG, ECHO)</td>
+                    </tr>
+                    <tr>
+                        <td>LED (any color)</td>
+                        <td>1</td>
+                        <td>Red is typical for alerts</td>
+                    </tr>
+                    <tr>
+                        <td>220Ω Resistor</td>
+                        <td>1</td>
+                        <td>Current limiting for LED</td>
+                    </tr>
+                    <tr>
+                        <td>Jumper Wires</td>
+                        <td>6</td>
+                        <td>For connections</td>
+                    </tr>
+                    <tr>
+                        <td>Breadboard</td>
+                        <td>1</td>
+                        <td>For assembly</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Detailed Connections -->
+        <div class="content-section">
+            <h2>Detailed Circuit Connections</h2>
+
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">HC-SR04 Ultrasonic Sensor:</span>
+                    <div class="connection">VCC → Arduino 5V (Power supply - requires 5V)</div>
+                    <div class="connection">GND → Arduino GND (Ground reference)</div>
+                    <div class="connection">TRIG → Arduino Digital Pin 9 (Trigger pin - sends ultrasonic pulse)</div>
+                    <div class="connection">ECHO → Arduino Digital Pin 10 (Echo pin - receives reflected pulse)</div>
+                </div>
+
+                <div class="component">
+                    <span class="component-name">LED:</span>
+                    <div class="connection">Anode (+ long leg) → 220Ω Resistor → Arduino Digital Pin 12</div>
+                    <div class="connection">Cathode (- short leg) → Arduino GND</div>
+                </div>
+            </div>
+
+            <div class="pin-note">
+                <strong>Pin Selection Notes:</strong>
+                <ul>
+                    <li><strong>Pins 9 & 10:</strong> Can be any digital pins - these are used for timing measurements, not PWM</li>
+                    <li><strong>Pin 12 (LED):</strong> Can be any digital pin - simple on/off control, no PWM needed</li>
+                    <li><strong>Why 220Ω resistor?</strong> Calculation: R = (5V - 2V) / 0.02A = 150Ω minimum. 220Ω is standard and safe.</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">Common Connection Mistakes:</div>
+                <ul>
+                    <li>❌ Swapping TRIG and ECHO pins - won't work properly</li>
+                    <li>❌ Forgetting LED resistor - LED will burn out</li>
+                    <li>❌ LED backwards - won't light up (check anode/cathode polarity!)</li>
+                    <li>❌ HC-SR04 on 3.3V instead of 5V - unreliable readings</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Complete Arduino Code -->
+        <div class="content-section">
+            <h2>Complete Arduino Code</h2>
+            <p><strong>Copy-paste ready code with extensive comments for exam marks!</strong></p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span class="code-lang">Arduino C++</span>
+                    <span>Click to select all (Ctrl+A)</span>
+                </div>
+                <pre><code>// ============================================
+// CIRCUIT 01: ULTRASONIC SENSOR + LED
+// HC-SR04 Distance Measurement with LED Alert
+// ============================================
+
+// ===== PIN DEFINITIONS =====
+// Define constant integers for pin numbers - makes code readable and maintainable
+const int trigPin = 9;   // TRIG pin of HC-SR04 connected to digital pin 9
+const int echoPin = 10;  // ECHO pin of HC-SR04 connected to digital pin 10
+const int ledPin = 12;   // LED connected to digital pin 12 (via 220Ω resistor)
+
+// ===== GLOBAL VARIABLES =====
+// Variables to store sensor readings and calculations
+long duration;      // Time taken for ultrasonic pulse to return (in microseconds)
+int distance;       // Calculated distance to object (in centimeters)
+
+// ===== THRESHOLD CONSTANT =====
+const int THRESHOLD_DISTANCE = 30;  // LED turns ON when distance < 30cm
+
+
+// ===== SETUP FUNCTION =====
+// Runs ONCE when Arduino starts or resets
+void setup() {
+  // Initialize Serial communication at 9600 baud rate
+  // This allows us to see distance values in Serial Monitor
+  Serial.begin(9600);
+
+  // Configure pin modes
+  pinMode(trigPin, OUTPUT);  // TRIG pin sends OUT ultrasonic pulse
+  pinMode(echoPin, INPUT);   // ECHO pin reads IN the reflected pulse
+  pinMode(ledPin, OUTPUT);   // LED pin for visual output
+
+  // Initial state: LED OFF
+  digitalWrite(ledPin, LOW);
+
+  // Confirmation message for Serial Monitor
+  Serial.println("===== HC-SR04 Ultrasonic Sensor + LED =====");
+  Serial.println("Distance Threshold: 30cm");
+  Serial.println("LED ON when object < 30cm");
+  Serial.println("==========================================");
+  Serial.println();
+}
+
+
+// ===== MAIN LOOP FUNCTION =====
+// Runs CONTINUOUSLY after setup()
+void loop() {
+
+  // ===== STEP 1: Clear the TRIG pin =====
+  // Set TRIG to LOW to ensure a clean pulse before triggering
+  // This prevents interference from previous signals
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);  // Short 2μs delay for stability
+
+
+  // ===== STEP 2: Send 10 microsecond HIGH pulse on TRIG =====
+  // HC-SR04 datasheet requires exactly 10μs HIGH pulse on TRIG pin
+  // This triggers the sensor to emit an ultrasonic burst (8 pulses at 40kHz)
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);  // 10 microseconds (NOT milliseconds!)
+  digitalWrite(trigPin, LOW);
+
+
+  // ===== STEP 3: Measure pulse duration on ECHO pin =====
+  // pulseIn() waits for ECHO pin to go HIGH, then measures how long it stays HIGH
+  // Returns duration in MICROSECONDS
+  // This duration represents round-trip time: Arduino → Object → Arduino
+  duration = pulseIn(echoPin, HIGH);
+
+
+  // ===== STEP 4: Calculate distance using formula =====
+  // Formula derivation:
+  // - Speed of sound = 343 m/s = 0.0343 cm/μs = 0.034 cm/μs (rounded)
+  // - Distance = Speed × Time
+  // - But time is ROUND-TRIP, so divide by 2 for ONE-WAY distance
+  // Final formula: distance (cm) = duration (μs) × 0.034 / 2
+  distance = duration * 0.034 / 2;
+
+  // Alternative formula (often seen in examples):
+  // distance = duration / 29 / 2;
+  // This works because: 1 / 0.034 ≈ 29.4
+
+
+  // ===== STEP 5: Control LED based on distance threshold =====
+  if (distance < THRESHOLD_DISTANCE) {
+    // Object is CLOSER than 30cm → Turn LED ON
+    digitalWrite(ledPin, HIGH);
+  } else {
+    // Object is FARTHER than 30cm → Turn LED OFF
+    digitalWrite(ledPin, LOW);
+  }
+
+
+  // ===== STEP 6: Display distance on Serial Monitor =====
+  // Print distance value for debugging and verification
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.print(" cm");
+
+  // Add LED status indicator
+  if (distance < THRESHOLD_DISTANCE) {
+    Serial.println("  [LED ON - Object Close!]");
+  } else {
+    Serial.println("  [LED OFF - Object Far]");
+  }
+
+
+  // ===== STEP 7: Delay before next measurement =====
+  // Wait 100ms before next reading
+  // Prevents Serial Monitor spam and gives sensor time to reset
+  // Adjust if you need faster/slower readings
+  delay(100);  // 100 milliseconds = 0.1 seconds = 10 readings per second
+}
+
+
+// ===== END OF CODE =====
+// Expected behavior in Tinkercad:
+// 1. Move object (or sensor) closer/farther in simulation
+// 2. Watch LED turn ON when distance < 30cm
+// 3. Check Serial Monitor to see real-time distance readings</code></pre>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="content-section">
+            <h2>How the Circuit Works - Step by Step</h2>
+
+            <div class="tip-box">
+                <div class="box-title">The Ultrasonic Principle</div>
+                <p>The HC-SR04 works like a bat's echolocation:</p>
+                <ol>
+                    <li><strong>Transmit:</strong> TRIG pin triggers 8 ultrasonic sound pulses (40 kHz - humans can't hear it)</li>
+                    <li><strong>Travel:</strong> Sound waves travel through air at ~343 m/s</li>
+                    <li><strong>Bounce:</strong> Waves hit object and reflect back</li>
+                    <li><strong>Receive:</strong> ECHO pin goes HIGH when reflected pulse is detected</li>
+                    <li><strong>Measure:</strong> Arduino measures how long ECHO stayed HIGH = round-trip time</li>
+                    <li><strong>Calculate:</strong> Use time and speed of sound to find distance</li>
+                </ol>
+            </div>
+
+            <h3>Code Flow Explanation:</h3>
+            <ol>
+                <li><strong>Setup Phase:</strong>
+                    <ul>
+                        <li>Serial Monitor initialized at 9600 baud</li>
+                        <li>Pins configured: TRIG as OUTPUT, ECHO as INPUT, LED as OUTPUT</li>
+                        <li>LED starts in OFF state</li>
+                    </ul>
+                </li>
+                <li><strong>Triggering (Steps 1-2):</strong>
+                    <ul>
+                        <li>TRIG pin cleared to LOW for 2μs (clean slate)</li>
+                        <li>TRIG pin set HIGH for exactly 10μs (required by datasheet)</li>
+                        <li>This causes sensor to emit ultrasonic burst</li>
+                    </ul>
+                </li>
+                <li><strong>Measurement (Step 3):</strong>
+                    <ul>
+                        <li><code>pulseIn(echoPin, HIGH)</code> waits for ECHO to go HIGH</li>
+                        <li>Returns duration in microseconds (μs)</li>
+                        <li>Typical range: 150μs (2cm) to 25,000μs (400cm)</li>
+                    </ul>
+                </li>
+                <li><strong>Calculation (Step 4):</strong>
+                    <ul>
+                        <li>Duration × 0.034 = round-trip distance in cm</li>
+                        <li>Divide by 2 = one-way distance to object</li>
+                        <li>Example: 1000μs × 0.034 / 2 = 17cm</li>
+                    </ul>
+                </li>
+                <li><strong>Decision Logic (Step 5):</strong>
+                    <ul>
+                        <li>Compare distance to threshold (30cm)</li>
+                        <li>If less than 30cm: LED ON (HIGH)</li>
+                        <li>If greater than 30cm: LED OFF (LOW)</li>
+                    </ul>
+                </li>
+                <li><strong>Output (Step 6):</strong>
+                    <ul>
+                        <li>Print distance value to Serial Monitor</li>
+                        <li>Add status indicator for clarity</li>
+                    </ul>
+                </li>
+                <li><strong>Repeat (Step 7):</strong>
+                    <ul>
+                        <li>Wait 100ms (prevents sensor overload)</li>
+                        <li>Loop back to Step 1</li>
+                        <li>Achieves 10 readings per second</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <!-- Key Formulas -->
+        <div class="content-section">
+            <h2>Key Formulas & Calculations</h2>
+
+            <div class="formula">
+                <div class="formula-label">Distance Formula:</div>
+                <div class="formula-code">distance (cm) = duration (μs) × 0.034 / 2</div>
+                <div class="formula-example">Example: 1470 μs × 0.034 / 2 = 25 cm</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Alternative Formula (same result):</div>
+                <div class="formula-code">distance (cm) = duration (μs) / 29 / 2</div>
+                <div class="formula-example">Example: 1470 μs / 29 / 2 ≈ 25 cm</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Speed of Sound Conversion:</div>
+                <div class="formula-code">343 m/s = 34,300 cm/s = 0.0343 cm/μs ≈ 0.034 cm/μs</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">LED Resistor Calculation:</div>
+                <div class="formula-code">R = (Vs - Vf) / If = (5V - 2V) / 0.02A = 150Ω</div>
+                <div class="formula-example">220Ω is standard value, safe for most LEDs</div>
+            </div>
+
+            <div class="info-box">
+                <div class="box-title">HC-SR04 Specifications (Good to Know for Exam)</div>
+                <ul>
+                    <li><strong>Operating Voltage:</strong> 5V DC</li>
+                    <li><strong>Measuring Range:</strong> 2cm to 400cm (0.8" to 157")</li>
+                    <li><strong>Accuracy:</strong> ±3mm</li>
+                    <li><strong>Trigger Pulse:</strong> 10μs HIGH</li>
+                    <li><strong>Echo Pulse:</strong> 150μs to 25ms (proportional to distance)</li>
+                    <li><strong>Measuring Angle:</strong> 15° cone</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div class="content-section">
+            <h2>Common Mistakes to Avoid</h2>
+
+            <div class="warning-box">
+                <div class="box-title">Wiring Errors:</div>
+                <ul>
+                    <li>❌ <strong>TRIG and ECHO swapped:</strong> Sensor won't work at all</li>
+                    <li>❌ <strong>LED without resistor:</strong> LED burns out immediately</li>
+                    <li>❌ <strong>LED backwards:</strong> No light, no damage (just flip it)</li>
+                    <li>❌ <strong>Sensor on 3.3V:</strong> Unreliable or no readings</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">Code Errors:</div>
+                <ul>
+                    <li>❌ <strong>delay(10) instead of delayMicroseconds(10):</strong> Won't trigger properly</li>
+                    <li>❌ <strong>Forgetting "/ 2" in distance formula:</strong> Readings will be double actual distance</li>
+                    <li>❌ <strong>Using wrong constant (0.34 instead of 0.034):</strong> Readings 10× too large</li>
+                    <li>❌ <strong>pinMode(echoPin, OUTPUT):</strong> Should be INPUT - won't read pulses</li>
+                    <li>❌ <strong>No delay in loop():</strong> Serial Monitor floods, sensor overwhelmed</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">Logic Errors:</div>
+                <ul>
+                    <li>❌ <strong>if (distance > 30) for LED ON:</strong> Should be < (less than) for "close" alert</li>
+                    <li>❌ <strong>Forgetting Serial.begin(9600):</strong> No Serial Monitor output</li>
+                    <li>❌ <strong>Wrong baud rate mismatch:</strong> Garbled Serial Monitor text</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Exam Variations -->
+        <div class="content-section">
+            <h2>Possible Exam Variations</h2>
+            <p>The exam might modify this circuit in these ways:</p>
+
+            <div class="tip-box">
+                <div class="box-title">Likely Modifications:</div>
+                <ul>
+                    <li>🔄 <strong>Different threshold:</strong> "Turn LED ON when distance < 50cm" instead of 30cm</li>
+                    <li>🔄 <strong>Buzzer instead of LED:</strong> Same logic, different component</li>
+                    <li>🔄 <strong>Multiple LEDs:</strong> Green when far, Yellow when medium, Red when close</li>
+                    <li>🔄 <strong>Different pins:</strong> Use pins 7 and 8 instead of 9 and 10</li>
+                    <li>🔄 <strong>Reverse logic:</strong> LED ON when object is FAR (> 50cm)</li>
+                    <li>🔄 <strong>No Serial output:</strong> Just LED indicator, no Serial.print()</li>
+                    <li>🔄 <strong>Range detection:</strong> LED ON only when 20cm < distance < 50cm</li>
+                </ul>
+            </div>
+
+            <h3>How to Adapt Your Code:</h3>
+            <div class="formula">
+                <div class="formula-label">For different threshold (e.g., 50cm):</div>
+                <div class="formula-code">const int THRESHOLD_DISTANCE = 50;  // Change this line</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">For reverse logic (LED ON when far):</div>
+                <div class="formula-code">if (distance > THRESHOLD_DISTANCE) { digitalWrite(ledPin, HIGH); }</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">For range detection (20-50cm):</div>
+                <div class="formula-code">if (distance > 20 && distance < 50) { digitalWrite(ledPin, HIGH); }</div>
+            </div>
+        </div>
+
+        <!-- Testing Checklist -->
+        <div class="content-section">
+            <h2>Testing Checklist for Exam</h2>
+            <p><strong>Before submitting your circuit, verify:</strong></p>
+
+            <ol>
+                <li>✅ <strong>Connections:</strong> Double-check all 6 wires match the diagram</li>
+                <li>✅ <strong>Polarity:</strong> LED anode to pin, cathode to ground</li>
+                <li>✅ <strong>Resistor:</strong> 220Ω in series with LED</li>
+                <li>✅ <strong>Code compiles:</strong> No red error messages</li>
+                <li>✅ <strong>Serial Monitor works:</strong> Open it, set to 9600 baud, see distance values</li>
+                <li>✅ <strong>LED responds:</strong> Move object close, LED turns ON</li>
+                <li>✅ <strong>Threshold correct:</strong> LED changes state exactly at specified distance</li>
+                <li>✅ <strong>Comments added:</strong> Explain WHAT, HOW, WHY for marks!</li>
+            </ol>
+
+            <div class="tip-box">
+                <div class="box-title">Exam Time Management:</div>
+                <p><strong>Spend maximum 30 minutes on this circuit:</strong></p>
+                <ul>
+                    <li>5 min: Read requirements, plan approach</li>
+                    <li>10 min: Build circuit, wire connections</li>
+                    <li>10 min: Write and test code</li>
+                    <li>5 min: Add detailed comments, final testing</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Quick Reference Summary -->
+        <div class="content-section">
+            <h2>Quick Reference Summary</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Value/Detail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Sensor</strong></td>
+                        <td>HC-SR04 Ultrasonic</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Power</strong></td>
+                        <td>5V (NOT 3.3V)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TRIG Pin</strong></td>
+                        <td>Digital Pin 9 (OUTPUT)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ECHO Pin</strong></td>
+                        <td>Digital Pin 10 (INPUT)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LED Pin</strong></td>
+                        <td>Digital Pin 12 (OUTPUT, with 220Ω resistor)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Distance Formula</strong></td>
+                        <td>distance = duration × 0.034 / 2</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Threshold</strong></td>
+                        <td>30 cm (LED ON when closer)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Key Function</strong></td>
+                        <td>pulseIn(echoPin, HIGH)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Baud Rate</strong></td>
+                        <td>9600</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Loop Delay</strong></td>
+                        <td>100 ms</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <footer>
+        <p><a href="index.html">← Back to Circuit List</a> | <a href="circuit-02-ldr-servo-led.html">Next: Circuit 02 - LDR + Servo + LED →</a></p>
+        <p>Arduino Exam Reference for MEU33EM3 Design II</p>
+    </footer>
+</body>
+</html>

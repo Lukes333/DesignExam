@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Circuit 10: Temperature Sensor + Alert - Arduino Exam Reference</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Circuit 10: Temperature Sensor + LED/Buzzer Alert</h1>
+        <p class="subtitle">TMP36 Temperature Monitoring with Threshold</p>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="circuit-09-ultrasonic-buzzer.html" class="btn">← Previous</a>
+        <a href="circuit-11-buttons-logic.html" class="btn">Next Circuit →</a>
+    </nav>
+
+    <main>
+        <div class="circuit-hero">
+            <div class="circuit-header">
+                <h2 style="margin: 0; border: none;">TMP36 Temperature Sensor + Alert</h2>
+                <span class="badge badge-high">TIER 2 - HIGH PRIORITY</span>
+            </div>
+            <p><strong>Function:</strong> Monitor temperature with TMP36 sensor. LED/Buzzer activates when temperature exceeds threshold (e.g., 25°C).</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Components & Connections</h2>
+            <table>
+                <thead><tr><th>Component</th><th>Connection</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>TMP36 Left Pin (Vs)</strong></td><td>→ 5V</td></tr>
+                    <tr><td><strong>TMP36 Middle Pin (Vout)</strong></td><td>→ Analog A0</td></tr>
+                    <tr><td><strong>TMP36 Right Pin (GND)</strong></td><td>→ GND</td></tr>
+                    <tr><td><strong>LED Anode (+)</strong></td><td>→ 220Ω → Pin 13</td></tr>
+                    <tr><td><strong>LED Cathode (-)</strong></td><td>→ GND</td></tr>
+                </tbody>
+            </table>
+
+            <div class="pin-note">
+                <strong>TMP36 Pin Order (flat side facing you):</strong> Left=5V, Middle=Signal, Right=GND
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Complete Arduino Code</h2>
+            <pre><code>// Temperature Sensor + LED Alert
+
+const int tmpPin = A0;
+const int ledPin = 13;
+
+int sensorValue = 0;
+float voltage = 0.0;
+float temperatureC = 0.0;
+
+const float TEMP_THRESHOLD = 25.0;  // Alert at 25°C
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);
+
+  Serial.println("=== TMP36 Temperature Monitor ===");
+  Serial.println("Alert at 25°C");
+}
+
+void loop() {
+  // Read sensor (0-1023)
+  sensorValue = analogRead(tmpPin);
+
+  // Convert to voltage (0-5V)
+  voltage = (sensorValue * 5.0) / 1024.0;
+
+  // Convert voltage to temperature
+  // TMP36 formula: T(°C) = (Vout - 0.5) × 100
+  // 0.5V = 0°C, +10mV per degree
+  temperatureC = (voltage - 0.5) * 100.0;
+
+  // Check threshold and control LED
+  if (temperatureC > TEMP_THRESHOLD) {
+    digitalWrite(ledPin, HIGH);  // Alert ON
+  } else {
+    digitalWrite(ledPin, LOW);   // Alert OFF
+  }
+
+  // Display temperature
+  Serial.print("Voltage: ");
+  Serial.print(voltage, 3);
+  Serial.print("V | Temperature: ");
+  Serial.print(temperatureC, 1);
+  Serial.print("°C | Alert: ");
+  Serial.println(temperatureC > TEMP_THRESHOLD ? "ON" : "OFF");
+
+  delay(500);  // Update every 0.5 seconds
+}
+
+// Expected behavior:
+// Room temp (20-23°C): LED OFF
+// Warm temp (>25°C): LED ON
+// Touch sensor with warm finger: LED ON</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Key Formula</h2>
+            <div class="formula">
+                <div class="formula-label">TMP36 Temperature Conversion:</div>
+                <div class="formula-code">temperatureC = (voltage - 0.5) × 100</div>
+                <div class="formula-example">Example: 0.75V → (0.75 - 0.5) × 100 = 25°C</div>
+            </div>
+
+            <div class="info-box">
+                <div class="box-title">TMP36 Specifications</div>
+                <ul>
+                    <li><strong>Range:</strong> -40°C to +125°C</li>
+                    <li><strong>Accuracy:</strong> ±2°C</li>
+                    <li><strong>Output:</strong> 0.5V at 0°C, +10mV per °C</li>
+                    <li><strong>Example:</strong> 1.0V = 50°C, 0.25V = -25°C</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Common Mistakes</h2>
+            <ul>
+                <li>❌ TMP36 backwards → Reads negative or extremely hot</li>
+                <li>❌ Wrong formula → Inaccurate temperature</li>
+                <li>❌ Integer division → Use <code>5.0</code> not <code>5</code></li>
+                <li>❌ No delay → Serial Monitor floods</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Exam Variations</h2>
+            <ul>
+                <li>🔄 <strong>Different threshold:</strong> Change to 30°C, 20°C, etc.</li>
+                <li>🔄 <strong>Buzzer instead of LED:</strong> tone() when hot</li>
+                <li>🔄 <strong>Range alert:</strong> LED ON when 20°C < temp < 30°C</li>
+                <li>🔄 <strong>Cold alert:</strong> LED ON when temp < 15°C</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Testing Checklist</h2>
+            <ol>
+                <li>✅ TMP36 connected correctly (check pin order!)</li>
+                <li>✅ Serial Monitor shows reasonable room temperature (20-25°C)</li>
+                <li>✅ Touch sensor with warm finger → temp increases, LED ON</li>
+                <li>✅ Remove finger → temp drops, LED OFF</li>
+            </ol>
+        </div>
+
+    </main>
+
+    <footer>
+        <p><a href="circuit-09-ultrasonic-buzzer.html">← Previous</a> | <a href="index.html">Back to List</a> | <a href="circuit-11-buttons-logic.html">Next: Circuit 11 →</a></p>
+    </footer>
+</body>
+</html>

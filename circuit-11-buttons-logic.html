@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Circuit 11: Two Buttons + LED Logic - Arduino Exam Reference</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Circuit 11: Two Buttons + LED (Logic Gates)</h1>
+        <p class="subtitle">Boolean Logic - AND / OR Operations</p>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="circuit-10-temperature-alert.html" class="btn">← Previous</a>
+        <a href="circuit-12-traffic-light.html" class="btn">Next Circuit →</a>
+    </nav>
+
+    <main>
+        <div class="circuit-hero">
+            <div class="circuit-header">
+                <h2 style="margin: 0; border: none;">Two Buttons + LED Logic</h2>
+                <span class="badge badge-medium">TIER 3 - MEDIUM PRIORITY</span>
+            </div>
+            <p><strong>Function:</strong> LED responds to button combinations using AND/OR logic. Tests boolean operators and multiple inputs.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Connections</h2>
+            <ul>
+                <li><strong>Button 1:</strong> One terminal → 5V, Other → Pin 2 + 10kΩ to GND</li>
+                <li><strong>Button 2:</strong> One terminal → 5V, Other → Pin 3 + 10kΩ to GND</li>
+                <li><strong>LED:</strong> Anode → 220Ω → Pin 13, Cathode → GND</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Complete Arduino Code - AND Logic</h2>
+            <pre><code>// Two Buttons AND Logic
+// LED ON only when BOTH buttons pressed
+
+const int button1Pin = 2;
+const int button2Pin = 3;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(button1Pin, INPUT);
+  pinMode(button2Pin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  bool button1 = digitalRead(button1Pin);
+  bool button2 = digitalRead(button2Pin);
+
+  // AND logic: Both must be HIGH
+  if (button1 == HIGH && button2 == HIGH) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+
+  delay(10);
+}</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Alternative: OR Logic</h2>
+            <pre><code>// OR Logic: LED ON when EITHER button pressed
+if (button1 == HIGH || button2 == HIGH) {
+  digitalWrite(ledPin, HIGH);
+} else {
+  digitalWrite(ledPin, LOW);
+}</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Alternative: XOR Logic</h2>
+            <pre><code>// XOR Logic: LED ON when ONLY ONE button pressed (not both, not neither)
+if ((button1 == HIGH && button2 == LOW) || (button1 == LOW && button2 == HIGH)) {
+  digitalWrite(ledPin, HIGH);
+} else {
+  digitalWrite(ledPin, LOW);
+}</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Boolean Operators Summary</h2>
+            <table>
+                <thead><tr><th>Operator</th><th>Symbol</th><th>Behavior</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>AND</strong></td><td>&&</td><td>Both must be TRUE</td></tr>
+                    <tr><td><strong>OR</strong></td><td>||</td><td>At least one TRUE</td></tr>
+                    <tr><td><strong>NOT</strong></td><td>!</td><td>Inverts (TRUE↔FALSE)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h2>Truth Tables</h2>
+            <h3>AND (&&):</h3>
+            <table>
+                <thead><tr><th>Button 1</th><th>Button 2</th><th>LED</th></tr></thead>
+                <tbody>
+                    <tr><td>LOW</td><td>LOW</td><td>OFF</td></tr>
+                    <tr><td>LOW</td><td>HIGH</td><td>OFF</td></tr>
+                    <tr><td>HIGH</td><td>LOW</td><td>OFF</td></tr>
+                    <tr><td>HIGH</td><td>HIGH</td><td>ON</td></tr>
+                </tbody>
+            </table>
+
+            <h3>OR (||):</h3>
+            <table>
+                <thead><tr><th>Button 1</th><th>Button 2</th><th>LED</th></tr></thead>
+                <tbody>
+                    <tr><td>LOW</td><td>LOW</td><td>OFF</td></tr>
+                    <tr><td>LOW</td><td>HIGH</td><td>ON</td></tr>
+                    <tr><td>HIGH</td><td>LOW</td><td>ON</td></tr>
+                    <tr><td>HIGH</td><td>HIGH</td><td>ON</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h2>Testing Checklist</h2>
+            <ol>
+                <li>✅ AND: LED only ON when both buttons pressed</li>
+                <li>✅ OR: LED ON when either button pressed</li>
+                <li>✅ Pull-down resistors on both buttons</li>
+                <li>✅ Test all 4 combinations (both, neither, each alone)</li>
+            </ol>
+        </div>
+
+    </main>
+
+    <footer>
+        <p><a href="circuit-10-temperature-alert.html">← Previous</a> | <a href="index.html">Back to List</a> | <a href="circuit-12-traffic-light.html">Next: Circuit 12 →</a></p>
+    </footer>
+</body>
+</html>

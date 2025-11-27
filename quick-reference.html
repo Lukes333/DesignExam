@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Reference - Arduino Exam Cheat Sheet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Arduino Quick Reference</h1>
+        <p class="subtitle">Essential Formulas, Pins, Functions & Tips for MEU33EM3 Exam</p>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="#pins" class="btn">Pin Reference</a>
+        <a href="#formulas" class="btn">Formulas</a>
+        <a href="#functions" class="btn">Functions</a>
+        <a href="#libraries" class="btn">Libraries</a>
+    </nav>
+
+    <main>
+        <!-- PIN REFERENCE -->
+        <section id="pins" class="content-section">
+            <h2>Arduino Uno Pin Reference</h2>
+
+            <div class="quick-ref-grid">
+                <div class="ref-card">
+                    <h3>Digital Pins (0-13)</h3>
+                    <table>
+                        <thead><tr><th>Pin</th><th>Function</th><th>Notes</th></tr></thead>
+                        <tbody>
+                            <tr><td>0</td><td>Digital I/O</td><td>RX - avoid during Serial use</td></tr>
+                            <tr><td>1</td><td>Digital I/O</td><td>TX - avoid during Serial use</td></tr>
+                            <tr><td>2-13</td><td>Digital I/O</td><td>digitalWrite(), digitalRead()</td></tr>
+                            <tr><td><strong>3, 5, 6, 9, 10, 11</strong></td><td><strong>PWM (~ symbol)</strong></td><td><strong>analogWrite(0-255)</strong></td></tr>
+                            <tr><td>13</td><td>Digital I/O + LED</td><td>Built-in LED on board</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="ref-card">
+                    <h3>Analog Pins (A0-A5)</h3>
+                    <table>
+                        <thead><tr><th>Pin</th><th>Function</th><th>Range</th></tr></thead>
+                        <tbody>
+                            <tr><td>A0</td><td>Analog Input</td><td>0-1023</td></tr>
+                            <tr><td>A1</td><td>Analog Input</td><td>0-1023</td></tr>
+                            <tr><td>A2</td><td>Analog Input</td><td>0-1023</td></tr>
+                            <tr><td>A3</td><td>Analog Input</td><td>0-1023</td></tr>
+                            <tr><td>A4</td><td>Analog / I2C SDA</td><td>0-1023 / I2C Data</td></tr>
+                            <tr><td>A5</td><td>Analog / I2C SCL</td><td>0-1023 / I2C Clock</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="pin-note">
+                        <strong>Key:</strong> analogRead() returns 0-1023 (10-bit ADC)<br>
+                        0 = 0V, 512 = 2.5V, 1023 = 5V
+                    </div>
+                </div>
+
+                <div class="ref-card">
+                    <h3>Power Pins</h3>
+                    <table>
+                        <thead><tr><th>Pin</th><th>Voltage</th><th>Use</th></tr></thead>
+                        <tbody>
+                            <tr><td>5V</td><td>5V</td><td>Power components (sensors, LEDs)</td></tr>
+                            <tr><td>3.3V</td><td>3.3V</td><td>Low-voltage components</td></tr>
+                            <tr><td>GND</td><td>0V</td><td>Ground (multiple GND pins available)</td></tr>
+                            <tr><td>Vin</td><td>7-12V</td><td>External power input</td></tr>
+                            <tr><td>IOREF</td><td>Reference</td><td>I/O voltage reference</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="ref-card">
+                    <h3>PWM Quick Guide</h3>
+                    <div class="formula">
+                        <div class="formula-label">PWM Pins (marked with ~):</div>
+                        <div class="formula-code">3, 5, 6, 9, 10, 11</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-label">Function:</div>
+                        <div class="formula-code">analogWrite(pin, value);  // 0-255</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-label">Duty Cycle:</div>
+                        <div class="formula-code">0 = 0% (OFF), 128 = 50%, 255 = 100% (ON)</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-label">Common Uses:</div>
+                        <div class="formula-code">LED brightness, Motor speed, Servo control</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ESSENTIAL FORMULAS -->
+        <section id="formulas" class="content-section">
+            <h2>Essential Formulas</h2>
+
+            <div class="quick-ref-grid">
+                <div class="ref-card">
+                    <h3>Ultrasonic Distance (HC-SR04)</h3>
+                    <div class="formula">
+                        <div class="formula-label">Distance in cm:</div>
+                        <div class="formula-code">distance = duration × 0.034 / 2</div>
+                        <div class="formula-example">duration in microseconds (from pulseIn)</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-label">Alternative formula:</div>
+                        <div class="formula-code">distance = duration / 29 / 2</div>
+                        <div class="formula-example">Same result (1/0.034 ≈ 29)</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-label">Speed of sound:</div>
+                        <div class="formula-code">343 m/s = 0.0343 cm/μs ≈ 0.034 cm/μs</div>
+                    </div>
+                </div>
+
+                <div class="ref-card">
+                    <h3>LED Resistor Calculation</h3>
+                    <div class="formula">
+                        <div class="formula-label">Resistor value:</div>
+                        <div class="formula-code">R = (Vs - Vf) / If</div>
+                        <div class="formula-example">Vs=Supply, Vf=LED forward voltage, If=LED current</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-label">Standard calculation:</div>
+                        <div class="formula-code">R = (5V - 2V) / 0.02A = 150Ω</div>
+                        <div class="formula-example">Use 220Ω as standard safe value</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-label">LED specs (typical):</div>
+                        <div class="formula-code">Vf ≈ 2V (red), 3V (blue/white), If = 20mA</div>
+                    </div>
+                </div>
+
+                <div class="ref-card">
+                    <h3>Temperature Conversion (TMP36)</h3>
+                    <div class="formula">
+                        <div class="formula-label">Voltage from analogRead:</div>
+                        <div class="formula-code">voltage = (analogRead × 5.0) / 1024.0</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-label">Temperature in Celsius:</div>
+                        <div class="formula-code">tempC = (voltage - 0.5) × 100</div>
+                        <div class="formula-example">0.5V = 0°C, +10mV per degree</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-label">Example:</div>
+                        <div class="formula-code">0.75V → (0.75 - 0.5) × 100 = 25°C</div>
+                    </div>
+                </div>
+
+                <div class="ref-card">
+                    <h3>Accelerometer (GY-61 / ADXL335)</h3>
+                    <div class="formula">
+                        <div class="formula-label">G-force conversion:</div>
+                        <div class="formula-code">g = (analogRead - 338) / 61</div>
+                        <div class="formula-example">338 = 0g, 61 = units per g</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-label">Zero point calculation:</div>
+                        <div class="formula-code">338 = (1.65V / 5V) × 1023</div>
+                        <div class="formula-example">1.65V at 0g</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-label">Sensitivity:</div>
+                        <div class="formula-code">61 = (0.3V / 5V) × 1023</div>
+                        <div class="formula-example">±300mV per g</div>
+                    </div>
+                </div>
+
+                <div class="ref-card">
+                    <h3>Value Conversions</h3>
+                    <div class="formula">
+                        <div class="formula-label">Analog to PWM (divide by 4):</div>
+                        <div class="formula-code">pwm = analogRead / 4  // 1023 → 255</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-label">Analog to voltage:</div>
+                        <div class="formula-code">voltage = (analogRead × 5.0) / 1024.0</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-label">Voltage to analogRead:</div>
+                        <div class="formula-code">value = (voltage / 5.0) × 1023</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-label">Percentage calculation:</div>
+                        <div class="formula-code">percent = (value × 100) / 255</div>
+                    </div>
+                </div>
+
+                <div class="ref-card">
+                    <h3>Voltage Divider</h3>
+                    <div class="formula">
+                        <div class="formula-label">Output voltage:</div>
+                        <div class="formula-code">Vout = Vin × (R2 / (R1 + R2))</div>
+                        <div class="formula-example">R1=top resistor, R2=bottom resistor</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-label">Used for:</div>
+                        <div class="formula-code">LDR, FSR, Potentiometer circuits</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ESSENTIAL FUNCTIONS -->
+        <section id="functions" class="content-section">
+            <h2>Essential Arduino Functions</h2>
+
+            <div class="quick-ref-grid">
+                <div class="ref-card">
+                    <h3>Digital I/O</h3>
+                    <div class="formula">
+                        <div class="formula-code">pinMode(pin, INPUT);  // Set as input</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">pinMode(pin, OUTPUT);  // Set as output</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">digitalWrite(pin, HIGH);  // Set HIGH (5V)</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">digitalWrite(pin, LOW);  // Set LOW (0V)</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">int val = digitalRead(pin);  // Returns HIGH or LOW</div>
+                    </div>
+                </div>
+
+                <div class="ref-card">
+                    <h3>Analog I/O</h3>
+                    <div class="formula">
+                        <div class="formula-code">int val = analogRead(A0);  // Returns 0-1023</div>
+                        <div class="formula-example">No pinMode needed for analog inputs</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">analogWrite(pin, 128);  // PWM: 0-255</div>
+                        <div class="formula-example">Pin MUST be PWM (3,5,6,9,10,11)</div>
+                    </div>
+                </div>
+
+                <div class="ref-card">
+                    <h3>Timing Functions</h3>
+                    <div class="formula">
+                        <div class="formula-code">delay(1000);  // Wait 1000 ms (1 second)</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">delayMicroseconds(10);  // Wait 10 μs</div>
+                        <div class="formula-example">Used for ultrasonic trigger pulse</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">unsigned long t = millis();  // Time since start (ms)</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">unsigned long t = micros();  // Time since start (μs)</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">long dur = pulseIn(pin, HIGH);  // Pulse duration (μs)</div>
+                        <div class="formula-example">Returns how long pin stayed HIGH</div>
+                    </div>
+                </div>
+
+                <div class="ref-card">
+                    <h3>Serial Communication</h3>
+                    <div class="formula">
+                        <div class="formula-code">Serial.begin(9600);  // Initialize at 9600 baud</div>
+                        <div class="formula-example">Must match Serial Monitor setting</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">Serial.print(value);  // Print without newline</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">Serial.println(value);  // Print with newline</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">Serial.print(val, 2);  // Print with 2 decimals</div>
+                    </div>
+                </div>
+
+                <div class="ref-card">
+                    <h3>Math & Utility</h3>
+                    <div class="formula">
+                        <div class="formula-code">int out = map(val, 0, 1023, 0, 180);</div>
+                        <div class="formula-example">Maps value from one range to another</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">int val = constrain(x, 0, 180);</div>
+                        <div class="formula-example">Limits x between 0 and 180</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">int val = abs(-5);  // Returns 5</div>
+                        <div class="formula-example">Absolute value (always positive)</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">int bigger = max(5, 10);  // Returns 10</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">int smaller = min(5, 10);  // Returns 5</div>
+                    </div>
+                </div>
+
+                <div class="ref-card">
+                    <h3>Tone (Buzzer)</h3>
+                    <div class="formula">
+                        <div class="formula-code">tone(pin, frequency);  // Continuous tone</div>
+                        <div class="formula-example">frequency in Hz (e.g., 2000)</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">tone(pin, freq, duration);  // Timed tone</div>
+                        <div class="formula-example">duration in milliseconds</div>
+                    </div>
+                    <div class="formula">
+                        <div class="formula-code">noTone(pin);  // Stop tone</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVO LIBRARY -->
+        <section id="libraries" class="content-section">
+            <h2>Servo Library Reference</h2>
+
+            <div class="ref-card">
+                <h3>Servo Library Functions</h3>
+                <div class="formula">
+                    <div class="formula-label">1. Include library (top of code):</div>
+                    <div class="formula-code">#include &lt;Servo.h&gt;</div>
+                </div>
+                <div class="formula">
+                    <div class="formula-label">2. Create servo object (before setup):</div>
+                    <div class="formula-code">Servo myServo;  // Can name anything</div>
+                </div>
+                <div class="formula">
+                    <div class="formula-label">3. Attach to pin (in setup):</div>
+                    <div class="formula-code">myServo.attach(9);  // Pin must be PWM</div>
+                </div>
+                <div class="formula">
+                    <div class="formula-label">4. Set position (in loop):</div>
+                    <div class="formula-code">myServo.write(90);  // 0-180 degrees</div>
+                </div>
+                <div class="formula">
+                    <div class="formula-label">5. Read position:</div>
+                    <div class="formula-code">int pos = myServo.read();  // Returns angle</div>
+                </div>
+                <div class="formula">
+                    <div class="formula-label">6. Detach servo (optional):</div>
+                    <div class="formula-code">myServo.detach();  // Stops PWM signal</div>
+                </div>
+
+                <div class="warning-box" style="margin-top: 1em;">
+                    <div class="box-title">Common Servo Mistakes:</div>
+                    <ul>
+                        <li>❌ Forgetting #include &lt;Servo.h&gt; at top</li>
+                        <li>❌ Not calling .attach() in setup()</li>
+                        <li>❌ Calling .attach() in loop() (should be setup only)</li>
+                        <li>❌ Using analogWrite() instead of .write()</li>
+                        <li>❌ Servo on non-PWM pin</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- COMPONENT SPECIFICATIONS -->
+        <section class="content-section">
+            <h2>Component Specifications</h2>
+
+            <div class="quick-ref-grid">
+                <div class="ref-card">
+                    <h3>HC-SR04 Ultrasonic</h3>
+                    <ul>
+                        <li><strong>Voltage:</strong> 5V DC</li>
+                        <li><strong>Range:</strong> 2-400 cm</li>
+                        <li><strong>Accuracy:</strong> ±3mm</li>
+                        <li><strong>Trigger:</strong> 10μs HIGH pulse</li>
+                        <li><strong>Echo:</strong> Duration proportional to distance</li>
+                        <li><strong>Angle:</strong> 15° detection cone</li>
+                    </ul>
+                </div>
+
+                <div class="ref-card">
+                    <h3>Servo Motor</h3>
+                    <ul>
+                        <li><strong>Voltage:</strong> 4.8-6V (usually 5V)</li>
+                        <li><strong>Range:</strong> 0-180 degrees</li>
+                        <li><strong>Signal:</strong> PWM 50Hz, 1-2ms pulse</li>
+                        <li><strong>Wires:</strong> Red=5V, Brown=GND, Orange=Signal</li>
+                        <li><strong>Library:</strong> Required (#include &lt;Servo.h&gt;)</li>
+                    </ul>
+                </div>
+
+                <div class="ref-card">
+                    <h3>TMP36 Temperature</h3>
+                    <ul>
+                        <li><strong>Voltage:</strong> 2.7-5.5V</li>
+                        <li><strong>Range:</strong> -40°C to +125°C</li>
+                        <li><strong>Accuracy:</strong> ±2°C</li>
+                        <li><strong>Output:</strong> 0.5V at 0°C</li>
+                        <li><strong>Scale:</strong> +10mV per °C</li>
+                        <li><strong>Pins:</strong> Left=5V, Middle=Signal, Right=GND</li>
+                    </ul>
+                </div>
+
+                <div class="ref-card">
+                    <h3>L293D Motor Driver</h3>
+                    <ul>
+                        <li><strong>Pin 1 (Enable):</strong> PWM for speed</li>
+                        <li><strong>Pin 2,7 (Inputs):</strong> Direction control</li>
+                        <li><strong>Pin 3,6 (Outputs):</strong> To motor</li>
+                        <li><strong>Pin 4,5 (GND):</strong> Ground (both!)</li>
+                        <li><strong>Pin 8 (VCC2):</strong> Motor power (9V)</li>
+                        <li><strong>Pin 16 (VCC1):</strong> Logic power (5V)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUICK TROUBLESHOOTING -->
+        <section class="content-section">
+            <h2>Quick Troubleshooting Guide</h2>
+
+            <div class="quick-ref-grid">
+                <div class="ref-card">
+                    <h3>Code Won't Compile</h3>
+                    <ul>
+                        <li>✓ Missing semicolon ; at end of line</li>
+                        <li>✓ Mismatched { } braces</li>
+                        <li>✓ Forgot #include for library</li>
+                        <li>✓ Variable not declared (const int missing)</li>
+                        <li>✓ Wrong capitalization (pinMode not pinmode)</li>
+                    </ul>
+                </div>
+
+                <div class="ref-card">
+                    <h3>LED Not Working</h3>
+                    <ul>
+                        <li>✓ LED backwards (check anode/cathode)</li>
+                        <li>✓ No resistor (LED burned out)</li>
+                        <li>✓ Wrong pin number in code</li>
+                        <li>✓ pinMode not set to OUTPUT</li>
+                        <li>✓ digitalWrite LOW when should be HIGH</li>
+                    </ul>
+                </div>
+
+                <div class="ref-card">
+                    <h3>Sensor Reading Wrong</h3>
+                    <ul>
+                        <li>✓ Wrong pin in analogRead()</li>
+                        <li>✓ No voltage divider (LDR, FSR)</li>
+                        <li>✓ Wrong formula or conversion</li>
+                        <li>✓ Integer division (use 5.0 not 5)</li>
+                        <li>✓ Sensor backwards (check pinout)</li>
+                    </ul>
+                </div>
+
+                <div class="ref-card">
+                    <h3>Servo Not Moving</h3>
+                    <ul>
+                        <li>✓ Forgot #include &lt;Servo.h&gt;</li>
+                        <li>✓ Didn't call .attach() in setup()</li>
+                        <li>✓ Using analogWrite() instead of .write()</li>
+                        <li>✓ Servo on non-PWM pin</li>
+                        <li>✓ Servo wires swapped</li>
+                    </ul>
+                </div>
+
+                <div class="ref-card">
+                    <h3>Serial Monitor Issues</h3>
+                    <ul>
+                        <li>✓ Forgot Serial.begin(9600) in setup()</li>
+                        <li>✓ Wrong baud rate selected in monitor</li>
+                        <li>✓ Using pins 0/1 (RX/TX) for other purposes</li>
+                        <li>✓ No Serial.print() statements in code</li>
+                    </ul>
+                </div>
+
+                <div class="ref-card">
+                    <h3>Button Not Responding</h3>
+                    <ul>
+                        <li>✓ No pull-down/pull-up resistor</li>
+                        <li>✓ pinMode set to OUTPUT (should be INPUT)</li>
+                        <li>✓ No debounce delay</li>
+                        <li>✓ Wrong logic (checking LOW when should be HIGH)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXAM TIPS -->
+        <section class="content-section">
+            <h2>Exam Strategy Tips</h2>
+
+            <div class="strategy-grid">
+                <div class="strategy-card">
+                    <h3>Before You Start</h3>
+                    <ul>
+                        <li>📖 Read entire question twice</li>
+                        <li>✏️ Identify: sensors (inputs) vs outputs</li>
+                        <li>🎯 Note thresholds, ranges, special requirements</li>
+                        <li>⏱️ Allocate 30-35 min per circuit max</li>
+                        <li>📋 Bookmark this quick reference page!</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-card">
+                    <h3>Building the Circuit</h3>
+                    <ul>
+                        <li>🔴 Power rails first (5V, GND)</li>
+                        <li>📍 Double-check all pin numbers</li>
+                        <li>🔌 Verify polarity (LED, sensor orientation)</li>
+                        <li>⚡ Don't forget resistors (220Ω for LED, 10kΩ for buttons)</li>
+                        <li>✅ Test connections before coding</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-card">
+                    <h3>Writing the Code</h3>
+                    <ul>
+                        <li>💾 Save often in Tinkercad!</li>
+                        <li>📝 Use descriptive variable names</li>
+                        <li>🔢 Define pin numbers as const int</li>
+                        <li>✅ Test with Serial.println() frequently</li>
+                        <li>📚 Don't forget library #include if needed</li>
+                        <li>💬 Add comments AFTER code works</li>
+                    </ul>
+                </div>
+
+                <div class="strategy-card">
+                    <h3>Debugging</h3>
+                    <ul>
+                        <li>🖨️ Use Serial Monitor to check values</li>
+                        <li>🔍 Print ALL sensor readings to understand behavior</li>
+                        <li>⏸️ Add delays to slow down if too fast</li>
+                        <li>🔢 Check threshold values match requirements</li>
+                        <li>🧮 Verify formulas (distance, temperature, etc.)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p><a href="index.html">← Back to Circuit List</a></p>
+        <p><strong>Print this page for offline reference during exam!</strong></p>
+        <p>Arduino Exam Reference for MEU33EM3 Design II | December 1, 2025</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuit 06: Potentiometer + Servo - Arduino Exam Reference</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Circuit 06: Potentiometer + Servo</h1>
+        <p class="subtitle">Direct Analog Control of Servo Position</p>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="quick-reference.html" class="btn-primary">Quick Reference</a>
+        <a href="circuit-05-accelerometer-led.html" class="btn">← Previous</a>
+        <a href="circuit-07-pot-led-pwm.html" class="btn">Next Circuit →</a>
+    </nav>
+
+    <main>
+        <div class="circuit-hero">
+            <div class="circuit-header">
+                <h2 style="margin: 0; border: none;">Potentiometer + Servo Motor</h2>
+                <span class="badge badge-high">TIER 2 - HIGH PRIORITY</span>
+            </div>
+            <p style="margin-top: 1em;"><strong>Function:</strong> Turn potentiometer to directly control servo angle from 0° to 180°. Simple, common pattern - likely exam material!</p>
+
+            <div class="circuit-meta">
+                <div class="meta-item"><span class="meta-label">Probability:</span> <span class="meta-value">75%</span></div>
+                <div class="meta-item"><span class="meta-label">Difficulty:</span> <span class="meta-value">Easy</span></div>
+                <div class="meta-item"><span class="meta-label">Key Concepts:</span> <span class="meta-value">map(), Servo Library, Direct Control</span></div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Components & Connections</h2>
+            <table>
+                <thead><tr><th>Component</th><th>Connection</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Potentiometer Left</strong></td><td>→ 5V</td></tr>
+                    <tr><td><strong>Potentiometer Middle (Wiper)</strong></td><td>→ Analog A0</td></tr>
+                    <tr><td><strong>Potentiometer Right</strong></td><td>→ GND</td></tr>
+                    <tr><td><strong>Servo Red Wire</strong></td><td>→ 5V</td></tr>
+                    <tr><td><strong>Servo Brown/Black Wire</strong></td><td>→ GND</td></tr>
+                    <tr><td><strong>Servo Orange/Yellow Wire</strong></td><td>→ Digital Pin 9 (PWM)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h2>Complete Arduino Code</h2>
+            <div class="code-container">
+                <div class="code-header"><span class="code-lang">Arduino C++</span></div>
+                <pre><code>// ============================================
+// CIRCUIT 06: POTENTIOMETER + SERVO
+// Direct Analog Control of Servo Position
+// ============================================
+
+#include <Servo.h>  // Include Servo library
+
+Servo myServo;  // Create servo object
+
+const int potPin = A0;   // Potentiometer on analog pin A0
+const int servoPin = 9;  // Servo on PWM pin 9
+
+int potValue = 0;     // Raw potentiometer reading (0-1023)
+int servoAngle = 0;   // Servo angle (0-180 degrees)
+
+void setup() {
+  Serial.begin(9600);
+  myServo.attach(servoPin);  // Attach servo to pin 9
+
+  Serial.println("=== Potentiometer + Servo ===");
+  Serial.println("Turn pot to control servo");
+  Serial.println("============================");
+}
+
+void loop() {
+  // Read potentiometer value (0-1023)
+  potValue = analogRead(potPin);
+
+  // Map pot value (0-1023) to servo angle (0-180)
+  // map(value, fromLow, fromHigh, toLow, toHigh)
+  servoAngle = map(potValue, 0, 1023, 0, 180);
+
+  // Constrain to valid servo range (safety)
+  servoAngle = constrain(servoAngle, 0, 180);
+
+  // Move servo to calculated angle
+  myServo.write(servoAngle);
+
+  // Display values on Serial Monitor
+  Serial.print("Pot: ");
+  Serial.print(potValue);
+  Serial.print(" | Angle: ");
+  Serial.print(servoAngle);
+  Serial.println("°");
+
+  delay(15);  // Small delay for servo stability
+}
+
+// Expected behavior:
+// - Pot fully left → Servo at 0°
+// - Pot middle → Servo at 90°
+// - Pot fully right → Servo at 180°</code></pre>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Key Concepts</h2>
+            <div class="formula">
+                <div class="formula-label">map() Function:</div>
+                <div class="formula-code">servoAngle = map(potValue, 0, 1023, 0, 180);</div>
+                <div class="formula-example">Converts 0-1023 input range to 0-180 output range linearly</div>
+            </div>
+
+            <div class="tip-box">
+                <div class="box-title">Why map() is Perfect Here</div>
+                <p>Potentiometer gives 0-1023, Servo needs 0-180. map() does the math:</p>
+                <ul>
+                    <li>pot = 0 → angle = 0°</li>
+                    <li>pot = 512 → angle = 90°</li>
+                    <li>pot = 1023 → angle = 180°</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Exam Variations</h2>
+            <ul>
+                <li>🔄 <strong>Limited range:</strong> "Map pot to servo 45-135°" → <code>map(potValue, 0, 1023, 45, 135)</code></li>
+                <li>🔄 <strong>Reversed control:</strong> "Left = 180°, Right = 0°" → <code>map(potValue, 0, 1023, 180, 0)</code></li>
+                <li>🔄 <strong>Different pins:</strong> Just change pin constants</li>
+                <li>🔄 <strong>Multiple servos:</strong> Create multiple Servo objects, attach to different pins</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Testing Checklist</h2>
+            <ol>
+                <li>✅ Code compiles (Servo library included)</li>
+                <li>✅ Servo attached in setup()</li>
+                <li>✅ Servo on PWM pin (3,5,6,9,10,11)</li>
+                <li>✅ Pot fully left → Servo 0°</li>
+                <li>✅ Pot fully right → Servo 180°</li>
+                <li>✅ Smooth movement as pot turns</li>
+            </ol>
+        </div>
+
+    </main>
+
+    <footer>
+        <p><a href="circuit-05-accelerometer-led.html">← Previous</a> | <a href="index.html">Back to List</a> | <a href="circuit-07-pot-led-pwm.html">Next: Circuit 07 →</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Circuit 15: PIR Motion Sensor + LED - Arduino Exam Reference</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Circuit 15: PIR Motion Sensor + LED</h1>
+        <p class="subtitle">Simple Motion Detection</p>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="circuit-14-rgb-pot.html" class="btn">← Previous</a>
+        <a href="quick-reference.html" class="btn">Quick Reference →</a>
+    </nav>
+
+    <main>
+        <div class="circuit-hero">
+            <div class="circuit-header">
+                <h2 style="margin: 0; border: none;">PIR Motion Sensor + LED</h2>
+                <span class="badge badge-medium">TIER 3 - MEDIUM PRIORITY</span>
+            </div>
+            <p><strong>Function:</strong> LED turns ON when PIR sensor detects motion, OFF when no motion. Simple digital sensor input.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Components & Connections</h2>
+            <table>
+                <thead><tr><th>Component</th><th>Connection</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>PIR VCC</strong></td><td>→ 5V</td></tr>
+                    <tr><td><strong>PIR GND</strong></td><td>→ GND</td></tr>
+                    <tr><td><strong>PIR OUT</strong></td><td>→ Digital Pin 2</td></tr>
+                    <tr><td><strong>LED Anode (+)</strong></td><td>→ 220Ω → Pin 13</td></tr>
+                    <tr><td><strong>LED Cathode (-)</strong></td><td>→ GND</td></tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <div class="box-title">PIR Sensor Info</div>
+                <p><strong>How it works:</strong> Detects infrared radiation changes (body heat)</p>
+                <ul>
+                    <li><strong>Motion detected:</strong> OUT pin goes HIGH</li>
+                    <li><strong>No motion:</strong> OUT pin goes LOW</li>
+                    <li><strong>Detection range:</strong> Up to 7 meters, 120° cone</li>
+                    <li><strong>Warm-up time:</strong> ~30-60 seconds after power-on</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Complete Arduino Code</h2>
+            <div class="code-container">
+                <pre><code>// PIR Motion Sensor + LED
+
+const int pirPin = 2;     // PIR sensor output to digital pin 2
+const int ledPin = 13;    // LED on pin 13
+
+int motionState = 0;      // Variable to store PIR state
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(pirPin, INPUT);  // PIR output is INPUT to Arduino
+  pinMode(ledPin, OUTPUT);
+
+  Serial.println("=== PIR Motion Detector ===");
+  Serial.println("Warming up sensor...");
+  delay(2000);  // Give PIR time to stabilize
+  Serial.println("Ready!");
+}
+
+void loop() {
+  // Read PIR sensor state
+  motionState = digitalRead(pirPin);
+
+  // Control LED based on motion detection
+  if (motionState == HIGH) {
+    // Motion detected!
+    digitalWrite(ledPin, HIGH);
+    Serial.println("Motion detected!");
+  } else {
+    // No motion
+    digitalWrite(ledPin, LOW);
+    Serial.println("No motion");
+  }
+
+  delay(100);  // Small delay to prevent Serial spam
+}
+
+// Expected behavior:
+// - No movement → LED OFF, Serial: "No motion"
+// - Wave hand in front of PIR → LED ON, Serial: "Motion detected!"
+// - Stop moving → LED OFF after a few seconds</code></pre>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Alternative: Motion-Activated Timer</h2>
+            <pre><code>// Keep LED ON for 5 seconds after motion detected
+
+unsigned long lastMotionTime = 0;
+const unsigned long TIMEOUT = 5000;  // 5 seconds
+
+void loop() {
+  motionState = digitalRead(pirPin);
+
+  if (motionState == HIGH) {
+    lastMotionTime = millis();  // Save time of motion
+    digitalWrite(ledPin, HIGH);
+    Serial.println("Motion detected!");
+  }
+
+  // Turn off LED if timeout passed
+  if (millis() - lastMotionTime > TIMEOUT) {
+    digitalWrite(ledPin, LOW);
+  }
+
+  delay(100);
+}</code></pre>
+        </div>
+
+        <div class="content-section">
+            <h2>Key Concepts</h2>
+            <div class="formula">
+                <div class="formula-label">Digital Input Reading:</div>
+                <div class="formula-code">int state = digitalRead(pin);  // Returns HIGH or LOW</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">millis() for Timing:</div>
+                <div class="formula-code">unsigned long time = millis();  // Milliseconds since startup</div>
+                <div class="formula-example">Used for non-blocking delays and timers</div>
+            </div>
+
+            <div class="tip-box">
+                <div class="box-title">PIR Sensitivity Adjustment</div>
+                <p>Many PIR modules have 2 potentiometers:</p>
+                <ul>
+                    <li><strong>Sensitivity (Sx):</strong> Detection range (3-7m)</li>
+                    <li><strong>Time delay (Tx):</strong> How long OUT stays HIGH (0.3-200s)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Common Mistakes</h2>
+            <ul>
+                <li>❌ Not allowing warm-up time → Erratic detection</li>
+                <li>❌ PIR pin as OUTPUT → Won't read sensor</li>
+                <li>❌ Wrong power (3.3V) → May not work reliably</li>
+                <li>❌ Testing immediately → PIR needs 30-60s warmup</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Exam Variations</h2>
+            <ul>
+                <li>🔄 <strong>Buzzer instead of LED:</strong> Sound alarm on motion</li>
+                <li>🔄 <strong>Timer function:</strong> LED stays on for X seconds after motion</li>
+                <li>🔄 <strong>Count events:</strong> Increment counter each time motion detected</li>
+                <li>🔄 <strong>Inverted logic:</strong> LED ON when NO motion (security system)</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Testing Checklist</h2>
+            <ol>
+                <li>✅ Allow 30-60 second warm-up time</li>
+                <li>✅ PIR pin configured as INPUT</li>
+                <li>✅ Wave hand in front of sensor → LED turns ON</li>
+                <li>✅ Stop moving → LED turns OFF (may take a few seconds)</li>
+                <li>✅ Serial Monitor shows motion status</li>
+            </ol>
+        </div>
+
+    </main>
+
+    <footer>
+        <p><a href="circuit-14-rgb-pot.html">← Previous</a> | <a href="index.html">Back to List</a> | <a href="quick-reference.html">Quick Reference →</a></p>
+    </footer>
+</body>
+</html>
