@@ -1,0 +1,2418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arduino Code Builder - Modular Code Library</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Code Builder Specific Styles */
+        .page-container {
+            display: flex;
+            max-width: 1600px;
+            margin: 0 auto;
+            gap: 2em;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 20px;
+            width: 280px;
+            height: calc(100vh - 40px);
+            overflow-y: auto;
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5em;
+            flex-shrink: 0;
+        }
+
+        .sidebar h3 {
+            color: var(--keyword-blue);
+            font-size: 1.1em;
+            margin-bottom: 1em;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5em;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5em;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 0.5em 0.8em;
+            color: var(--text-primary);
+            background-color: var(--bg-tertiary);
+            border-radius: 5px;
+            transition: all 0.2s ease;
+            font-size: 0.9em;
+        }
+
+        .sidebar-nav a:hover {
+            background-color: var(--keyword-blue);
+            color: var(--text-bright);
+            text-decoration: none;
+            transform: translateX(5px);
+        }
+
+        .sidebar-nav .sub-nav {
+            padding-left: 1em;
+            margin-top: 0.5em;
+        }
+
+        .sidebar-nav .sub-nav a {
+            font-size: 0.85em;
+            background-color: var(--bg-primary);
+        }
+
+        .content-area {
+            flex: 1;
+            min-width: 0;
+            padding: 2em 2em 2em 0;
+        }
+
+        .backbone-section, .snippet-section {
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 2em;
+            margin-bottom: 2em;
+            border: 2px solid var(--border-color);
+        }
+
+        .backbone-section {
+            border-left: 5px solid var(--keyword-blue);
+        }
+
+        .snippet-section {
+            border-left: 5px solid var(--comment-green);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 1.5em;
+            padding-bottom: 1em;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-header h2 {
+            margin: 0;
+            border: none;
+            padding: 0;
+        }
+
+        .toggle-icon {
+            font-size: 1.5em;
+            color: var(--keyword-blue);
+            transition: transform 0.3s ease;
+        }
+
+        .collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            max-height: 10000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .collapsed .section-content {
+            max-height: 0;
+        }
+
+        .code-block-container {
+            position: relative;
+            margin: 1.5em 0;
+        }
+
+        .code-header {
+            background-color: var(--bg-tertiary);
+            padding: 0.8em 1em;
+            border-radius: 5px 5px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background-color: var(--keyword-blue);
+            color: var(--text-bright);
+            border: none;
+            padding: 0.4em 1em;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85em;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--function-yellow);
+            color: var(--bg-primary);
+        }
+
+        .copy-btn.copied {
+            background-color: var(--comment-green);
+        }
+
+        .code-block-container pre {
+            margin: 0;
+            border-radius: 0 0 5px 5px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .customization-points {
+            background-color: var(--bg-tertiary);
+            border-left: 4px solid var(--string-orange);
+            padding: 1em;
+            margin: 1em 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .customization-points h4 {
+            color: var(--string-orange);
+            margin-top: 0;
+            font-size: 1em;
+        }
+
+        .customization-points ol {
+            margin: 0;
+            padding-left: 1.5em;
+        }
+
+        .use-cases {
+            background-color: rgba(106, 153, 85, 0.1);
+            border-left: 4px solid var(--comment-green);
+            padding: 1em;
+            margin: 1em 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .use-cases h4 {
+            color: var(--comment-green);
+            margin-top: 0;
+            font-size: 1em;
+        }
+
+        .snippet-card {
+            background-color: var(--bg-primary);
+            padding: 1.5em;
+            border-radius: 5px;
+            margin-bottom: 1.5em;
+            border: 1px solid var(--border-color);
+        }
+
+        .snippet-card h4 {
+            color: var(--function-yellow);
+            margin-top: 0;
+        }
+
+        .snippet-meta {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            margin-bottom: 1em;
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 0.3em 0.8em;
+            background-color: var(--comment-green);
+            color: var(--bg-primary);
+            border-radius: 15px;
+            font-size: 0.75em;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-right: 0.5em;
+        }
+
+        .snippet-card pre {
+            max-height: 400px;
+        }
+
+        .assembly-guide {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            padding: 2em;
+            border-radius: 10px;
+            margin-bottom: 2em;
+            border: 2px solid var(--function-yellow);
+        }
+
+        .assembly-steps {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .assembly-steps li {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 3em;
+            margin-bottom: 1.5em;
+        }
+
+        .assembly-steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-color: var(--function-yellow);
+            color: var(--bg-primary);
+            width: 2em;
+            height: 2em;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        .filter-btn {
+            padding: 0.5em 1em;
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85em;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--keyword-blue);
+        }
+
+        .filter-btn.active {
+            background-color: var(--keyword-blue);
+            color: var(--text-bright);
+            border-color: var(--keyword-blue);
+        }
+
+        @media (max-width: 1024px) {
+            .page-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                top: 0;
+            }
+
+            .content-area {
+                padding: 1em;
+            }
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            padding: 2em;
+            border-radius: 10px;
+            margin-bottom: 2em;
+            border: 3px solid var(--keyword-blue);
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            margin-bottom: 0.5em;
+        }
+
+        .hero-section p {
+            font-size: 1.1em;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quick-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2em;
+            margin-top: 1.5em;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background-color: var(--bg-primary);
+            padding: 1em 1.5em;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            color: var(--function-yellow);
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Arduino Code Builder</h1>
+        <p class="subtitle">Complete Modular Code Library for Exam Success</p>
+        <div class="search-container">
+            <input type="text" id="searchBox" placeholder="Search code snippets... (e.g., 'servo', 'threshold', 'button')" onkeyup="searchCode()">
+        </div>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="quick-reference.html" class="btn-primary">Quick Reference</a>
+        <a href="#backbones" class="btn-critical">Code Backbones</a>
+        <a href="#snippets" class="btn-high">Task Snippets</a>
+        <a href="#assembly" class="btn-medium">Assembly Guide</a>
+    </nav>
+
+    <div class="page-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <h3>Quick Navigation</h3>
+            <ul class="sidebar-nav">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#backbones">Code Backbones (10)</a>
+                    <ul class="sub-nav">
+                        <li><a href="#backbone1">1. Sensor → Digital Output</a></li>
+                        <li><a href="#backbone2">2. Analog → PWM</a></li>
+                        <li><a href="#backbone3">3. Analog → Servo</a></li>
+                        <li><a href="#backbone4">4. Ultrasonic Distance</a></li>
+                        <li><a href="#backbone5">5. State Machine</a></li>
+                        <li><a href="#backbone6">6. Button Toggle</a></li>
+                        <li><a href="#backbone7">7. Multi-Input Logic</a></li>
+                        <li><a href="#backbone8">8. Motor Control</a></li>
+                        <li><a href="#backbone9">9. Multi-Axis Sensor</a></li>
+                        <li><a href="#backbone10">10. Sequential Pattern</a></li>
+                    </ul>
+                </li>
+                <li><a href="#snippets">Task Snippets (50+)</a>
+                    <ul class="sub-nav">
+                        <li><a href="#cat1">Input Reading</a></li>
+                        <li><a href="#cat2">Threshold Logic</a></li>
+                        <li><a href="#cat3">Output Control</a></li>
+                        <li><a href="#cat4">Value Conversion</a></li>
+                        <li><a href="#cat5">State Management</a></li>
+                        <li><a href="#cat6">Timing</a></li>
+                        <li><a href="#cat7">Serial Output</a></li>
+                        <li><a href="#cat8">Special Functions</a></li>
+                    </ul>
+                </li>
+                <li><a href="#assembly">Assembly Guide</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="content-area">
+            <!-- Hero Section -->
+            <div id="overview" class="hero-section">
+                <h1>Ultimate Arduino Code Library</h1>
+                <p>Pre-built, tested code modules that you can copy, paste, and customize. Build ANY Arduino circuit quickly during your exam by mixing and matching backbones and snippets.</p>
+                <div class="quick-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">10</span>
+                        <span class="stat-label">Complete Backbones</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label">Task Snippets</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">∞</span>
+                        <span class="stat-label">Combinations</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CODE BACKBONES SECTION -->
+            <h2 id="backbones" style="color: var(--keyword-blue); font-size: 2em; margin-top: 1em;">Code Backbones</h2>
+            <p style="font-size: 1.1em; color: var(--text-secondary); margin-bottom: 2em;">Complete skeleton programs for different circuit types. Each includes setup(), loop(), variables, and extensive comments showing where to customize.</p>
+
+            <!-- BACKBONE 1 -->
+            <div class="backbone-section" id="backbone1">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>BACKBONE 1: Basic Sensor → Digital Output</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="use-cases">
+                        <h4>Use Cases:</h4>
+                        <ul>
+                            <li>Force sensor + LED</li>
+                            <li>Temperature sensor + buzzer</li>
+                            <li>PIR motion sensor + LED</li>
+                            <li>Button + LED (simple)</li>
+                            <li>Any analog or digital sensor with simple on/off output</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>Pattern:</strong> Read sensor → Compare to threshold → Turn LED/buzzer ON/OFF</p>
+
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+                        </div>
+                        <pre><code>// ========================================
+// BACKBONE 1: Basic Sensor → Digital Output
+// ========================================
+// Use this when: Simple sensor triggers simple output
+// Examples: FSR+LED, Button+LED, Temp+Buzzer
+// ========================================
+
+// ===== PIN DEFINITIONS - CUSTOMIZE THESE =====
+const int sensorPin = A0;        // Change: Input pin (analog or digital)
+const int outputPin = 13;        // Change: Output pin for LED/buzzer
+const int threshold = 500;       // Change: Trigger value (0-1023 for analog)
+
+void setup() {
+  // ===== INITIALIZE PINS =====
+  pinMode(sensorPin, INPUT);     // Change to INPUT_PULLUP for buttons
+  pinMode(outputPin, OUTPUT);
+
+  // ===== OPTIONAL: Serial Monitor =====
+  Serial.begin(9600);            // Remove if not needed
+}
+
+void loop() {
+  // ===== READ SENSOR =====
+  int sensorValue = analogRead(sensorPin);  // Use digitalRead() for digital sensors
+
+  // ===== OPTIONAL: Print to Serial =====
+  Serial.print("Sensor: ");
+  Serial.println(sensorValue);
+
+  // ===== THRESHOLD LOGIC =====
+  if (sensorValue > threshold) {            // Change: > or < depending on logic
+    digitalWrite(outputPin, HIGH);          // Output ON
+  } else {
+    digitalWrite(outputPin, LOW);           // Output OFF
+  }
+
+  // ===== TIMING =====
+  delay(100);                               // Change: Adjust read frequency
+}</code></pre>
+                    </div>
+
+                    <div class="customization-points">
+                        <h4>Customization Points:</h4>
+                        <ol>
+                            <li>Change <code>sensorPin</code> to your actual pin (A0-A5 for analog, 2-13 for digital)</li>
+                            <li>Change <code>outputPin</code> to your LED/buzzer pin</li>
+                            <li>Change <code>threshold</code> value based on your sensor</li>
+                            <li>Change <code>></code> to <code><</code> if you want opposite logic</li>
+                            <li>Use <code>digitalRead()</code> instead of <code>analogRead()</code> for digital sensors</li>
+                            <li>Use <code>INPUT_PULLUP</code> for buttons without external resistor</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BACKBONE 2 -->
+            <div class="backbone-section" id="backbone2">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>BACKBONE 2: Analog Input → PWM Output</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="use-cases">
+                        <h4>Use Cases:</h4>
+                        <ul>
+                            <li>Potentiometer + LED brightness</li>
+                            <li>LDR + LED brightness (inverse)</li>
+                            <li>Force sensor + motor speed</li>
+                            <li>Any analog input controlling PWM output</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>Pattern:</strong> Read analog sensor → Convert to PWM range → Control brightness/speed</p>
+
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+                        </div>
+                        <pre><code>// ========================================
+// BACKBONE 2: Analog Input → PWM Output
+// ========================================
+// Use this when: Analog sensor controls speed/brightness
+// Examples: Pot+LED, LDR+Motor, FSR+LED brightness
+// ========================================
+
+// ===== PIN DEFINITIONS - CUSTOMIZE THESE =====
+const int analogPin = A0;        // Change: Analog input pin (A0-A5)
+const int pwmPin = 9;            // Change: PWM pin (3,5,6,9,10,11 ONLY!)
+
+void setup() {
+  pinMode(pwmPin, OUTPUT);
+  Serial.begin(9600);            // Optional
+}
+
+void loop() {
+  // ===== READ ANALOG INPUT (0-1023) =====
+  int analogValue = analogRead(analogPin);
+
+  // ===== CONVERT TO PWM RANGE (0-255) =====
+  int pwmValue = analogValue / 4;         // Divide by 4: 1023/4 ≈ 255
+  // OR use map: pwmValue = map(analogValue, 0, 1023, 0, 255);
+
+  // ===== OPTIONAL: Invert for sensors like LDR =====
+  // pwmValue = 255 - pwmValue;           // Uncomment for inverse relationship
+
+  // ===== OUTPUT PWM =====
+  analogWrite(pwmPin, pwmValue);
+
+  // ===== OPTIONAL: Serial Output =====
+  Serial.print("Analog: ");
+  Serial.print(analogValue);
+  Serial.print(" → PWM: ");
+  Serial.println(pwmValue);
+
+  delay(10);
+}</code></pre>
+                    </div>
+
+                    <div class="customization-points">
+                        <h4>Customization Points:</h4>
+                        <ol>
+                            <li><code>analogPin</code> - your sensor pin</li>
+                            <li><code>pwmPin</code> - MUST be 3, 5, 6, 9, 10, or 11 (has ~ symbol)</li>
+                            <li>Uncomment invert line for reverse behavior (LDR darker = LED brighter)</li>
+                            <li>Use <code>map()</code> function for non-linear scaling</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BACKBONE 3 -->
+            <div class="backbone-section" id="backbone3">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>BACKBONE 3: Analog Input → Servo Control</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="use-cases">
+                        <h4>Use Cases:</h4>
+                        <ul>
+                            <li>Potentiometer + Servo</li>
+                            <li>LDR + Servo</li>
+                            <li>Joystick + Servo</li>
+                            <li>Any analog input controlling servo position</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>Pattern:</strong> Read analog sensor → Map to angle → Move servo</p>
+
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+                        </div>
+                        <pre><code>// ========================================
+// BACKBONE 3: Analog Input → Servo Control
+// ========================================
+// Use this when: Analog sensor controls servo angle
+// Examples: Pot+Servo, LDR+Servo, Joystick+Servo
+// ========================================
+
+#include &lt;Servo.h&gt;  // REQUIRED: Must include Servo library
+
+// ===== PIN DEFINITIONS - CUSTOMIZE THESE =====
+const int analogPin = A0;        // Change: Analog input pin
+const int servoPin = 9;          // Change: Servo signal pin (preferably PWM)
+
+// ===== CREATE SERVO OBJECT =====
+Servo myServo;
+
+void setup() {
+  myServo.attach(servoPin);      // Attach servo to pin
+  Serial.begin(9600);
+}
+
+void loop() {
+  // ===== READ ANALOG INPUT =====
+  int analogValue = analogRead(analogPin);
+
+  // ===== MAP TO SERVO ANGLE (0-180) =====
+  int angle = map(analogValue, 0, 1023, 0, 180);
+
+  // ===== MOVE SERVO =====
+  myServo.write(angle);
+
+  // ===== OPTIONAL: Serial Output =====
+  Serial.print("Input: ");
+  Serial.print(analogValue);
+  Serial.print(" → Angle: ");
+  Serial.println(angle);
+
+  delay(15);  // Small delay for smooth movement
+}</code></pre>
+                    </div>
+
+                    <div class="customization-points">
+                        <h4>Customization Points:</h4>
+                        <ol>
+                            <li><code>#include &lt;Servo.h&gt;</code> - MUST be at top of file</li>
+                            <li><code>analogPin</code> - your sensor pin</li>
+                            <li><code>servoPin</code> - servo signal wire</li>
+                            <li>Change <code>map()</code> values if you want limited range (e.g., 0-90 instead of 0-180)</li>
+                            <li>Name servo object differently if using multiple servos (myServo1, myServo2, etc.)</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BACKBONE 4 -->
+            <div class="backbone-section" id="backbone4">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>BACKBONE 4: Ultrasonic Distance → Action</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="use-cases">
+                        <h4>Use Cases:</h4>
+                        <ul>
+                            <li>Ultrasonic + LED (distance alert)</li>
+                            <li>Ultrasonic + Buzzer (parking sensor)</li>
+                            <li>Ultrasonic + Servo (auto-tracking)</li>
+                            <li>Any HC-SR04 distance measurement</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>Pattern:</strong> Send pulse → Measure echo → Calculate distance → Threshold action</p>
+
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+                        </div>
+                        <pre><code>// ========================================
+// BACKBONE 4: Ultrasonic Distance → Action
+// ========================================
+// Use this when: HC-SR04 ultrasonic sensor
+// Examples: Distance+LED, Parking sensor, Obstacle detection
+// ========================================
+
+// ===== PIN DEFINITIONS - CUSTOMIZE THESE =====
+const int trigPin = 9;           // Change: TRIG pin (OUTPUT)
+const int echoPin = 10;          // Change: ECHO pin (INPUT)
+const int outputPin = 12;        // Change: LED/Buzzer pin
+const int threshold = 30;        // Change: Distance threshold in cm
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(outputPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  // ===== SEND ULTRASONIC PULSE =====
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);         // MUST be 10 microseconds
+  digitalWrite(trigPin, LOW);
+
+  // ===== MEASURE ECHO TIME =====
+  long duration = pulseIn(echoPin, HIGH);
+
+  // ===== CALCULATE DISTANCE =====
+  float distance = duration * 0.034 / 2;  // Formula: (time × speed) / 2
+
+  // ===== SERIAL OUTPUT =====
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  // ===== THRESHOLD ACTION =====
+  if (distance < threshold) {    // Change: < for close, > for far
+    digitalWrite(outputPin, HIGH);
+  } else {
+    digitalWrite(outputPin, LOW);
+  }
+
+  delay(500);  // Adjust measurement frequency
+}</code></pre>
+                    </div>
+
+                    <div class="customization-points">
+                        <h4>Customization Points:</h4>
+                        <ol>
+                            <li><code>trigPin</code> and <code>echoPin</code> - HC-SR04 connections</li>
+                            <li><code>outputPin</code> - what activates at threshold</li>
+                            <li><code>threshold</code> - distance in cm</li>
+                            <li>Change <code><</code> to <code>></code> for opposite logic</li>
+                            <li>Formula is ALWAYS <code>duration * 0.034 / 2</code> - don't change!</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BACKBONE 5 -->
+            <div class="backbone-section" id="backbone5">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>BACKBONE 5: State Machine with Flags</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="use-cases">
+                        <h4>Use Cases:</h4>
+                        <ul>
+                            <li>LDR + Servo (rotate once when dark/bright)</li>
+                            <li>Button + Multi-state LED</li>
+                            <li>Sensor that triggers action only on state change</li>
+                            <li>Any circuit needing "do this ONCE when condition changes"</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>Pattern:</strong> Read input → Check flags → Action once → Update flags</p>
+
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+                        </div>
+                        <pre><code>// ========================================
+// BACKBONE 5: State Machine with Flags
+// ========================================
+// Use this when: Action should happen ONCE per state change
+// Examples: LDR+Servo, Button cycles through modes
+// ========================================
+
+#include &lt;Servo.h&gt;  // Remove if not using servo
+
+// ===== PIN DEFINITIONS - CUSTOMIZE THESE =====
+const int sensorPin = A0;
+const int threshold = 500;
+const int outputPin = 9;         // Or servo pin
+
+// ===== STATE FLAGS =====
+bool state1Triggered = false;    // Tracks if state 1 action done
+bool state2Triggered = false;    // Tracks if state 2 action done
+
+// ===== SERVO (if needed) =====
+Servo myServo;
+
+void setup() {
+  pinMode(sensorPin, INPUT);
+  // myServo.attach(outputPin);   // Uncomment for servo
+  pinMode(outputPin, OUTPUT);     // Or use this for LED
+  Serial.begin(9600);
+}
+
+void loop() {
+  // ===== READ SENSOR =====
+  int sensorValue = analogRead(sensorPin);
+  Serial.println(sensorValue);
+
+  // ===== STATE 1: When sensor crosses threshold going UP =====
+  if (sensorValue > threshold && !state1Triggered) {
+    Serial.println("State 1 activated!");
+
+    // ACTION: Do something once
+    digitalWrite(outputPin, HIGH);
+    // OR: myServo.write(180);
+
+    delay(1000);  // Wait for action to complete
+
+    // Update flags
+    state1Triggered = true;
+    state2Triggered = false;
+  }
+
+  // ===== STATE 2: When sensor crosses threshold going DOWN =====
+  if (sensorValue < threshold && !state2Triggered && state1Triggered) {
+    Serial.println("State 2 activated!");
+
+    // ACTION: Do something once
+    digitalWrite(outputPin, LOW);
+    // OR: myServo.write(0);
+
+    delay(1000);
+
+    // Update flags
+    state2Triggered = true;
+    state1Triggered = false;
+  }
+
+  delay(100);
+}</code></pre>
+                    </div>
+
+                    <div class="customization-points">
+                        <h4>Customization Points:</h4>
+                        <ol>
+                            <li>Add more states by creating more flag variables</li>
+                            <li>Change threshold comparison logic</li>
+                            <li>Change actions in each state block</li>
+                            <li>Rename states to match your application (darkTriggered, brightTriggered, etc.)</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BACKBONE 6 -->
+            <div class="backbone-section" id="backbone6">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>BACKBONE 6: Button Toggle</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="use-cases">
+                        <h4>Use Cases:</h4>
+                        <ul>
+                            <li>Button + LED toggle</li>
+                            <li>Button cycles through modes</li>
+                            <li>Button starts/stops action</li>
+                            <li>Any press-to-toggle functionality</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>Pattern:</strong> Read button → Detect press → Toggle state → Debounce</p>
+
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+                        </div>
+                        <pre><code>// ========================================
+// BACKBONE 6: Button Toggle
+// ========================================
+// Use this when: Button press toggles output on/off
+// Examples: Button+LED toggle, Push-on push-off
+// ========================================
+
+// ===== PIN DEFINITIONS - CUSTOMIZE THESE =====
+const int buttonPin = 2;
+const int ledPin = 13;
+
+// ===== STATE VARIABLES =====
+int buttonState = LOW;
+int previousState = LOW;
+int ledState = LOW;
+
+void setup() {
+  pinMode(buttonPin, INPUT_PULLUP);  // Internal pullup - button connects to GND
+  // OR: pinMode(buttonPin, INPUT);   // External pullup - button connects to 5V
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  // ===== READ BUTTON =====
+  buttonState = digitalRead(buttonPin);
+
+  // ===== DETECT PRESS (transition from HIGH to LOW for INPUT_PULLUP) =====
+  if (buttonState == LOW && previousState == HIGH) {
+    // Toggle LED state
+    ledState = !ledState;           // ! means NOT - flips state
+    digitalWrite(ledPin, ledState);
+
+    // Debounce delay
+    delay(50);                      // Prevents multiple triggers
+  }
+
+  // ===== SAVE STATE FOR NEXT LOOP =====
+  previousState = buttonState;
+}</code></pre>
+                    </div>
+
+                    <div class="customization-points">
+                        <h4>Customization Points:</h4>
+                        <ol>
+                            <li>Use <code>INPUT_PULLUP</code> if button connects to GND (no resistor needed)</li>
+                            <li>Use <code>INPUT</code> if button has external pullup/pulldown resistor</li>
+                            <li>Change debounce delay (50ms usually works)</li>
+                            <li>Can toggle multiple outputs or cycle through states</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BACKBONE 7 -->
+            <div class="backbone-section" id="backbone7">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>BACKBONE 7: Multi-Input Logic</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="use-cases">
+                        <h4>Use Cases:</h4>
+                        <ul>
+                            <li>2 buttons + LED (AND/OR gate)</li>
+                            <li>Multiple sensors combined</li>
+                            <li>Safety interlocks</li>
+                            <li>Condition checking with multiple requirements</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>Pattern:</strong> Read multiple inputs → Boolean logic → Control output</p>
+
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+                        </div>
+                        <pre><code>// ========================================
+// BACKBONE 7: Multi-Input Logic
+// ========================================
+// Use this when: Multiple inputs control one output
+// Examples: AND gate, OR gate, complex conditions
+// ========================================
+
+// ===== PIN DEFINITIONS - CUSTOMIZE THESE =====
+const int input1Pin = 2;
+const int input2Pin = 3;
+const int outputPin = 13;
+
+void setup() {
+  pinMode(input1Pin, INPUT_PULLUP);
+  pinMode(input2Pin, INPUT_PULLUP);
+  pinMode(outputPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  // ===== READ INPUTS =====
+  int input1 = digitalRead(input1Pin);
+  int input2 = digitalRead(input2Pin);
+
+  // ===== LOGIC OPTIONS - CHOOSE ONE =====
+
+  // AND gate: Both inputs must be HIGH
+  if (input1 == HIGH && input2 == HIGH) {
+    digitalWrite(outputPin, HIGH);
+  } else {
+    digitalWrite(outputPin, LOW);
+  }
+
+  /* OR gate: Either input HIGH
+  if (input1 == HIGH || input2 == HIGH) {
+    digitalWrite(outputPin, HIGH);
+  } else {
+    digitalWrite(outputPin, LOW);
+  }
+  */
+
+  /* XOR gate: Only one input HIGH
+  if ((input1 == HIGH && input2 == LOW) || (input1 == LOW && input2 == HIGH)) {
+    digitalWrite(outputPin, HIGH);
+  } else {
+    digitalWrite(outputPin, LOW);
+  }
+  */
+
+  /* NAND gate: NOT both HIGH
+  if (!(input1 == HIGH && input2 == HIGH)) {
+    digitalWrite(outputPin, HIGH);
+  } else {
+    digitalWrite(outputPin, LOW);
+  }
+  */
+
+  delay(10);
+}</code></pre>
+                    </div>
+
+                    <div class="customization-points">
+                        <h4>Customization Points:</h4>
+                        <ol>
+                            <li>Add more inputs by declaring more pins</li>
+                            <li>Uncomment the logic gate you need</li>
+                            <li>Can combine with analog sensors (threshold checks)</li>
+                            <li>Note: INPUT_PULLUP makes LOW = pressed</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BACKBONE 8 -->
+            <div class="backbone-section" id="backbone8">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>BACKBONE 8: Motor Direction + Speed Control</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="use-cases">
+                        <h4>Use Cases:</h4>
+                        <ul>
+                            <li>DC Motor + L293D + Pot + Switches</li>
+                            <li>Bidirectional motor control</li>
+                            <li>Variable speed with reversing</li>
+                            <li>Any H-bridge motor control</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>Pattern:</strong> Read switches/pot → Set direction → Set speed → H-bridge control</p>
+
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+                        </div>
+                        <pre><code>// ========================================
+// BACKBONE 8: Motor Direction + Speed
+// ========================================
+// Use this when: DC motor with L293D H-bridge
+// Examples: Bidirectional motor with speed control
+// ========================================
+
+// ===== PIN DEFINITIONS - CUSTOMIZE THESE =====
+const int enablePin = 9;          // L293D Pin 1 - MUST be PWM
+const int control1Pin = 2;        // L293D Pin 2
+const int control2Pin = 3;        // L293D Pin 7
+const int directionSwitchPin = 4;
+const int onOffSwitchPin = 5;
+const int speedPotPin = A0;
+
+// ===== STATE VARIABLES =====
+int onOffState = 0;
+int previousOnOffState = 0;
+int directionState = 0;
+int previousDirectionState = 0;
+int motorEnabled = 0;
+int motorSpeed = 0;
+int motorDirection = 1;           // 1=forward, 0=reverse
+
+void setup() {
+  pinMode(directionSwitchPin, INPUT);
+  pinMode(onOffSwitchPin, INPUT);
+  pinMode(control1Pin, OUTPUT);
+  pinMode(control2Pin, OUTPUT);
+  pinMode(enablePin, OUTPUT);
+  digitalWrite(enablePin, LOW);   // Start with motor off
+}
+
+void loop() {
+  // ===== READ INPUTS =====
+  onOffState = digitalRead(onOffSwitchPin);
+  delay(1);  // Stability delay
+  directionState = digitalRead(directionSwitchPin);
+  motorSpeed = analogRead(speedPotPin) / 4;  // Convert 0-1023 to 0-255
+
+  // ===== TOGGLE MOTOR ON/OFF =====
+  if (onOffState != previousOnOffState) {
+    if (onOffState == HIGH) {
+      motorEnabled = !motorEnabled;
+    }
+  }
+
+  // ===== TOGGLE DIRECTION =====
+  if (directionState != previousDirectionState) {
+    if (directionState == HIGH) {
+      motorDirection = !motorDirection;
+    }
+  }
+
+  // ===== SET MOTOR DIRECTION =====
+  if (motorDirection == 1) {
+    digitalWrite(control1Pin, HIGH);
+    digitalWrite(control2Pin, LOW);
+  } else {
+    digitalWrite(control1Pin, LOW);
+    digitalWrite(control2Pin, HIGH);
+  }
+
+  // ===== SET MOTOR SPEED =====
+  if (motorEnabled == 1) {
+    analogWrite(enablePin, motorSpeed);
+  } else {
+    analogWrite(enablePin, 0);
+  }
+
+  // ===== SAVE STATES =====
+  previousDirectionState = directionState;
+  previousOnOffState = onOffState;
+}</code></pre>
+                    </div>
+
+                    <div class="customization-points">
+                        <h4>Customization Points:</h4>
+                        <ol>
+                            <li><code>enablePin</code> MUST be PWM (3, 5, 6, 9, 10, 11)</li>
+                            <li>Control pins set direction via H-bridge</li>
+                            <li>External power supply needed for motor</li>
+                            <li>Can simplify by removing on/off switch</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BACKBONE 9 -->
+            <div class="backbone-section" id="backbone9">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>BACKBONE 9: Multi-Axis Sensor</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="use-cases">
+                        <h4>Use Cases:</h4>
+                        <ul>
+                            <li>Accelerometer (X, Y, Z axes)</li>
+                            <li>Joystick (X, Y axes + button)</li>
+                            <li>Multiple independent sensors</li>
+                            <li>RGB LED control from 3 pots</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>Pattern:</strong> Read multiple analog channels → Convert values → Check thresholds</p>
+
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+                        </div>
+                        <pre><code>// ========================================
+// BACKBONE 9: Multi-Axis Sensor
+// ========================================
+// Use this when: Multiple analog channels (accelerometer, joystick)
+// Examples: GY-61 accelerometer, 2-axis joystick
+// ========================================
+
+// ===== PIN DEFINITIONS - CUSTOMIZE THESE =====
+const int xPin = A3;
+const int yPin = A2;
+const int zPin = A1;
+const int ledPin = 7;
+
+// ===== CALIBRATION VALUES - CUSTOMIZE THESE =====
+const float xOffset = 336.0;      // Zero-g offset for X
+const float yOffset = 332.0;      // Zero-g offset for Y
+const float zOffset = 347.5;      // Zero-g offset for Z
+const float sensitivity = 67.0;   // Raw units per g
+
+// ===== THRESHOLD =====
+const float gThreshold = 1.5;     // Alert if > ±1.5g
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);
+
+  // Serial Plotter header (tab-separated)
+  Serial.println("X_g\tY_g\tZ_g");
+}
+
+void loop() {
+  // ===== READ RAW VALUES =====
+  int xRaw = analogRead(xPin);
+  int yRaw = analogRead(yPin);
+  int zRaw = analogRead(zPin);
+
+  // ===== CONVERT TO MEANINGFUL VALUES =====
+  // Formula: (Raw - Offset) / Sensitivity
+  float xG = (xRaw - xOffset) / sensitivity;
+  float yG = (yRaw - yOffset) / sensitivity;
+  float zG = (zRaw - zOffset) / sensitivity;
+
+  // ===== SERIAL OUTPUT (for Serial Plotter) =====
+  Serial.print(xG);
+  Serial.print("\t");  // Tab-separated for Plotter
+  Serial.print(yG);
+  Serial.print("\t");
+  Serial.println(zG);
+
+  // ===== CHECK THRESHOLDS =====
+  if (abs(xG) > gThreshold || abs(yG) > gThreshold || abs(zG) > gThreshold) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+
+  delay(50);  // ~20 readings per second
+}</code></pre>
+                    </div>
+
+                    <div class="customization-points">
+                        <h4>Customization Points:</h4>
+                        <ol>
+                            <li>Change pin assignments for your sensor</li>
+                            <li>Calibration values are sensor-specific (find from testing)</li>
+                            <li>Change threshold value</li>
+                            <li>Use <code>abs()</code> function to check both +/- values</li>
+                            <li>Tab-separated Serial.print for Plotter</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BACKBONE 10 -->
+            <div class="backbone-section" id="backbone10">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2>BACKBONE 10: Sequential Pattern</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="use-cases">
+                        <h4>Use Cases:</h4>
+                        <ul>
+                            <li>Traffic light (Red → Yellow → Green)</li>
+                            <li>LED chase/Knight Rider effect</li>
+                            <li>Multi-step sequence</li>
+                            <li>Timed events</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>Pattern:</strong> Arrays/loops → Timing → Pattern repeats</p>
+
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+                        </div>
+                        <pre><code>// ========================================
+// BACKBONE 10: Sequential Pattern
+// ========================================
+// Use this when: Multiple outputs in sequence
+// Examples: Traffic light, LED patterns, step sequences
+// ========================================
+
+// ===== PIN DEFINITIONS - CUSTOMIZE THESE =====
+const int led1 = 8;   // Red
+const int led2 = 9;   // Yellow
+const int led3 = 10;  // Green
+
+// ===== TIMING - CUSTOMIZE THESE =====
+const int state1Time = 5000;  // 5 seconds
+const int state2Time = 2000;  // 2 seconds
+const int state3Time = 5000;  // 5 seconds
+
+void setup() {
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+}
+
+void loop() {
+  // ===== STATE 1: Red =====
+  digitalWrite(led1, HIGH);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+  delay(state1Time);
+
+  // ===== STATE 2: Yellow =====
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, HIGH);
+  digitalWrite(led3, LOW);
+  delay(state2Time);
+
+  // ===== STATE 3: Green =====
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, HIGH);
+  delay(state3Time);
+
+  // Loop repeats automatically
+}
+
+/* ALTERNATIVE: Array Method for More LEDs
+const int numLeds = 5;
+const int leds[numLeds] = {8, 9, 10, 11, 12};
+
+void setup() {
+  for (int i = 0; i < numLeds; i++) {
+    pinMode(leds[i], OUTPUT);
+  }
+}
+
+void loop() {
+  // Chase effect
+  for (int i = 0; i < numLeds; i++) {
+    digitalWrite(leds[i], HIGH);
+    delay(200);
+    digitalWrite(leds[i], LOW);
+  }
+}
+*/</code></pre>
+                    </div>
+
+                    <div class="customization-points">
+                        <h4>Customization Points:</h4>
+                        <ol>
+                            <li>Add more states by copying pattern</li>
+                            <li>Change timing for each state</li>
+                            <li>Use arrays for many LEDs</li>
+                            <li>Can combine with sensors for triggered sequences</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TASK SNIPPETS SECTION -->
+            <h2 id="snippets" style="color: var(--comment-green); font-size: 2em; margin-top: 2em;">Task Snippets</h2>
+            <p style="font-size: 1.1em; color: var(--text-secondary); margin-bottom: 2em;">Small, reusable code blocks organized by function. Copy and insert these into your backbones for specific functionality.</p>
+
+            <!-- Filter Buttons -->
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterSnippets('all')">All Snippets</button>
+                <button class="filter-btn" onclick="filterSnippets('cat1')">Input Reading</button>
+                <button class="filter-btn" onclick="filterSnippets('cat2')">Threshold Logic</button>
+                <button class="filter-btn" onclick="filterSnippets('cat3')">Output Control</button>
+                <button class="filter-btn" onclick="filterSnippets('cat4')">Value Conversion</button>
+                <button class="filter-btn" onclick="filterSnippets('cat5')">State Management</button>
+                <button class="filter-btn" onclick="filterSnippets('cat6')">Timing</button>
+                <button class="filter-btn" onclick="filterSnippets('cat7')">Serial Output</button>
+                <button class="filter-btn" onclick="filterSnippets('cat8')">Special Functions</button>
+            </div>
+
+            <!-- CATEGORY 1: INPUT READING -->
+            <div class="snippet-section" id="cat1" data-category="cat1">
+                <h3 style="color: var(--comment-green); font-size: 1.5em; margin-bottom: 1em;">Category 1: Input Reading Snippets</h3>
+
+                <!-- Snippet 1.1 -->
+                <div class="snippet-card">
+                    <h4>Snippet 1.1: Read Digital Button (Internal Pullup)</h4>
+                    <p class="snippet-meta"><span class="category-badge">Input</span> When to use: Button connected to GND (no external resistor)</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Button connected to GND (no external resistor)
+const int buttonPin = 2;
+pinMode(buttonPin, INPUT_PULLUP);
+int buttonState = digitalRead(buttonPin);
+// Note: LOW = pressed, HIGH = released</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 1.2 -->
+                <div class="snippet-card">
+                    <h4>Snippet 1.2: Read Digital Button (External Pulldown)</h4>
+                    <p class="snippet-meta"><span class="category-badge">Input</span> When to use: Button connected to 5V with pulldown resistor</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Button connected to 5V with pulldown resistor
+const int buttonPin = 2;
+pinMode(buttonPin, INPUT);
+int buttonState = digitalRead(buttonPin);
+// Note: HIGH = pressed, LOW = released</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 1.3 -->
+                <div class="snippet-card">
+                    <h4>Snippet 1.3: Read Analog Sensor</h4>
+                    <p class="snippet-meta"><span class="category-badge">Input</span> When to use: Pot, LDR, FSR, temperature sensor</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Pot, LDR, FSR, temperature sensor
+const int sensorPin = A0;
+pinMode(sensorPin, INPUT);  // Optional - analog pins default to input
+int sensorValue = analogRead(sensorPin);  // Returns 0-1023</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 1.4 -->
+                <div class="snippet-card">
+                    <h4>Snippet 1.4: Read Ultrasonic Distance</h4>
+                    <p class="snippet-meta"><span class="category-badge">Input</span> When to use: HC-SR04 distance measurement</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: HC-SR04 distance measurement
+const int trigPin = 9;
+const int echoPin = 10;
+
+// In setup:
+pinMode(trigPin, OUTPUT);
+pinMode(echoPin, INPUT);
+
+// In loop:
+digitalWrite(trigPin, LOW);
+delayMicroseconds(2);
+digitalWrite(trigPin, HIGH);
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);
+long duration = pulseIn(echoPin, HIGH);
+float distance = duration * 0.034 / 2;  // cm</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 1.5 -->
+                <div class="snippet-card">
+                    <h4>Snippet 1.5: Read Multiple Analog Sensors</h4>
+                    <p class="snippet-meta"><span class="category-badge">Input</span> When to use: Accelerometer, joystick, multiple sensors</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Accelerometer, joystick, multiple sensors
+const int xPin = A3;
+const int yPin = A2;
+const int zPin = A1;
+
+int xValue = analogRead(xPin);
+int yValue = analogRead(yPin);
+int zValue = analogRead(zPin);</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORY 2: THRESHOLD LOGIC -->
+            <div class="snippet-section" id="cat2" data-category="cat2">
+                <h3 style="color: var(--comment-green); font-size: 1.5em; margin-bottom: 1em;">Category 2: Threshold Logic Snippets</h3>
+
+                <!-- Snippet 2.1 -->
+                <div class="snippet-card">
+                    <h4>Snippet 2.1: Simple Greater Than Threshold</h4>
+                    <p class="snippet-meta"><span class="category-badge">Logic</span> When to use: Activate output when sensor exceeds value</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Activate output when sensor exceeds value
+const int threshold = 500;
+if (sensorValue > threshold) {
+  digitalWrite(outputPin, HIGH);
+} else {
+  digitalWrite(outputPin, LOW);
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 2.2 -->
+                <div class="snippet-card">
+                    <h4>Snippet 2.2: Simple Less Than Threshold</h4>
+                    <p class="snippet-meta"><span class="category-badge">Logic</span> When to use: Activate output when sensor below value (e.g., darkness)</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Activate output when sensor below value (e.g., darkness)
+const int threshold = 300;
+if (sensorValue < threshold) {
+  digitalWrite(outputPin, HIGH);
+} else {
+  digitalWrite(outputPin, LOW);
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 2.3 -->
+                <div class="snippet-card">
+                    <h4>Snippet 2.3: Range Check (Between Values)</h4>
+                    <p class="snippet-meta"><span class="category-badge">Logic</span> When to use: Output active only in specific range</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Output active only in specific range
+const int minThreshold = 300;
+const int maxThreshold = 700;
+
+if (sensorValue >= minThreshold && sensorValue <= maxThreshold) {
+  digitalWrite(outputPin, HIGH);
+} else {
+  digitalWrite(outputPin, LOW);
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 2.4 -->
+                <div class="snippet-card">
+                    <h4>Snippet 2.4: Multiple Thresholds (If/Else If Ladder)</h4>
+                    <p class="snippet-meta"><span class="category-badge">Logic</span> When to use: Different outputs for different ranges</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Different outputs for different ranges
+if (sensorValue < 300) {
+  // Very low - e.g., Green LED
+  digitalWrite(greenPin, HIGH);
+  digitalWrite(yellowPin, LOW);
+  digitalWrite(redPin, LOW);
+} else if (sensorValue < 700) {
+  // Medium - e.g., Yellow LED
+  digitalWrite(greenPin, LOW);
+  digitalWrite(yellowPin, HIGH);
+  digitalWrite(redPin, LOW);
+} else {
+  // High - e.g., Red LED
+  digitalWrite(greenPin, LOW);
+  digitalWrite(yellowPin, LOW);
+  digitalWrite(redPin, HIGH);
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 2.5 -->
+                <div class="snippet-card">
+                    <h4>Snippet 2.5: Hysteresis (Prevent Flickering)</h4>
+                    <p class="snippet-meta"><span class="category-badge">Logic</span> When to use: Threshold with deadband to prevent rapid on/off</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Threshold with deadband to prevent rapid on/off
+const int thresholdLow = 480;
+const int thresholdHigh = 520;
+static bool outputState = false;
+
+if (sensorValue > thresholdHigh) {
+  outputState = true;
+} else if (sensorValue < thresholdLow) {
+  outputState = false;
+}
+digitalWrite(outputPin, outputState);</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORY 3: OUTPUT CONTROL -->
+            <div class="snippet-section" id="cat3" data-category="cat3">
+                <h3 style="color: var(--comment-green); font-size: 1.5em; margin-bottom: 1em;">Category 3: Output Control Snippets</h3>
+
+                <!-- Snippet 3.1 -->
+                <div class="snippet-card">
+                    <h4>Snippet 3.1: Digital ON/OFF</h4>
+                    <p class="snippet-meta"><span class="category-badge">Output</span> When to use: LED, buzzer, relay</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: LED, buzzer, relay
+const int outputPin = 13;
+pinMode(outputPin, OUTPUT);
+digitalWrite(outputPin, HIGH);  // ON
+digitalWrite(outputPin, LOW);   // OFF</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 3.2 -->
+                <div class="snippet-card">
+                    <h4>Snippet 3.2: PWM Brightness/Speed</h4>
+                    <p class="snippet-meta"><span class="category-badge">Output</span> When to use: LED brightness, motor speed</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: LED brightness, motor speed
+const int pwmPin = 9;  // MUST be PWM pin (3,5,6,9,10,11)
+pinMode(pwmPin, OUTPUT);
+int brightness = 128;  // 0-255
+analogWrite(pwmPin, brightness);</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 3.3 -->
+                <div class="snippet-card">
+                    <h4>Snippet 3.3: Servo Angle Control</h4>
+                    <p class="snippet-meta"><span class="category-badge">Output</span> When to use: Servo motor positioning</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Servo motor positioning
+#include &lt;Servo.h&gt;
+Servo myServo;
+const int servoPin = 9;
+
+// In setup:
+myServo.attach(servoPin);
+
+// In loop:
+int angle = 90;  // 0-180 degrees
+myServo.write(angle);</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 3.4 -->
+                <div class="snippet-card">
+                    <h4>Snippet 3.4: Motor Direction (H-Bridge)</h4>
+                    <p class="snippet-meta"><span class="category-badge">Output</span> When to use: DC motor with L293D</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: DC motor with L293D
+const int control1Pin = 2;
+const int control2Pin = 3;
+
+// Forward:
+digitalWrite(control1Pin, HIGH);
+digitalWrite(control2Pin, LOW);
+
+// Reverse:
+digitalWrite(control1Pin, LOW);
+digitalWrite(control2Pin, HIGH);
+
+// Stop:
+digitalWrite(control1Pin, LOW);
+digitalWrite(control2Pin, LOW);</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 3.5 -->
+                <div class="snippet-card">
+                    <h4>Snippet 3.5: Buzzer Tone</h4>
+                    <p class="snippet-meta"><span class="category-badge">Output</span> When to use: Piezo buzzer with frequency</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Piezo buzzer with frequency
+const int buzzerPin = 8;
+
+// Play tone:
+tone(buzzerPin, 1000);  // 1000 Hz frequency
+
+// Stop tone:
+noTone(buzzerPin);
+
+// Play for duration:
+tone(buzzerPin, 1000, 500);  // 1000Hz for 500ms</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 3.6 -->
+                <div class="snippet-card">
+                    <h4>Snippet 3.6: RGB LED Control</h4>
+                    <p class="snippet-meta"><span class="category-badge">Output</span> When to use: Common cathode RGB LED</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Common cathode RGB LED
+const int redPin = 9;
+const int greenPin = 10;
+const int bluePin = 11;
+
+// Set color (0-255 each):
+analogWrite(redPin, 255);    // Full red
+analogWrite(greenPin, 0);    // No green
+analogWrite(bluePin, 128);   // Half blue
+// Result: Purple</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORY 4: VALUE CONVERSION -->
+            <div class="snippet-section" id="cat4" data-category="cat4">
+                <h3 style="color: var(--comment-green); font-size: 1.5em; margin-bottom: 1em;">Category 4: Value Conversion Snippets</h3>
+
+                <!-- Snippet 4.1 -->
+                <div class="snippet-card">
+                    <h4>Snippet 4.1: Analog to PWM (Divide by 4)</h4>
+                    <p class="snippet-meta"><span class="category-badge">Conversion</span> When to use: Pot controlling LED/motor speed</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Pot controlling LED/motor speed
+int analogValue = analogRead(A0);  // 0-1023
+int pwmValue = analogValue / 4;     // 0-255
+analogWrite(pwmPin, pwmValue);</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 4.2 -->
+                <div class="snippet-card">
+                    <h4>Snippet 4.2: Analog to Angle (Map Function)</h4>
+                    <p class="snippet-meta"><span class="category-badge">Conversion</span> When to use: Pot controlling servo</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Pot controlling servo
+int analogValue = analogRead(A0);           // 0-1023
+int angle = map(analogValue, 0, 1023, 0, 180);  // 0-180
+myServo.write(angle);</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 4.3 -->
+                <div class="snippet-card">
+                    <h4>Snippet 4.3: Duration to Distance (Ultrasonic)</h4>
+                    <p class="snippet-meta"><span class="category-badge">Conversion</span> When to use: HC-SR04 sensor</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: HC-SR04 sensor
+long duration = pulseIn(echoPin, HIGH);  // microseconds
+float distance = duration * 0.034 / 2;    // centimeters
+// OR for inches:
+// float distance = duration * 0.0133 / 2;</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 4.4 -->
+                <div class="snippet-card">
+                    <h4>Snippet 4.4: Voltage to Temperature (TMP36)</h4>
+                    <p class="snippet-meta"><span class="category-badge">Conversion</span> When to use: TMP36 temperature sensor</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: TMP36 temperature sensor
+int reading = analogRead(tempPin);
+float voltage = (reading * 5.0) / 1024.0;
+float tempC = (voltage - 0.5) * 100.0;
+float tempF = (tempC * 9.0 / 5.0) + 32.0;</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 4.5 -->
+                <div class="snippet-card">
+                    <h4>Snippet 4.5: Raw to G-Force (Accelerometer)</h4>
+                    <p class="snippet-meta"><span class="category-badge">Conversion</span> When to use: GY-61 or similar accelerometer</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: GY-61 or similar accelerometer
+const float offset = 336.0;      // Calibration value
+const float sensitivity = 67.0;  // Units per g
+int rawValue = analogRead(A3);
+float gForce = (rawValue - offset) / sensitivity;</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 4.6 -->
+                <div class="snippet-card">
+                    <h4>Snippet 4.6: Constrain Value to Range</h4>
+                    <p class="snippet-meta"><span class="category-badge">Conversion</span> When to use: Limit value between min/max</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Limit value between min/max
+int value = analogRead(A0);
+value = constrain(value, 0, 255);  // Force between 0-255</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 4.7 -->
+                <div class="snippet-card">
+                    <h4>Snippet 4.7: Map with Reverse</h4>
+                    <p class="snippet-meta"><span class="category-badge">Conversion</span> When to use: Invert relationship (e.g., LDR darker = brighter LED)</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Invert relationship (e.g., LDR darker = brighter LED)
+int sensorValue = analogRead(A0);
+int output = map(sensorValue, 0, 1023, 255, 0);  // Note: 255, 0 (reversed)</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORY 5: STATE MANAGEMENT -->
+            <div class="snippet-section" id="cat5" data-category="cat5">
+                <h3 style="color: var(--comment-green); font-size: 1.5em; margin-bottom: 1em;">Category 5: State Management Snippets</h3>
+
+                <!-- Snippet 5.1 -->
+                <div class="snippet-card">
+                    <h4>Snippet 5.1: Simple Toggle</h4>
+                    <p class="snippet-meta"><span class="category-badge">State</span> When to use: Flip between ON/OFF</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Flip between ON/OFF
+static bool state = false;
+state = !state;  // Toggle
+digitalWrite(ledPin, state);</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 5.2 -->
+                <div class="snippet-card">
+                    <h4>Snippet 5.2: State Flags (Prevent Repeat)</h4>
+                    <p class="snippet-meta"><span class="category-badge">State</span> When to use: Action should happen once per state change</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Action should happen once per state change
+static bool hasTriggered = false;
+
+if (condition && !hasTriggered) {
+  // Do action once
+  hasTriggered = true;
+}
+
+if (!condition) {
+  hasTriggered = false;  // Reset when condition no longer true
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 5.3 -->
+                <div class="snippet-card">
+                    <h4>Snippet 5.3: Multiple State Flags</h4>
+                    <p class="snippet-meta"><span class="category-badge">State</span> When to use: Track multiple independent states</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Track multiple independent states
+static bool state1Done = false;
+static bool state2Done = false;
+
+if (sensor < threshold && !state1Done) {
+  // Action for state 1
+  state1Done = true;
+  state2Done = false;
+}
+
+if (sensor > threshold && !state2Done && state1Done) {
+  // Action for state 2
+  state2Done = true;
+  state1Done = false;
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 5.4 -->
+                <div class="snippet-card">
+                    <h4>Snippet 5.4: Previous State Tracking</h4>
+                    <p class="snippet-meta"><span class="category-badge">State</span> When to use: Detect changes (button press, threshold crossing)</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Detect changes (button press, threshold crossing)
+static int previousState = LOW;
+int currentState = digitalRead(buttonPin);
+
+if (currentState != previousState) {
+  // State changed - do something
+  if (currentState == HIGH) {
+    // Changed from LOW to HIGH
+  }
+}
+previousState = currentState;</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 5.5 -->
+                <div class="snippet-card">
+                    <h4>Snippet 5.5: Cycle Through States</h4>
+                    <p class="snippet-meta"><span class="category-badge">State</span> When to use: Button cycles through multiple modes</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Button cycles through multiple modes
+static int mode = 0;
+const int numModes = 3;
+
+if (buttonPressed) {
+  mode++;
+  if (mode >= numModes) {
+    mode = 0;  // Wrap around
+  }
+}
+
+switch(mode) {
+  case 0:
+    // Mode 0 actions
+    break;
+  case 1:
+    // Mode 1 actions
+    break;
+  case 2:
+    // Mode 2 actions
+    break;
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORY 6: TIMING -->
+            <div class="snippet-section" id="cat6" data-category="cat6">
+                <h3 style="color: var(--comment-green); font-size: 1.5em; margin-bottom: 1em;">Category 6: Timing Snippets</h3>
+
+                <!-- Snippet 6.1 -->
+                <div class="snippet-card">
+                    <h4>Snippet 6.1: Simple Delay</h4>
+                    <p class="snippet-meta"><span class="category-badge">Timing</span> When to use: Simple pause (blocks code)</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Simple pause (blocks code)
+delay(1000);  // Wait 1 second (1000 milliseconds)</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 6.2 -->
+                <div class="snippet-card">
+                    <h4>Snippet 6.2: Microsecond Delay</h4>
+                    <p class="snippet-meta"><span class="category-badge">Timing</span> When to use: Very short delays (ultrasonic trigger)</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Very short delays (ultrasonic trigger)
+delayMicroseconds(10);  // Wait 10 microseconds</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 6.3 -->
+                <div class="snippet-card">
+                    <h4>Snippet 6.3: Non-Blocking Delay (millis)</h4>
+                    <p class="snippet-meta"><span class="category-badge">Timing</span> When to use: Delay without stopping other code</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Delay without stopping other code
+unsigned long previousMillis = 0;
+const long interval = 1000;  // 1 second
+
+unsigned long currentMillis = millis();
+if (currentMillis - previousMillis >= interval) {
+  previousMillis = currentMillis;
+  // Do action every interval
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 6.4 -->
+                <div class="snippet-card">
+                    <h4>Snippet 6.4: Blink Without Delay</h4>
+                    <p class="snippet-meta"><span class="category-badge">Timing</span> When to use: Blink LED while doing other things</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Blink LED while doing other things
+unsigned long previousMillis = 0;
+const long interval = 500;
+int ledState = LOW;
+
+unsigned long currentMillis = millis();
+if (currentMillis - previousMillis >= interval) {
+  previousMillis = currentMillis;
+  ledState = !ledState;
+  digitalWrite(ledPin, ledState);
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORY 7: SERIAL OUTPUT -->
+            <div class="snippet-section" id="cat7" data-category="cat7">
+                <h3 style="color: var(--comment-green); font-size: 1.5em; margin-bottom: 1em;">Category 7: Serial Output Snippets</h3>
+
+                <!-- Snippet 7.1 -->
+                <div class="snippet-card">
+                    <h4>Snippet 7.1: Print Single Value</h4>
+                    <p class="snippet-meta"><span class="category-badge">Serial</span> When to use: Debug or monitor single sensor</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Debug or monitor single sensor
+Serial.begin(9600);  // In setup()
+Serial.println(sensorValue);  // In loop()</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 7.2 -->
+                <div class="snippet-card">
+                    <h4>Snippet 7.2: Print with Label</h4>
+                    <p class="snippet-meta"><span class="category-badge">Serial</span> When to use: Clear identification of value</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Clear identification of value
+Serial.print("Sensor: ");
+Serial.println(sensorValue);
+// Output: "Sensor: 512"</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 7.3 -->
+                <div class="snippet-card">
+                    <h4>Snippet 7.3: Print Multiple Values (Tab-Separated)</h4>
+                    <p class="snippet-meta"><span class="category-badge">Serial</span> When to use: Serial Plotter with multiple values</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Serial Plotter with multiple values
+Serial.print(value1);
+Serial.print("\t");  // Tab character
+Serial.print(value2);
+Serial.print("\t");
+Serial.println(value3);</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 7.4 -->
+                <div class="snippet-card">
+                    <h4>Snippet 7.4: Print with Units</h4>
+                    <p class="snippet-meta"><span class="category-badge">Serial</span> When to use: Include units for clarity</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Include units for clarity
+Serial.print("Distance: ");
+Serial.print(distance);
+Serial.println(" cm");
+// Output: "Distance: 25.3 cm"</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 7.5 -->
+                <div class="snippet-card">
+                    <h4>Snippet 7.5: Serial Plotter Header</h4>
+                    <p class="snippet-meta"><span class="category-badge">Serial</span> When to use: Label axes in Serial Plotter</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Label axes in Serial Plotter
+Serial.begin(9600);
+Serial.println("X_axis\tY_axis\tZ_axis");  // In setup, once</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORY 8: SPECIAL FUNCTIONS -->
+            <div class="snippet-section" id="cat8" data-category="cat8">
+                <h3 style="color: var(--comment-green); font-size: 1.5em; margin-bottom: 1em;">Category 8: Special Function Snippets</h3>
+
+                <!-- Snippet 8.1 -->
+                <div class="snippet-card">
+                    <h4>Snippet 8.1: Button Debouncing</h4>
+                    <p class="snippet-meta"><span class="category-badge">Special</span> When to use: Prevent false triggers from button bounce</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Prevent false triggers from button bounce
+const int buttonPin = 2;
+int buttonState;
+int lastButtonState = LOW;
+unsigned long lastDebounceTime = 0;
+unsigned long debounceDelay = 50;
+
+int reading = digitalRead(buttonPin);
+
+if (reading != lastButtonState) {
+  lastDebounceTime = millis();
+}
+
+if ((millis() - lastDebounceTime) > debounceDelay) {
+  if (reading != buttonState) {
+    buttonState = reading;
+    // Use buttonState here
+  }
+}
+lastButtonState = reading;</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 8.2 -->
+                <div class="snippet-card">
+                    <h4>Snippet 8.2: Button Press Detection (Rising Edge)</h4>
+                    <p class="snippet-meta"><span class="category-badge">Special</span> When to use: Detect moment button is pressed</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Detect moment button is pressed
+static int lastState = LOW;
+int currentState = digitalRead(buttonPin);
+
+if (currentState == HIGH && lastState == LOW) {
+  // Button just pressed - do action once
+}
+lastState = currentState;</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 8.3 -->
+                <div class="snippet-card">
+                    <h4>Snippet 8.3: Servo Sweep Back and Forth</h4>
+                    <p class="snippet-meta"><span class="category-badge">Special</span> When to use: Automatic servo scanning</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Automatic servo scanning
+static int angle = 0;
+static int direction = 1;  // 1 = increasing, -1 = decreasing
+
+angle += direction;
+
+if (angle >= 180 || angle <= 0) {
+  direction *= -1;  // Reverse direction
+}
+
+myServo.write(angle);
+delay(15);</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 8.4 -->
+                <div class="snippet-card">
+                    <h4>Snippet 8.4: Array Iteration</h4>
+                    <p class="snippet-meta"><span class="category-badge">Special</span> When to use: Control multiple LEDs in sequence</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Control multiple LEDs in sequence
+const int numLeds = 5;
+const int leds[] = {8, 9, 10, 11, 12};
+
+// Turn all on:
+for (int i = 0; i < numLeds; i++) {
+  digitalWrite(leds[i], HIGH);
+}
+
+// Turn all off:
+for (int i = 0; i < numLeds; i++) {
+  digitalWrite(leds[i], LOW);
+}
+
+// Chase effect:
+for (int i = 0; i < numLeds; i++) {
+  digitalWrite(leds[i], HIGH);
+  delay(100);
+  digitalWrite(leds[i], LOW);
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Snippet 8.5 -->
+                <div class="snippet-card">
+                    <h4>Snippet 8.5: Generate Random Values</h4>
+                    <p class="snippet-meta"><span class="category-badge">Special</span> When to use: Random patterns, testing</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span class="code-lang">Arduino C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>// When to use: Random patterns, testing
+randomSeed(analogRead(A5));  // In setup() - seed with noise
+
+int randomValue = random(0, 255);  // Random 0-254
+int randomAngle = random(0, 181);  // Random 0-180</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ASSEMBLY GUIDE -->
+            <div id="assembly" class="assembly-guide">
+                <h2 style="color: var(--function-yellow); margin-top: 0;">Quick Assembly Guide</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5em;">Step-by-step instructions for combining backbones + snippets to build your circuit code</p>
+
+                <ol class="assembly-steps">
+                    <li>
+                        <strong>Identify Circuit Type</strong>
+                        <p>Analyze your circuit:</p>
+                        <ul>
+                            <li>What inputs? (Sensor, button, etc.)</li>
+                            <li>What outputs? (LED, servo, motor, etc.)</li>
+                            <li>What behavior? (Simple on/off, variable control, state machine, etc.)</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Choose Backbone</strong>
+                        <p>Match circuit type to backbone (1-10) and copy entire backbone code as your starting point.</p>
+                    </li>
+                    <li>
+                        <strong>Customize Pin Numbers</strong>
+                        <p>Change all pin definitions to match your circuit. Double-check PWM pins for outputs needing speed/brightness control (pins 3, 5, 6, 9, 10, 11).</p>
+                    </li>
+                    <li>
+                        <strong>Add Task Snippets</strong>
+                        <p>Enhance with specific functionality:</p>
+                        <ul>
+                            <li>Need threshold logic? Add snippet 2.x</li>
+                            <li>Need conversion? Add snippet 4.x</li>
+                            <li>Need state management? Add snippet 5.x</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Add Comments</strong>
+                        <p>Explain your code (worth marks!):</p>
+                        <ul>
+                            <li>Explain WHAT each section does</li>
+                            <li>Explain WHY you chose this approach</li>
+                            <li>Note expected VALUES (e.g., "0-1023", "30cm")</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Test Incrementally</strong>
+                        <p>Verify each part:</p>
+                        <ul>
+                            <li>Test inputs first (print to Serial Monitor)</li>
+                            <li>Then test outputs (does LED turn on?)</li>
+                            <li>Then test logic (correct behavior?)</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <div class="info-box" style="margin-top: 2em;">
+                    <div class="box-title">Example: Building a Distance Alert System</div>
+                    <p><strong>Requirements:</strong> HC-SR04 ultrasonic sensor + LED that turns on when object < 30cm</p>
+                    <p><strong>Solution:</strong></p>
+                    <ol style="padding-left: 1.5em;">
+                        <li>Choose <strong>Backbone 4</strong> (Ultrasonic Distance → Action)</li>
+                        <li>Set <code>trigPin = 9</code>, <code>echoPin = 10</code>, <code>outputPin = 13</code></li>
+                        <li>Set <code>threshold = 30</code></li>
+                        <li>Already complete! Just customize pins and threshold.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Arduino Code Builder | Complete Modular Code Library for MEU33EM3 Design II</p>
+        <p><strong>Exam Strategy:</strong> Find → Copy → Customize → Test → Comment</p>
+    </footer>
+
+    <script>
+        // Search functionality
+        function searchCode() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            const allSections = document.querySelectorAll('.backbone-section, .snippet-card');
+
+            allSections.forEach(section => {
+                const text = section.textContent.toLowerCase();
+                const matches = text.includes(searchTerm);
+                section.style.display = matches ? 'block' : 'none';
+            });
+        }
+
+        // Toggle section collapse/expand
+        function toggleSection(header) {
+            const section = header.parentElement;
+            section.classList.toggle('collapsed');
+        }
+
+        // Copy code to clipboard
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block-container').querySelector('code');
+            const text = codeBlock.textContent;
+
+            navigator.clipboard.writeText(text).then(() => {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = 'Copy Code';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Filter snippets by category
+        function filterSnippets(category) {
+            const snippetSections = document.querySelectorAll('.snippet-section');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+
+            // Update active button
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Show/hide sections
+            if (category === 'all') {
+                snippetSections.forEach(section => {
+                    section.style.display = 'block';
+                });
+            } else {
+                snippetSections.forEach(section => {
+                    if (section.id === category) {
+                        section.style.display = 'block';
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+            }
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
