@@ -1,0 +1,4227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Questions - Arduino Exam Reference</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .question-container {
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 2em;
+            margin: 2em 0;
+        }
+        .question-header {
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+            padding: 1.5em;
+            border-radius: 8px;
+            margin-bottom: 1.5em;
+            border-left: 5px solid var(--keyword-blue);
+        }
+        .question-number {
+            color: var(--function-yellow);
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 0.3em;
+        }
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.4em 1em;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 700;
+            margin-right: 1em;
+        }
+        .difficulty-easy { background-color: var(--comment-green); color: var(--bg-primary); }
+        .difficulty-medium { background-color: var(--high-orange); color: var(--text-bright); }
+        .difficulty-hard { background-color: var(--critical-red); color: var(--text-bright); }
+
+        .solution-container {
+            background-color: var(--bg-primary);
+            border: 2px solid var(--comment-green);
+            border-radius: 8px;
+            padding: 2em;
+            margin-top: 2em;
+        }
+        .solution-header {
+            color: var(--comment-green);
+            font-size: 1.3em;
+            border-bottom: 2px solid var(--comment-green);
+            padding-bottom: 0.5em;
+            margin-bottom: 1em;
+        }
+        .requirements-list {
+            background-color: var(--bg-tertiary);
+            padding: 1.5em;
+            border-radius: 5px;
+            margin: 1em 0;
+        }
+        .deliverables-checklist {
+            background-color: var(--bg-tertiary);
+            padding: 1.5em;
+            border-radius: 5px;
+            margin: 1em 0;
+        }
+        .grading-criteria {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 0.5em;
+            background-color: var(--bg-tertiary);
+            padding: 1em;
+            border-radius: 5px;
+            margin: 1em 0;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 2em 0;
+            flex-wrap: wrap;
+            gap: 1em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Practice Questions</h1>
+        <p class="subtitle">20 Realistic Exam-Style Questions with Full Solutions</p>
+    </header>
+
+    <nav class="quick-links">
+        <a href="index.html" class="btn-primary">← Back to Home</a>
+        <a href="quick-reference.html" class="btn-primary">Quick Reference</a>
+        <a href="code-builder.html" class="btn-primary">Code Builder</a>
+    </nav>
+
+    <main>
+        <!-- Introduction -->
+        <div class="exam-strategy">
+            <h2>How to Use These Practice Questions</h2>
+            <div class="strategy-grid">
+                <div class="strategy-card">
+                    <h3>Practice Approach</h3>
+                    <ul>
+                        <li>Try each question BEFORE looking at the solution</li>
+                        <li>Time yourself - follow the stated time allocations</li>
+                        <li>Build the actual circuit in Tinkercad</li>
+                        <li>Compare your solution to the provided one</li>
+                        <li>Focus on understanding WHY, not just copying code</li>
+                    </ul>
+                </div>
+                <div class="strategy-card">
+                    <h3>Question Difficulty</h3>
+                    <ul>
+                        <li><strong class="difficulty-badge difficulty-easy">EASY</strong> 15-20 min - Single sensor/actuator</li>
+                        <li><strong class="difficulty-badge difficulty-medium">MEDIUM</strong> 20-30 min - Multiple components</li>
+                        <li><strong class="difficulty-badge difficulty-hard">HARD</strong> 30-45 min - Complex integration</li>
+                    </ul>
+                </div>
+                <div class="strategy-card">
+                    <h3>Exam Simulation</h3>
+                    <ul>
+                        <li>Pick 3 questions: 1 HARD (40%), 1 MEDIUM (35%), 1 EASY (25%)</li>
+                        <li>Set timer for 2 hours</li>
+                        <li>Use internet and notes (like real exam)</li>
+                        <li>Don't use ChatGPT or saved circuits</li>
+                        <li>Focus on comments - they're worth marks!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUESTION 1: PARKING ASSIST SYSTEM -->
+        <div class="question-container" id="q1">
+            <div class="question-header">
+                <div class="question-number">QUESTION 1: PARKING ASSIST SYSTEM</div>
+                <span class="difficulty-badge difficulty-medium">MEDIUM</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">25 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">35%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>You are designing a parking assist system for a vehicle. The system uses an ultrasonic sensor to measure the distance to obstacles behind the car. As the car gets closer to an obstacle, the warning system should provide increasingly urgent feedback to the driver.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <h4>1. DISTANCE MEASUREMENT:</h4>
+                <ul>
+                    <li>Use HC-SR04 ultrasonic sensor to measure distance</li>
+                    <li>Display distance in centimeters on Serial Monitor</li>
+                    <li>Update measurements every 500ms</li>
+                </ul>
+
+                <h4>2. WARNING SYSTEM - Three levels:</h4>
+                <ul>
+                    <li>GREEN LED: Distance > 50cm (safe)</li>
+                    <li>YELLOW LED: Distance 20-50cm (caution)</li>
+                    <li>RED LED: Distance < 20cm (danger)</li>
+                </ul>
+
+                <h4>3. BUZZER ALERT:</h4>
+                <ul>
+                    <li>Buzzer OFF when distance > 50cm</li>
+                    <li>Buzzer beeps slowly (1 second intervals) when 20-50cm</li>
+                    <li>Buzzer beeps rapidly (0.2 second intervals) when < 20cm</li>
+                </ul>
+
+                <h4>4. SERIAL OUTPUT FORMAT:</h4>
+                <p><code>"Distance: [XX.X] cm - Status: [SAFE/CAUTION/DANGER]"</code></p>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>HC-SR04 Ultrasonic Sensor</li>
+                <li>3 LEDs (Red, Yellow, Green) with 220Ω resistors</li>
+                <li>Piezo Buzzer</li>
+                <li>Breadboard and wires</li>
+            </ul>
+
+            <h3>Code Requirements:</h3>
+            <ul>
+                <li>Use descriptive variable names (e.g., greenLedPin, not pin1)</li>
+                <li>Include detailed comments explaining WHAT, HOW, WHY</li>
+                <li>Use const int for pin definitions</li>
+                <li>Include the distance formula with explanation</li>
+            </ul>
+
+            <h3>Deliverables:</h3>
+            <div class="deliverables-checklist">
+                <ul>
+                    <li>☐ Working Tinkercad circuit with all components properly connected</li>
+                    <li>☐ Complete Arduino code with extensive comments</li>
+                    <li>☐ Serial Monitor showing at least 3 different distance readings</li>
+                </ul>
+            </div>
+
+            <h3>Grading Criteria:</h3>
+            <div class="grading-criteria">
+                <div>Circuit connections</div><div>20%</div>
+                <div>Distance calculation accuracy</div><div>20%</div>
+                <div>Multi-threshold logic</div><div>20%</div>
+                <div>Buzzer timing</div><div>15%</div>
+                <div>Code comments and structure</div><div>25%</div>
+            </div>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 1 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 1</div>
+
+            <h3>Approach:</h3>
+            <p>This system requires three-tier threshold logic. We'll use the ultrasonic sensor to get distance readings, then use if-else statements to control three LEDs and variable buzzer timing based on proximity zones. The key is maintaining clean zone boundaries and managing the buzzer timing with millis() for non-blocking operation.</p>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">HC-SR04 Ultrasonic Sensor:</span>
+                    <div class="connection">VCC → Arduino 5V</div>
+                    <div class="connection">GND → Arduino GND</div>
+                    <div class="connection">TRIG → Arduino Pin 9</div>
+                    <div class="connection">ECHO → Arduino Pin 10</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Green LED (Safe):</span>
+                    <div class="connection">Anode → 220Ω resistor → Arduino Pin 5</div>
+                    <div class="connection">Cathode → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Yellow LED (Caution):</span>
+                    <div class="connection">Anode → 220Ω resistor → Arduino Pin 6</div>
+                    <div class="connection">Cathode → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Red LED (Danger):</span>
+                    <div class="connection">Anode → 220Ω resistor → Arduino Pin 7</div>
+                    <div class="connection">Cathode → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Piezo Buzzer:</span>
+                    <div class="connection">Positive → Arduino Pin 8</div>
+                    <div class="connection">Negative → GND</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// PARKING ASSIST SYSTEM
+// HC-SR04 + 3 LEDs + Buzzer with Zone Detection
+// ============================================
+
+// ===== PIN DEFINITIONS =====
+const int trigPin = 9;        // HC-SR04 trigger pin
+const int echoPin = 10;       // HC-SR04 echo pin
+const int greenLedPin = 5;    // Green LED - SAFE zone
+const int yellowLedPin = 6;   // Yellow LED - CAUTION zone
+const int redLedPin = 7;      // Red LED - DANGER zone
+const int buzzerPin = 8;      // Piezo buzzer
+
+// ===== DISTANCE THRESHOLDS =====
+const int DANGER_THRESHOLD = 20;   // Red zone: < 20cm
+const int CAUTION_THRESHOLD = 50;  // Yellow zone: 20-50cm
+                                   // Green zone: > 50cm
+
+// ===== BUZZER TIMING =====
+const int FAST_BEEP = 200;    // Danger zone beep interval (ms)
+const int SLOW_BEEP = 1000;   // Caution zone beep interval (ms)
+
+// ===== GLOBAL VARIABLES =====
+long duration;                 // Pulse duration from ultrasonic sensor
+int distance;                  // Calculated distance in cm
+unsigned long previousMillis = 0;  // For non-blocking buzzer timing
+bool buzzerState = false;      // Current state of buzzer
+
+void setup() {
+  // Initialize Serial communication
+  Serial.begin(9600);
+
+  // Configure pin modes
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(greenLedPin, OUTPUT);
+  pinMode(yellowLedPin, OUTPUT);
+  pinMode(redLedPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+
+  // Turn all LEDs and buzzer OFF initially
+  digitalWrite(greenLedPin, LOW);
+  digitalWrite(yellowLedPin, LOW);
+  digitalWrite(redLedPin, LOW);
+  digitalWrite(buzzerPin, LOW);
+
+  // Startup message
+  Serial.println("===== PARKING ASSIST SYSTEM =====");
+  Serial.println("GREEN  > 50cm  - SAFE");
+  Serial.println("YELLOW 20-50cm - CAUTION");
+  Serial.println("RED    < 20cm  - DANGER");
+  Serial.println("==================================");
+}
+
+void loop() {
+  // ===== MEASURE DISTANCE =====
+  // Clear trigger pin
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  // Send 10μs pulse to trigger
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Read echo pulse duration
+  duration = pulseIn(echoPin, HIGH);
+
+  // Calculate distance in cm
+  // Formula: distance = (duration × speed of sound) / 2
+  // Speed of sound = 0.034 cm/μs
+  distance = duration * 0.034 / 2;
+
+  // ===== DETERMINE ZONE AND CONTROL OUTPUTS =====
+  if (distance < DANGER_THRESHOLD) {
+    // DANGER ZONE - Red LED, fast buzzer
+    digitalWrite(greenLedPin, LOW);
+    digitalWrite(yellowLedPin, LOW);
+    digitalWrite(redLedPin, HIGH);
+
+    // Fast beeping
+    handleBuzzer(FAST_BEEP);
+
+    // Serial output
+    Serial.print("Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm - Status: DANGER");
+
+  } else if (distance >= DANGER_THRESHOLD && distance <= CAUTION_THRESHOLD) {
+    // CAUTION ZONE - Yellow LED, slow buzzer
+    digitalWrite(greenLedPin, LOW);
+    digitalWrite(yellowLedPin, HIGH);
+    digitalWrite(redLedPin, LOW);
+
+    // Slow beeping
+    handleBuzzer(SLOW_BEEP);
+
+    // Serial output
+    Serial.print("Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm - Status: CAUTION");
+
+  } else {
+    // SAFE ZONE - Green LED, no buzzer
+    digitalWrite(greenLedPin, HIGH);
+    digitalWrite(yellowLedPin, LOW);
+    digitalWrite(redLedPin, LOW);
+    digitalWrite(buzzerPin, LOW);
+    buzzerState = false;
+
+    // Serial output
+    Serial.print("Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm - Status: SAFE");
+  }
+
+  // Wait 500ms before next reading
+  delay(500);
+}
+
+// ===== BUZZER CONTROL FUNCTION =====
+// Uses millis() for non-blocking beeping
+// interval: time between beeps in milliseconds
+void handleBuzzer(int interval) {
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - previousMillis >= interval) {
+    // Time to toggle buzzer
+    previousMillis = currentMillis;
+    buzzerState = !buzzerState;
+    digitalWrite(buzzerPin, buzzerState);
+  }
+}
+
+// ===== END OF CODE =====</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>Multi-threshold logic:</strong> Use if-else-if chains for zone detection</li>
+                <li><strong>Non-blocking timing:</strong> millis() allows buzzer to beep without stopping distance measurements</li>
+                <li><strong>State management:</strong> Track buzzer state to toggle on/off</li>
+                <li><strong>Clear zone boundaries:</strong> < 20, 20-50, > 50 with no overlap</li>
+            </ul>
+
+            <h3>Common Mistakes to Avoid:</h3>
+            <ul>
+                <li>❌ Using delay() for buzzer timing - blocks distance measurements</li>
+                <li>❌ Overlapping zone conditions (e.g., <= and >=)</li>
+                <li>❌ Not turning OFF other LEDs when one zone is active</li>
+                <li>❌ Forgetting to reset buzzer state in SAFE zone</li>
+            </ul>
+
+            <h3>Time Breakdown:</h3>
+            <ul>
+                <li>Circuit assembly: 10 minutes</li>
+                <li>Code writing: 10 minutes</li>
+                <li>Testing & debugging: 3 minutes</li>
+                <li>Comments: 2 minutes</li>
+                <li><strong>Total: 25 minutes</strong></li>
+            </ul>
+        </div>
+
+        <!-- Navigation to more questions -->
+        <div class="nav-buttons">
+            <a href="#q2" class="btn">Next Question →</a>
+            <a href="#toc" class="btn-primary">Question Index</a>
+        </div>
+
+        <!-- QUESTION 2: AUTOMATIC NIGHT LIGHT -->
+        <div class="question-container" id="q2">
+            <div class="question-header">
+                <div class="question-number">QUESTION 2: AUTOMATIC NIGHT LIGHT</div>
+                <span class="difficulty-badge difficulty-easy">EASY</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">15 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">25%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Design an automatic night light that turns on when the ambient light level drops below a certain threshold. This system uses a light-dependent resistor (LDR) to sense darkness and automatically controls an LED.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li>Use an LDR with a 10kΩ resistor in voltage divider configuration</li>
+                    <li>Read analog values from the LDR (0-1023 range)</li>
+                    <li>Turn LED ON when light level drops below 300</li>
+                    <li>Turn LED OFF when light level exceeds 300</li>
+                    <li>Display light level values on Serial Monitor every second</li>
+                    <li>Serial format: "Light Level: XXX - LED: ON/OFF"</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>LDR (Photoresistor)</li>
+                <li>10kΩ resistor</li>
+                <li>LED with 220Ω resistor</li>
+                <li>Breadboard and wires</li>
+            </ul>
+
+            <h3>Deliverables:</h3>
+            <div class="deliverables-checklist">
+                <ul>
+                    <li>☐ Working circuit with LDR voltage divider</li>
+                    <li>☐ Code with threshold logic</li>
+                    <li>☐ Serial Monitor output demonstration</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 2 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 2</div>
+
+            <h3>Approach:</h3>
+            <p>Simple threshold-based control using an LDR voltage divider. The LDR resistance decreases with more light, so darker conditions result in lower analog readings. We compare against a threshold and control the LED accordingly.</p>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">LDR Voltage Divider:</span>
+                    <div class="connection">5V → LDR → Arduino A0 → 10kΩ resistor → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">LED:</span>
+                    <div class="connection">Anode → 220Ω resistor → Arduino Pin 13</div>
+                    <div class="connection">Cathode → GND</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// AUTOMATIC NIGHT LIGHT
+// LDR-controlled LED with threshold detection
+// ============================================
+
+// ===== PIN DEFINITIONS =====
+const int ldrPin = A0;        // LDR connected to analog pin A0
+const int ledPin = 13;        // LED connected to digital pin 13
+
+// ===== THRESHOLD VALUE =====
+const int LIGHT_THRESHOLD = 300;  // LED turns ON when value < 300
+
+// ===== GLOBAL VARIABLES =====
+int lightLevel;               // Analog reading from LDR (0-1023)
+
+void setup() {
+  // Initialize Serial communication
+  Serial.begin(9600);
+
+  // Configure pin modes
+  pinMode(ldrPin, INPUT);     // LDR is an input (analog)
+  pinMode(ledPin, OUTPUT);    // LED is an output
+
+  // Initial state: LED OFF
+  digitalWrite(ledPin, LOW);
+
+  Serial.println("===== AUTOMATIC NIGHT LIGHT =====");
+  Serial.println("LED ON when light < 300");
+  Serial.println("=================================");
+}
+
+void loop() {
+  // ===== READ LIGHT LEVEL =====
+  // analogRead() returns 0-1023
+  // Low values = dark, High values = bright
+  lightLevel = analogRead(ldrPin);
+
+  // ===== CONTROL LED BASED ON THRESHOLD =====
+  if (lightLevel < LIGHT_THRESHOLD) {
+    // It's dark - turn LED ON
+    digitalWrite(ledPin, HIGH);
+
+    // Serial output
+    Serial.print("Light Level: ");
+    Serial.print(lightLevel);
+    Serial.println(" - LED: ON");
+
+  } else {
+    // It's bright - turn LED OFF
+    digitalWrite(ledPin, LOW);
+
+    // Serial output
+    Serial.print("Light Level: ");
+    Serial.print(lightLevel);
+    Serial.println(" - LED: OFF");
+  }
+
+  // Wait 1 second before next reading
+  delay(1000);
+}
+
+// ===== END OF CODE =====
+// Expected behavior:
+// - Cover LDR with hand → LED turns ON
+// - Shine light on LDR → LED turns OFF</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>Voltage divider:</strong> LDR and fixed resistor create variable voltage</li>
+                <li><strong>Analog reading:</strong> analogRead() gives 0-1023 based on voltage at pin</li>
+                <li><strong>Simple threshold:</strong> Single comparison determines output</li>
+                <li><strong>LDR behavior:</strong> Lower resistance (lower reading) = more light</li>
+            </ul>
+
+            <h3>Time Breakdown:</h3>
+            <ul>
+                <li>Circuit assembly: 5 minutes</li>
+                <li>Code writing: 6 minutes</li>
+                <li>Testing: 2 minutes</li>
+                <li>Comments: 2 minutes</li>
+                <li><strong>Total: 15 minutes</strong></li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q1" class="btn">← Previous</a>
+            <a href="#q3" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 3: POTENTIOMETER SERVO CONTROL -->
+        <div class="question-container" id="q3">
+            <div class="question-header">
+                <div class="question-number">QUESTION 3: SERVO ANGLE CONTROL</div>
+                <span class="difficulty-badge difficulty-easy">EASY</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">18 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">25%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Create a system where a potentiometer directly controls the angle of a servo motor. As the user turns the potentiometer, the servo should smoothly rotate to match the position.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li>Use potentiometer to control servo angle (0-180°)</li>
+                    <li>Map analog input (0-1023) to servo angle (0-180)</li>
+                    <li>Display current angle on Serial Monitor</li>
+                    <li>Update servo position smoothly as pot is turned</li>
+                    <li>Serial format: "Pot Value: XXX → Servo Angle: XXX°"</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>Potentiometer (10kΩ)</li>
+                <li>Servo Motor (Standard)</li>
+                <li>Breadboard and wires</li>
+            </ul>
+
+            <h3>Deliverables:</h3>
+            <div class="deliverables-checklist">
+                <ul>
+                    <li>☐ Circuit with proper servo power connections</li>
+                    <li>☐ Code using Servo library and map() function</li>
+                    <li>☐ Demonstration of servo tracking pot movement</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 3 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 3</div>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">Potentiometer:</span>
+                    <div class="connection">Left pin → 5V</div>
+                    <div class="connection">Middle pin (wiper) → Arduino A0</div>
+                    <div class="connection">Right pin → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Servo Motor:</span>
+                    <div class="connection">Red wire → 5V</div>
+                    <div class="connection">Brown/Black wire → GND</div>
+                    <div class="connection">Orange/Yellow wire → Arduino Pin 9</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// POTENTIOMETER SERVO CONTROL
+// Direct mapping: pot position → servo angle
+// ============================================
+
+// Include Servo library
+#include <Servo.h>
+
+// ===== PIN DEFINITIONS =====
+const int potPin = A0;        // Potentiometer on analog pin A0
+const int servoPin = 9;       // Servo control pin (PWM capable)
+
+// ===== OBJECTS =====
+Servo myServo;                // Create servo object
+
+// ===== GLOBAL VARIABLES =====
+int potValue;                 // Raw potentiometer reading (0-1023)
+int servoAngle;               // Calculated servo angle (0-180)
+
+void setup() {
+  // Initialize Serial
+  Serial.begin(9600);
+
+  // Attach servo to pin
+  myServo.attach(servoPin);
+
+  Serial.println("===== POT → SERVO CONTROL =====");
+  Serial.println("Turn pot to control servo angle");
+}
+
+void loop() {
+  // ===== READ POTENTIOMETER =====
+  potValue = analogRead(potPin);  // Returns 0-1023
+
+  // ===== MAP TO SERVO ANGLE =====
+  // map(value, fromLow, fromHigh, toLow, toHigh)
+  // Convert 0-1023 range to 0-180 range
+  servoAngle = map(potValue, 0, 1023, 0, 180);
+
+  // ===== MOVE SERVO =====
+  myServo.write(servoAngle);
+
+  // ===== SERIAL OUTPUT =====
+  Serial.print("Pot Value: ");
+  Serial.print(potValue);
+  Serial.print(" → Servo Angle: ");
+  Serial.print(servoAngle);
+  Serial.println("°");
+
+  // Small delay for stability
+  delay(15);
+}
+
+// ===== END OF CODE =====</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>Servo library:</strong> #include &lt;Servo.h&gt; provides easy servo control</li>
+                <li><strong>map() function:</strong> Converts one range to another proportionally</li>
+                <li><strong>PWM pin:</strong> Servo control requires PWM-capable pin (3,5,6,9,10,11)</li>
+                <li><strong>attach() and write():</strong> Core servo functions to initialize and control</li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q2" class="btn">← Previous</a>
+            <a href="#q4" class="btn">Next Question →</a>
+        </div>
+
+        <!-- Continue with more questions... -->
+        <!-- For brevity, I'll include a few more key questions and then provide a table of contents -->
+
+        <!-- QUESTION 4: SIMULATED ACCELEROMETER (User's Special Request) -->
+        <div class="question-container" id="q4">
+            <div class="question-header">
+                <div class="question-number">QUESTION 4: 3-AXIS ACCELEROMETER SIMULATION</div>
+                <span class="difficulty-badge difficulty-medium">MEDIUM</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">25 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">35%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Simulate a GY-61 accelerometer using three potentiometers to represent X, Y, and Z axis acceleration. The system should monitor motion along all three axes and trigger an LED when any axis exceeds ±1.5g of acceleration.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li>Use 3 potentiometers to simulate X, Y, Z acceleration axes</li>
+                    <li>Map pot values (0-1023) to g-force range (-3g to +3g)</li>
+                    <li>Turn LED ON when |g| > 1.5 on ANY axis</li>
+                    <li>Display all three axis values on Serial Monitor</li>
+                    <li>Serial format: "X: X.XXg, Y: X.XXg, Z: X.XXg"</li>
+                    <li>Update readings every 100ms</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>3× Potentiometers (10kΩ) - for X, Y, Z axes</li>
+                <li>LED with 220Ω resistor</li>
+                <li>Breadboard and wires</li>
+            </ul>
+
+            <h3>Deliverables:</h3>
+            <div class="deliverables-checklist">
+                <ul>
+                    <li>☐ Circuit with 3 potentiometers properly connected</li>
+                    <li>☐ Code with g-force conversion and threshold checking</li>
+                    <li>☐ Serial Monitor showing 3-axis data</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 4 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 4</div>
+
+            <h3>Approach:</h3>
+            <p>This simulates accelerometer behavior by mapping potentiometer readings to g-force values. We use three analog inputs, convert each to a g-force value ranging from -3g to +3g, then check if absolute value on any axis exceeds our 1.5g threshold.</p>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">Potentiometer 1 (X-axis):</span>
+                    <div class="connection">Left → 5V, Middle → A3, Right → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Potentiometer 2 (Y-axis):</span>
+                    <div class="connection">Left → 5V, Middle → A2, Right → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Potentiometer 3 (Z-axis):</span>
+                    <div class="connection">Left → 5V, Middle → A1, Right → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">LED:</span>
+                    <div class="connection">Anode → 220Ω resistor → Pin 7</div>
+                    <div class="connection">Cathode → GND</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// SIMULATED GY-61 using 3 POTENTIOMETERS + LED
+// ============================================
+
+const int xPin = A3;   // Pot simulating X-axis
+const int yPin = A2;   // Pot simulating Y-axis
+const int zPin = A1;   // Pot simulating Z-axis
+const int ledPin = 7;  // LED
+
+// Threshold for turning LED on (g-force)
+const float G_THRESHOLD = 1.5;
+
+// Raw readings
+int xRaw, yRaw, zRaw;
+
+// Converted g-force values
+float xG, yG, zG;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, LOW);
+  Serial.println("=== SIMULATED GY-61 ===");
+  Serial.println("Move pots to simulate acceleration!");
+  Serial.println("LED ON when |g| > 1.5");
+}
+
+void loop() {
+  // ===== Read analog values from pots =====
+  xRaw = analogRead(xPin); // 0 - 1023
+  yRaw = analogRead(yPin);
+  zRaw = analogRead(zPin);
+
+  // ===== Convert to g-force =====
+  // Map 0-1023 to -3g to +3g
+  // Note: Mapping to 300, -300 then dividing by 100.0 gives -3.00 to +3.00
+  xG = map(xRaw, 0, 1023, 300, -300) / 100.0;
+  yG = map(yRaw, 0, 1023, 300, -300) / 100.0;
+  zG = map(zRaw, 0, 1023, 300, -300) / 100.0;
+
+  // ===== Check threshold =====
+  // Use abs() to get absolute value
+  // LED ON if ANY axis exceeds ±1.5g
+  if (abs(xG) > G_THRESHOLD || abs(yG) > G_THRESHOLD || abs(zG) > G_THRESHOLD) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+
+  // ===== Serial output =====
+  Serial.print("X: "); Serial.print(xG, 2); Serial.print("g, ");
+  Serial.print("Y: "); Serial.print(yG, 2); Serial.print("g, ");
+  Serial.print("Z: "); Serial.print(zG, 2); Serial.println("g");
+
+  delay(100);
+}
+
+// ===== END OF CODE =====</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>Multi-axis sensing:</strong> Read and process three separate analog inputs</li>
+                <li><strong>Bidirectional mapping:</strong> Converting to negative values (inverted range)</li>
+                <li><strong>Absolute value:</strong> abs() function checks magnitude regardless of direction</li>
+                <li><strong>OR logic:</strong> LED triggers if ANY condition is true</li>
+                <li><strong>Float precision:</strong> Using .2 in Serial.print() for 2 decimal places</li>
+            </ul>
+
+            <h3>Common Mistakes:</h3>
+            <ul>
+                <li>❌ Forgetting abs() - only checking positive values</li>
+                <li>❌ Using AND instead of OR - LED only triggers if ALL axes exceed threshold</li>
+                <li>❌ Integer division - using map result directly without /100.0</li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q3" class="btn">← Previous</a>
+            <a href="#q5" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 5: BUTTON TOGGLE LED -->
+        <div class="question-container" id="q5">
+            <div class="question-header">
+                <div class="question-number">QUESTION 5: BUTTON TOGGLE LED</div>
+                <span class="difficulty-badge difficulty-easy">EASY</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">15 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">25%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Create a simple toggle switch using a pushbutton. Each press of the button should alternate the LED between ON and OFF states, similar to a light switch in your home.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li>Use a pushbutton with pull-down resistor configuration</li>
+                    <li>Press button once → LED turns ON</li>
+                    <li>Press button again → LED turns OFF</li>
+                    <li>Implement debouncing to prevent false triggers</li>
+                    <li>Display button state on Serial Monitor: "Button Pressed - LED: ON/OFF"</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>Pushbutton</li>
+                <li>10kΩ resistor (pull-down)</li>
+                <li>LED with 220Ω resistor</li>
+                <li>Breadboard and wires</li>
+            </ul>
+
+            <h3>Deliverables:</h3>
+            <div class="deliverables-checklist">
+                <ul>
+                    <li>☐ Circuit with proper pull-down configuration</li>
+                    <li>☐ Code with toggle logic and debouncing</li>
+                    <li>☐ Demonstration of stable toggle operation</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 5 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 5</div>
+
+            <h3>Approach:</h3>
+            <p>Use state variables to track LED status and previous button state. Detect button press edges (transition from LOW to HIGH) and toggle LED state. Include debounce delay to prevent multiple triggers from single press.</p>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">Pushbutton:</span>
+                    <div class="connection">One side → Arduino Pin 2</div>
+                    <div class="connection">Same side → 10kΩ resistor → GND (pull-down)</div>
+                    <div class="connection">Other side → 5V</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">LED:</span>
+                    <div class="connection">Anode → 220Ω resistor → Pin 13</div>
+                    <div class="connection">Cathode → GND</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// BUTTON TOGGLE LED
+// Press button to toggle LED ON/OFF
+// ============================================
+
+// ===== PIN DEFINITIONS =====
+const int buttonPin = 2;      // Pushbutton on pin 2
+const int ledPin = 13;        // LED on pin 13
+
+// ===== STATE VARIABLES =====
+bool ledState = false;        // Current LED state (false = OFF, true = ON)
+bool lastButtonState = LOW;   // Previous button reading
+bool currentButtonState = LOW; // Current button reading
+
+// ===== DEBOUNCE TIMING =====
+unsigned long lastDebounceTime = 0;  // Last time button changed
+const unsigned long debounceDelay = 50;  // 50ms debounce period
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(buttonPin, INPUT);  // Button is input
+  pinMode(ledPin, OUTPUT);    // LED is output
+
+  digitalWrite(ledPin, LOW);  // Start with LED OFF
+
+  Serial.println("===== BUTTON TOGGLE LED =====");
+  Serial.println("Press button to toggle");
+}
+
+void loop() {
+  // ===== READ BUTTON STATE =====
+  int reading = digitalRead(buttonPin);
+
+  // ===== DEBOUNCING LOGIC =====
+  // If button state changed, reset debounce timer
+  if (reading != lastButtonState) {
+    lastDebounceTime = millis();
+  }
+
+  // ===== CHECK IF DEBOUNCE PERIOD PASSED =====
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    // If button state has been stable for debounce period
+
+    // Check if state actually changed
+    if (reading != currentButtonState) {
+      currentButtonState = reading;
+
+      // ===== TOGGLE ON BUTTON PRESS (rising edge) =====
+      if (currentButtonState == HIGH) {
+        // Button just pressed - toggle LED
+        ledState = !ledState;
+        digitalWrite(ledPin, ledState);
+
+        // Serial output
+        Serial.print("Button Pressed - LED: ");
+        Serial.println(ledState ? "ON" : "OFF");
+      }
+    }
+  }
+
+  // Save current reading for next loop
+  lastButtonState = reading;
+}
+
+// ===== END OF CODE =====</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>Toggle logic:</strong> Use NOT operator (!) to flip boolean state</li>
+                <li><strong>Edge detection:</strong> Only trigger on button press (LOW to HIGH), not release</li>
+                <li><strong>Debouncing:</strong> Mechanical buttons "bounce" - ignore changes for 50ms</li>
+                <li><strong>State management:</strong> Track both button and LED states separately</li>
+            </ul>
+
+            <h3>Common Mistakes:</h3>
+            <ul>
+                <li>❌ No debouncing - LED toggles multiple times per press</li>
+                <li>❌ Triggering on button state instead of state change - LED flickers</li>
+                <li>❌ Using delay() for debouncing - blocks program execution</li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q4" class="btn">← Previous</a>
+            <a href="#q6" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 6: PIR MOTION SENSOR -->
+        <div class="question-container" id="q6">
+            <div class="question-header">
+                <div class="question-number">QUESTION 6: PIR MOTION SENSOR ALARM</div>
+                <span class="difficulty-badge difficulty-easy">EASY</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">12 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">25%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Design a simple motion-activated alarm system using a PIR (Passive Infrared) motion sensor. When motion is detected, the system should activate an LED and buzzer to alert of the intrusion.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li>Use PIR sensor to detect motion</li>
+                    <li>When motion detected: Turn ON LED and activate buzzer</li>
+                    <li>When no motion: Turn OFF LED and buzzer</li>
+                    <li>Display motion status on Serial Monitor</li>
+                    <li>Serial format: "Motion: DETECTED/NONE - Alarm: ON/OFF"</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>PIR Motion Sensor (HC-SR501 or similar)</li>
+                <li>LED with 220Ω resistor</li>
+                <li>Piezo buzzer</li>
+                <li>Breadboard and wires</li>
+            </ul>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 6 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 6</div>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">PIR Sensor:</span>
+                    <div class="connection">VCC → 5V</div>
+                    <div class="connection">GND → GND</div>
+                    <div class="connection">OUT → Pin 7</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">LED:</span>
+                    <div class="connection">Anode → 220Ω → Pin 12</div>
+                    <div class="connection">Cathode → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Buzzer:</span>
+                    <div class="connection">Positive → Pin 8</div>
+                    <div class="connection">Negative → GND</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// PIR MOTION SENSOR ALARM
+// Detect motion and activate alarm
+// ============================================
+
+const int pirPin = 7;         // PIR sensor output
+const int ledPin = 12;        // LED indicator
+const int buzzerPin = 8;      // Buzzer alarm
+
+int motionState = LOW;        // Current PIR state
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(pirPin, INPUT);     // PIR is digital input
+  pinMode(ledPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+
+  digitalWrite(ledPin, LOW);
+  digitalWrite(buzzerPin, LOW);
+
+  Serial.println("===== MOTION SENSOR ALARM =====");
+  Serial.println("Waiting for motion...");
+
+  // Give PIR sensor time to calibrate (30-60 seconds in real hardware)
+  delay(2000);
+}
+
+void loop() {
+  // ===== READ PIR SENSOR =====
+  // PIR outputs HIGH when motion detected, LOW when none
+  motionState = digitalRead(pirPin);
+
+  // ===== CONTROL ALARM BASED ON MOTION =====
+  if (motionState == HIGH) {
+    // Motion detected - activate alarm
+    digitalWrite(ledPin, HIGH);
+    digitalWrite(buzzerPin, HIGH);
+
+    Serial.println("Motion: DETECTED - Alarm: ON");
+
+  } else {
+    // No motion - deactivate alarm
+    digitalWrite(ledPin, LOW);
+    digitalWrite(buzzerPin, LOW);
+
+    Serial.println("Motion: NONE - Alarm: OFF");
+  }
+
+  delay(500);  // Check every 500ms
+}
+
+// ===== END OF CODE =====</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>Digital sensor:</strong> PIR outputs simple HIGH/LOW signal</li>
+                <li><strong>Direct mapping:</strong> Sensor state directly controls outputs</li>
+                <li><strong>Calibration time:</strong> PIR sensors need warm-up period in real hardware</li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q5" class="btn">← Previous</a>
+            <a href="#q7" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 7: TEMPERATURE ALERT -->
+        <div class="question-container" id="q7">
+            <div class="question-header">
+                <div class="question-number">QUESTION 7: TEMPERATURE ALERT SYSTEM</div>
+                <span class="difficulty-badge difficulty-easy">EASY</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">20 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">25%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Build a temperature monitoring system using a TMP36 sensor. The system should display the current temperature and activate an alert when temperature exceeds a dangerous threshold.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li>Read temperature from TMP36 sensor</li>
+                    <li>Convert analog reading to temperature in Celsius</li>
+                    <li>Turn RED LED ON when temperature > 25°C</li>
+                    <li>Turn GREEN LED ON when temperature ≤ 25°C</li>
+                    <li>Display temperature on Serial Monitor every second</li>
+                    <li>Serial format: "Temperature: XX.X°C - Status: NORMAL/ALERT"</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>TMP36 Temperature Sensor</li>
+                <li>Red LED with 220Ω resistor</li>
+                <li>Green LED with 220Ω resistor</li>
+                <li>Breadboard and wires</li>
+            </ul>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 7 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 7</div>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">TMP36 (flat side facing you):</span>
+                    <div class="connection">Left pin → 5V</div>
+                    <div class="connection">Middle pin → A0</div>
+                    <div class="connection">Right pin → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Green LED:</span>
+                    <div class="connection">Anode → 220Ω → Pin 5</div>
+                    <div class="connection">Cathode → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Red LED:</span>
+                    <div class="connection">Anode → 220Ω → Pin 6</div>
+                    <div class="connection">Cathode → GND</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// TEMPERATURE ALERT SYSTEM
+// TMP36 sensor with threshold detection
+// ============================================
+
+const int tempPin = A0;       // TMP36 on analog pin A0
+const int greenLedPin = 5;    // Green LED - normal
+const int redLedPin = 6;      // Red LED - alert
+
+const float TEMP_THRESHOLD = 25.0;  // Alert threshold in °C
+
+int sensorValue;              // Raw analog reading
+float voltage;                // Converted voltage
+float temperatureC;           // Temperature in Celsius
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(tempPin, INPUT);
+  pinMode(greenLedPin, OUTPUT);
+  pinMode(redLedPin, OUTPUT);
+
+  Serial.println("===== TEMPERATURE MONITOR =====");
+  Serial.println("Alert threshold: 25°C");
+}
+
+void loop() {
+  // ===== READ TEMPERATURE SENSOR =====
+  sensorValue = analogRead(tempPin);  // 0-1023
+
+  // ===== CONVERT TO VOLTAGE =====
+  // TMP36 outputs 0-5V mapped to analog 0-1023
+  // Formula: voltage = (reading / 1024) × 5V
+  voltage = (sensorValue / 1024.0) * 5.0;
+
+  // ===== CONVERT VOLTAGE TO TEMPERATURE =====
+  // TMP36 datasheet: Vout = 500mV at 0°C, 10mV per degree
+  // Formula: tempC = (voltage - 0.5V) × 100
+  // 0.5V offset represents 0°C
+  // Each 10mV (0.01V) = 1°C, so ×100 converts to °C
+  temperatureC = (voltage - 0.5) * 100.0;
+
+  // ===== CHECK THRESHOLD AND CONTROL LEDs =====
+  if (temperatureC > TEMP_THRESHOLD) {
+    // Temperature too high - ALERT
+    digitalWrite(greenLedPin, LOW);
+    digitalWrite(redLedPin, HIGH);
+
+    Serial.print("Temperature: ");
+    Serial.print(temperatureC, 1);  // 1 decimal place
+    Serial.println("°C - Status: ALERT");
+
+  } else {
+    // Temperature normal
+    digitalWrite(greenLedPin, HIGH);
+    digitalWrite(redLedPin, LOW);
+
+    Serial.print("Temperature: ");
+    Serial.print(temperatureC, 1);
+    Serial.println("°C - Status: NORMAL");
+  }
+
+  delay(1000);  // Read every second
+}
+
+// ===== END OF CODE =====</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>Two-step conversion:</strong> Analog reading → Voltage → Temperature</li>
+                <li><strong>TMP36 formula:</strong> (voltage - 0.5) × 100 = °C</li>
+                <li><strong>Datasheet understanding:</strong> 500mV offset, 10mV/°C scale factor</li>
+                <li><strong>Float precision:</strong> Use Serial.print(value, decimals) for formatting</li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q6" class="btn">← Previous</a>
+            <a href="#q8" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 8: DC MOTOR CONTROL -->
+        <div class="question-container" id="q8">
+            <div class="question-header">
+                <div class="question-number">QUESTION 8: DC MOTOR CONTROL WITH L293D</div>
+                <span class="difficulty-badge difficulty-medium">MEDIUM</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">30 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">35%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Design a complete motor control system for a DC motor using the L293D H-bridge. The system should allow the user to control the motor's on/off state, direction (forward/reverse), and speed using switches and a potentiometer.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li>Use L293D H-bridge to control DC motor</li>
+                    <li>Switch 1: ON/OFF control (motor runs only when switch is HIGH)</li>
+                    <li>Switch 2: Direction control (HIGH = forward, LOW = reverse)</li>
+                    <li>Potentiometer: Speed control (0-255 PWM)</li>
+                    <li>Display motor status on Serial Monitor</li>
+                    <li>Serial format: "Motor: ON/OFF | Direction: FWD/REV | Speed: XXX"</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>L293D H-Bridge IC</li>
+                <li>DC Motor</li>
+                <li>2× Slide Switches</li>
+                <li>Potentiometer (10kΩ)</li>
+                <li>External power supply (6-12V for motor)</li>
+                <li>Breadboard and wires</li>
+            </ul>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 8 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 8</div>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">L293D H-Bridge:</span>
+                    <div class="connection">Pin 1 (Enable 1) → Arduino Pin 9 (PWM)</div>
+                    <div class="connection">Pin 2 (Input 1) → Arduino Pin 7</div>
+                    <div class="connection">Pin 7 (Input 2) → Arduino Pin 8</div>
+                    <div class="connection">Pin 3 (Output 1) → Motor wire 1</div>
+                    <div class="connection">Pin 6 (Output 2) → Motor wire 2</div>
+                    <div class="connection">Pin 4, 5, 12, 13 → GND</div>
+                    <div class="connection">Pin 8 (Vcc2) → External power (+6-12V)</div>
+                    <div class="connection">Pin 16 (Vcc1) → Arduino 5V</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Switches and Pot:</span>
+                    <div class="connection">Switch 1 (ON/OFF) → Pin 2</div>
+                    <div class="connection">Switch 2 (Direction) → Pin 3</div>
+                    <div class="connection">Potentiometer middle → A0</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// DC MOTOR CONTROL - L293D H-BRIDGE
+// Control ON/OFF, Direction, and Speed
+// ============================================
+
+// ===== PIN DEFINITIONS =====
+const int enablePin = 9;      // PWM pin for speed (L293D Enable)
+const int input1Pin = 7;      // Direction control 1
+const int input2Pin = 8;      // Direction control 2
+
+const int onOffSwitch = 2;    // ON/OFF control
+const int dirSwitch = 3;      // Direction control
+const int speedPot = A0;      // Speed potentiometer
+
+// ===== VARIABLES =====
+bool motorOn;                 // Motor ON/OFF state
+bool motorDirection;          // Motor direction
+int speedValue;               // Raw pot reading
+int motorSpeed;               // PWM value (0-255)
+
+void setup() {
+  Serial.begin(9600);
+
+  // Motor control pins
+  pinMode(enablePin, OUTPUT);
+  pinMode(input1Pin, OUTPUT);
+  pinMode(input2Pin, OUTPUT);
+
+  // Input pins
+  pinMode(onOffSwitch, INPUT);
+  pinMode(dirSwitch, INPUT);
+  pinMode(speedPot, INPUT);
+
+  // Initial state: motor OFF
+  digitalWrite(enablePin, LOW);
+
+  Serial.println("===== DC MOTOR CONTROL =====");
+}
+
+void loop() {
+  // ===== READ INPUTS =====
+  motorOn = digitalRead(onOffSwitch);
+  motorDirection = digitalRead(dirSwitch);
+  speedValue = analogRead(speedPot);
+
+  // ===== MAP SPEED =====
+  motorSpeed = map(speedValue, 0, 1023, 0, 255);
+
+  // ===== CONTROL MOTOR =====
+  if (motorOn == HIGH) {
+    // Motor should run
+
+    // Set direction
+    if (motorDirection == HIGH) {
+      // FORWARD: Input1=HIGH, Input2=LOW
+      digitalWrite(input1Pin, HIGH);
+      digitalWrite(input2Pin, LOW);
+    } else {
+      // REVERSE: Input1=LOW, Input2=HIGH
+      digitalWrite(input1Pin, LOW);
+      digitalWrite(input2Pin, HIGH);
+    }
+
+    // Set speed via PWM on enable pin
+    analogWrite(enablePin, motorSpeed);
+
+    // Serial output
+    Serial.print("Motor: ON | Direction: ");
+    Serial.print(motorDirection ? "FWD" : "REV");
+    Serial.print(" | Speed: ");
+    Serial.println(motorSpeed);
+
+  } else {
+    // Motor OFF
+    digitalWrite(input1Pin, LOW);
+    digitalWrite(input2Pin, LOW);
+    analogWrite(enablePin, 0);
+
+    Serial.println("Motor: OFF | Direction: --- | Speed: 0");
+  }
+
+  delay(200);
+}
+
+// ===== END OF CODE =====</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>H-bridge operation:</strong> IN1=HIGH/IN2=LOW = forward, IN1=LOW/IN2=HIGH = reverse</li>
+                <li><strong>PWM speed control:</strong> Enable pin controls speed via PWM (0-255)</li>
+                <li><strong>Multiple inputs:</strong> Combine digital switches and analog pot</li>
+                <li><strong>External power:</strong> Motors need separate power supply from Arduino</li>
+            </ul>
+
+            <h3>Common Mistakes:</h3>
+            <ul>
+                <li>❌ Both inputs HIGH or both LOW = motor brake/stop</li>
+                <li>❌ Forgetting external power supply for motor</li>
+                <li>❌ Not using PWM pin for enable - motor runs full speed only</li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q7" class="btn">← Previous</a>
+            <a href="#q9" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 9: LDR + SERVO STATE MACHINE -->
+        <div class="question-container" id="q9">
+            <div class="question-header">
+                <div class="question-number">QUESTION 9: LDR + SERVO STATE MACHINE</div>
+                <span class="difficulty-badge difficulty-medium">MEDIUM</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">28 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">35%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Create an automated curtain system that uses an LDR to detect darkness. When it gets dark (below threshold), the servo should rotate 90° to "close curtains" and an LED should turn ON. Importantly, this should only happen ONCE when darkness is detected, not continuously - use a state machine with flags.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li>Use LDR with 10kΩ voltage divider</li>
+                    <li>When light < 300: Rotate servo from 0° to 90° (ONCE), turn LED ON</li>
+                    <li>When light > 300: Rotate servo back to 0°, turn LED OFF</li>
+                    <li>Use flag variable to prevent continuous servo movement</li>
+                    <li>Display state changes on Serial Monitor</li>
+                    <li>Serial format: "Light: XXX - State: OPEN/CLOSED"</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>LDR with 10kΩ resistor</li>
+                <li>Servo Motor</li>
+                <li>LED with 220Ω resistor</li>
+                <li>Breadboard and wires</li>
+            </ul>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 9 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 9</div>
+
+            <h3>Approach:</h3>
+            <p>Use a boolean flag to track curtain state (open/closed). Only execute servo movement when state actually changes, preventing continuous operation. This is a classic state machine pattern used in the Week 10 examples.</p>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">LDR Voltage Divider:</span>
+                    <div class="connection">5V → LDR → A0 → 10kΩ → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Servo:</span>
+                    <div class="connection">Red → 5V, Brown → GND, Orange → Pin 9</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">LED:</span>
+                    <div class="connection">Anode → 220Ω → Pin 13, Cathode → GND</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// LDR + SERVO STATE MACHINE
+// Automated curtain system with state flags
+// ============================================
+
+#include <Servo.h>
+
+// ===== PIN DEFINITIONS =====
+const int ldrPin = A0;
+const int servoPin = 9;
+const int ledPin = 13;
+
+// ===== THRESHOLD =====
+const int LIGHT_THRESHOLD = 300;
+
+// ===== OBJECTS =====
+Servo curtainServo;
+
+// ===== STATE VARIABLE =====
+bool curtainsClosed = false;  // Track curtain state
+
+// ===== VARIABLES =====
+int lightLevel;
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(ldrPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+
+  curtainServo.attach(servoPin);
+  curtainServo.write(0);  // Start with curtains OPEN
+
+  digitalWrite(ledPin, LOW);
+
+  Serial.println("===== AUTOMATED CURTAIN SYSTEM =====");
+  Serial.println("Threshold: 300");
+}
+
+void loop() {
+  // ===== READ LIGHT LEVEL =====
+  lightLevel = analogRead(ldrPin);
+
+  // ===== STATE MACHINE LOGIC =====
+  if (lightLevel < LIGHT_THRESHOLD && !curtainsClosed) {
+    // It's dark AND curtains are currently open
+    // TRANSITION TO CLOSED STATE
+
+    Serial.println("DARK DETECTED - Closing curtains...");
+
+    curtainServo.write(90);     // Close curtains
+    digitalWrite(ledPin, HIGH); // Turn on light
+
+    curtainsClosed = true;      // Update state flag
+
+    Serial.print("Light: ");
+    Serial.print(lightLevel);
+    Serial.println(" - State: CLOSED");
+
+  } else if (lightLevel >= LIGHT_THRESHOLD && curtainsClosed) {
+    // It's bright AND curtains are currently closed
+    // TRANSITION TO OPEN STATE
+
+    Serial.println("LIGHT DETECTED - Opening curtains...");
+
+    curtainServo.write(0);      // Open curtains
+    digitalWrite(ledPin, LOW);  // Turn off light
+
+    curtainsClosed = false;     // Update state flag
+
+    Serial.print("Light: ");
+    Serial.print(lightLevel);
+    Serial.println(" - State: OPEN");
+
+  } else {
+    // No state change needed
+    // Just report current status occasionally
+    Serial.print("Light: ");
+    Serial.print(lightLevel);
+    Serial.print(" - State: ");
+    Serial.println(curtainsClosed ? "CLOSED" : "OPEN");
+  }
+
+  delay(1000);
+}
+
+// ===== END OF CODE =====</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>State machine:</strong> Use boolean flags to track system state</li>
+                <li><strong>Edge detection:</strong> Only act on state CHANGES, not continuous conditions</li>
+                <li><strong>Flag pattern:</strong> Check both sensor AND current state before acting</li>
+                <li><strong>Prevent oscillation:</strong> Without flags, servo would constantly move</li>
+            </ul>
+
+            <h3>Common Mistakes:</h3>
+            <ul>
+                <li>❌ No state flag - servo continuously writes same position</li>
+                <li>❌ Forgetting to update flag - state change happens only once ever</li>
+                <li>❌ Wrong logic - checking only sensor, not current state</li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q8" class="btn">← Previous</a>
+            <a href="#q10" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 10: TRAFFIC LIGHT SEQUENCE -->
+        <div class="question-container" id="q10">
+            <div class="question-header">
+                <div class="question-number">QUESTION 10: TRAFFIC LIGHT SEQUENCE</div>
+                <span class="difficulty-badge difficulty-medium">MEDIUM</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">22 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">35%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Simulate a traffic light controller with three LEDs (Red, Yellow, Green). The system should cycle through the standard traffic light sequence with proper timing.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li>Red LED: ON for 5 seconds</li>
+                    <li>Yellow LED: ON for 2 seconds</li>
+                    <li>Green LED: ON for 5 seconds</li>
+                    <li>Repeat sequence continuously</li>
+                    <li>Only ONE LED should be ON at any time</li>
+                    <li>Display current state on Serial Monitor</li>
+                    <li>Serial format: "Traffic Light: RED/YELLOW/GREEN"</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>Red, Yellow, Green LEDs (3× 220Ω resistors)</li>
+                <li>Breadboard and wires</li>
+            </ul>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 10 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 10</div>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">Red LED:</span>
+                    <div class="connection">Anode → 220Ω → Pin 11, Cathode → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Yellow LED:</span>
+                    <div class="connection">Anode → 220Ω → Pin 10, Cathode → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Green LED:</span>
+                    <div class="connection">Anode → 220Ω → Pin 9, Cathode → GND</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// TRAFFIC LIGHT SEQUENCE
+// Red → Yellow → Green cycle with timing
+// ============================================
+
+// ===== PIN DEFINITIONS =====
+const int redPin = 11;
+const int yellowPin = 10;
+const int greenPin = 9;
+
+// ===== TIMING CONSTANTS =====
+const int RED_TIME = 5000;      // 5 seconds
+const int YELLOW_TIME = 2000;   // 2 seconds
+const int GREEN_TIME = 5000;    // 5 seconds
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(redPin, OUTPUT);
+  pinMode(yellowPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+
+  // Turn all LEDs OFF initially
+  digitalWrite(redPin, LOW);
+  digitalWrite(yellowPin, LOW);
+  digitalWrite(greenPin, LOW);
+
+  Serial.println("===== TRAFFIC LIGHT CONTROLLER =====");
+}
+
+void loop() {
+  // ===== RED LIGHT PHASE =====
+  digitalWrite(redPin, HIGH);
+  digitalWrite(yellowPin, LOW);
+  digitalWrite(greenPin, LOW);
+
+  Serial.println("Traffic Light: RED");
+  delay(RED_TIME);
+
+  // ===== YELLOW LIGHT PHASE =====
+  digitalWrite(redPin, LOW);
+  digitalWrite(yellowPin, HIGH);
+  digitalWrite(greenPin, LOW);
+
+  Serial.println("Traffic Light: YELLOW");
+  delay(YELLOW_TIME);
+
+  // ===== GREEN LIGHT PHASE =====
+  digitalWrite(redPin, LOW);
+  digitalWrite(yellowPin, LOW);
+  digitalWrite(greenPin, HIGH);
+
+  Serial.println("Traffic Light: GREEN");
+  delay(GREEN_TIME);
+
+  // Loop will repeat back to RED
+}
+
+// ===== END OF CODE =====
+// Alternative: Use arrays for cleaner code
+// int ledPins[] = {redPin, yellowPin, greenPin};
+// int timings[] = {RED_TIME, YELLOW_TIME, GREEN_TIME};</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>Sequential control:</strong> Linear sequence with delays</li>
+                <li><strong>Mutual exclusion:</strong> Ensure only one output active at a time</li>
+                <li><strong>Timing constants:</strong> Use const int for easy modification</li>
+                <li><strong>State display:</strong> Clear Serial feedback for each state</li>
+            </ul>
+
+            <h3>Alternative Approach (Advanced):</h3>
+            <p>Could use arrays and for loops for more compact code, or millis() for non-blocking operation.</p>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q9" class="btn">← Previous</a>
+            <a href="#q11" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 11: RGB LED COLOR CONTROL -->
+        <div class="question-container" id="q11">
+            <div class="question-header">
+                <div class="question-number">QUESTION 11: RGB LED COLOR CONTROL</div>
+                <span class="difficulty-badge difficulty-medium">MEDIUM</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">25 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">35%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Use a potentiometer to control the color of an RGB LED. As the pot is turned, the LED should smoothly transition through colors: Red → Yellow → Green → Cyan → Blue → Magenta → back to Red.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li>Use potentiometer to select color (0-1023 mapped to color range)</li>
+                    <li>Control RGB LED using PWM on all three channels</li>
+                    <li>Create smooth color transitions</li>
+                    <li>Display current RGB values on Serial Monitor</li>
+                    <li>Serial format: "Pot: XXX | R:XXX G:XXX B:XXX"</li>
+                    <li>Update color in real-time as pot is turned</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>RGB LED (common cathode)</li>
+                <li>3× 220Ω resistors</li>
+                <li>Potentiometer (10kΩ)</li>
+                <li>Breadboard and wires</li>
+            </ul>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 11 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 11</div>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">RGB LED (Common Cathode):</span>
+                    <div class="connection">Red pin → 220Ω → Arduino Pin 9 (PWM)</div>
+                    <div class="connection">Green pin → 220Ω → Arduino Pin 10 (PWM)</div>
+                    <div class="connection">Blue pin → 220Ω → Arduino Pin 11 (PWM)</div>
+                    <div class="connection">Common cathode (longest pin) → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Potentiometer:</span>
+                    <div class="connection">Left → 5V, Middle → A0, Right → GND</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// RGB LED COLOR CONTROL
+// Potentiometer controls color transitions
+// ============================================
+
+// ===== PIN DEFINITIONS =====
+const int redPin = 9;      // PWM pin for red
+const int greenPin = 10;   // PWM pin for green
+const int bluePin = 11;    // PWM pin for blue
+const int potPin = A0;     // Potentiometer
+
+// ===== VARIABLES =====
+int potValue;
+int redValue, greenValue, blueValue;
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+
+  Serial.println("===== RGB COLOR CONTROL =====");
+}
+
+void loop() {
+  // ===== READ POTENTIOMETER =====
+  potValue = analogRead(potPin);  // 0-1023
+
+  // ===== MAP POT VALUE TO COLOR ZONES =====
+  // Divide 0-1023 into 6 color zones (0-5)
+  int colorZone = map(potValue, 0, 1023, 0, 6);
+
+  // ===== CALCULATE RGB VALUES BASED ON ZONE =====
+  switch(colorZone) {
+    case 0:  // RED
+      redValue = 255;
+      greenValue = 0;
+      blueValue = 0;
+      break;
+
+    case 1:  // YELLOW (Red + Green)
+      redValue = 255;
+      greenValue = 255;
+      blueValue = 0;
+      break;
+
+    case 2:  // GREEN
+      redValue = 0;
+      greenValue = 255;
+      blueValue = 0;
+      break;
+
+    case 3:  // CYAN (Green + Blue)
+      redValue = 0;
+      greenValue = 255;
+      blueValue = 255;
+      break;
+
+    case 4:  // BLUE
+      redValue = 0;
+      greenValue = 0;
+      blueValue = 255;
+      break;
+
+    case 5:  // MAGENTA (Red + Blue)
+      redValue = 255;
+      greenValue = 0;
+      blueValue = 255;
+      break;
+
+    default:  // Fallback to RED
+      redValue = 255;
+      greenValue = 0;
+      blueValue = 0;
+  }
+
+  // ===== WRITE PWM VALUES TO RGB LED =====
+  analogWrite(redPin, redValue);
+  analogWrite(greenPin, greenValue);
+  analogWrite(bluePin, blueValue);
+
+  // ===== SERIAL OUTPUT =====
+  Serial.print("Pot: ");
+  Serial.print(potValue);
+  Serial.print(" | R:");
+  Serial.print(redValue);
+  Serial.print(" G:");
+  Serial.print(greenValue);
+  Serial.print(" B:");
+  Serial.println(blueValue);
+
+  delay(50);  // Small delay for stability
+}
+
+// ===== END OF CODE =====</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>Multiple PWM:</strong> Control 3 PWM outputs simultaneously</li>
+                <li><strong>Color mixing:</strong> Combine R, G, B channels to create colors</li>
+                <li><strong>Switch statement:</strong> Clean way to handle multiple discrete cases</li>
+                <li><strong>Common cathode:</strong> HIGH = LED on, LOW = LED off</li>
+            </ul>
+
+            <h3>Color Theory:</h3>
+            <ul>
+                <li>Red + Green = Yellow</li>
+                <li>Green + Blue = Cyan</li>
+                <li>Blue + Red = Magenta</li>
+                <li>All three = White</li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q10" class="btn">← Previous</a>
+            <a href="#q12" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 12: TWO BUTTON LOGIC -->
+        <div class="question-container" id="q12">
+            <div class="question-header">
+                <div class="question-number">QUESTION 12: TWO-BUTTON LOGIC GATES</div>
+                <span class="difficulty-badge difficulty-medium">MEDIUM</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">18 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">35%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Create a system that demonstrates digital logic gates using two buttons and two LEDs. The system should implement both AND and OR logic simultaneously.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li>Use two pushbuttons as inputs</li>
+                    <li>Red LED (AND logic): ON only when BOTH buttons pressed</li>
+                    <li>Green LED (OR logic): ON when ANY button pressed</li>
+                    <li>Display button states on Serial Monitor</li>
+                    <li>Serial format: "Button1: X Button2: X | AND: X OR: X"</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>2× Pushbuttons</li>
+                <li>2× 10kΩ resistors (pull-down)</li>
+                <li>Red LED and Green LED (2× 220Ω resistors)</li>
+                <li>Breadboard and wires</li>
+            </ul>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 12 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 12</div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// TWO-BUTTON LOGIC GATES
+// Demonstrates AND and OR logic
+// ============================================
+
+// ===== PIN DEFINITIONS =====
+const int button1Pin = 2;
+const int button2Pin = 3;
+const int redLedPin = 12;    // AND result
+const int greenLedPin = 13;  // OR result
+
+// ===== VARIABLES =====
+bool button1State;
+bool button2State;
+bool andResult;
+bool orResult;
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(button1Pin, INPUT);
+  pinMode(button2Pin, INPUT);
+  pinMode(redLedPin, OUTPUT);
+  pinMode(greenLedPin, OUTPUT);
+
+  Serial.println("===== LOGIC GATE DEMO =====");
+  Serial.println("Red LED = AND, Green LED = OR");
+}
+
+void loop() {
+  // ===== READ BUTTON STATES =====
+  button1State = digitalRead(button1Pin);
+  button2State = digitalRead(button2Pin);
+
+  // ===== AND LOGIC =====
+  // True only if BOTH buttons are pressed
+  andResult = button1State && button2State;
+  digitalWrite(redLedPin, andResult);
+
+  // ===== OR LOGIC =====
+  // True if ANY button is pressed
+  orResult = button1State || button2State;
+  digitalWrite(greenLedPin, orResult);
+
+  // ===== SERIAL OUTPUT =====
+  Serial.print("Button1: ");
+  Serial.print(button1State);
+  Serial.print(" Button2: ");
+  Serial.print(button2State);
+  Serial.print(" | AND: ");
+  Serial.print(andResult);
+  Serial.print(" OR: ");
+  Serial.println(orResult);
+
+  delay(200);
+}
+
+// ===== END OF CODE =====</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>AND operator (&&):</strong> Both conditions must be true</li>
+                <li><strong>OR operator (||):</strong> At least one condition must be true</li>
+                <li><strong>Boolean logic:</strong> Combines multiple digital inputs</li>
+                <li><strong>Truth tables:</strong> AND: 1+1=1, OR: 1+0=1</li>
+            </ul>
+
+            <h3>Truth Table:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Button1</th>
+                        <th>Button2</th>
+                        <th>AND (Red)</th>
+                        <th>OR (Green)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                    <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+                    <tr><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+                    <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q11" class="btn">← Previous</a>
+            <a href="#q13" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 13: SERVO SWEEP WITH VARIABLE SPEED -->
+        <div class="question-container" id="q13">
+            <div class="question-header">
+                <div class="question-number">QUESTION 13: SERVO SWEEP WITH VARIABLE SPEED</div>
+                <span class="difficulty-badge difficulty-medium">MEDIUM</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">23 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">35%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Create an automated servo sweeping system where the servo continuously sweeps from 0° to 180° and back. A potentiometer controls the speed of the sweep - the higher the pot value, the faster the sweep.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li>Servo automatically sweeps 0° → 180° → 0° continuously</li>
+                    <li>Use for loops to increment/decrement angle</li>
+                    <li>Potentiometer controls delay between steps (faster sweep = shorter delay)</li>
+                    <li>Map pot value (0-1023) to delay range (1-50ms)</li>
+                    <li>Display current angle and speed on Serial Monitor</li>
+                    <li>Serial format: "Angle: XXX° | Speed: XX ms/step"</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>Servo Motor</li>
+                <li>Potentiometer (10kΩ)</li>
+                <li>Breadboard and wires</li>
+            </ul>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 13 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 13</div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// SERVO SWEEP WITH VARIABLE SPEED
+// Pot controls sweep speed
+// ============================================
+
+#include <Servo.h>
+
+const int servoPin = 9;
+const int potPin = A0;
+
+Servo myServo;
+
+int potValue;
+int sweepDelay;  // Delay between angle steps
+
+void setup() {
+  Serial.begin(9600);
+
+  myServo.attach(servoPin);
+  myServo.write(0);  // Start at 0°
+
+  Serial.println("===== SERVO SWEEP =====");
+}
+
+void loop() {
+  // ===== READ SPEED CONTROL =====
+  potValue = analogRead(potPin);
+
+  // ===== MAP TO DELAY TIME =====
+  // Higher pot = shorter delay = faster sweep
+  // Map 0-1023 to 50-1 (inverted)
+  sweepDelay = map(potValue, 0, 1023, 50, 1);
+
+  // ===== SWEEP FORWARD (0° to 180°) =====
+  for (int angle = 0; angle <= 180; angle++) {
+    // Update speed reading each step
+    potValue = analogRead(potPin);
+    sweepDelay = map(potValue, 0, 1023, 50, 1);
+
+    myServo.write(angle);
+
+    Serial.print("Angle: ");
+    Serial.print(angle);
+    Serial.print("° | Speed: ");
+    Serial.print(sweepDelay);
+    Serial.println(" ms/step");
+
+    delay(sweepDelay);
+  }
+
+  // ===== SWEEP BACKWARD (180° to 0°) =====
+  for (int angle = 180; angle >= 0; angle--) {
+    // Update speed reading each step
+    potValue = analogRead(potPin);
+    sweepDelay = map(potValue, 0, 1023, 50, 1);
+
+    myServo.write(angle);
+
+    Serial.print("Angle: ");
+    Serial.print(angle);
+    Serial.print("° | Speed: ");
+    Serial.print(sweepDelay);
+    Serial.println(" ms/step");
+
+    delay(sweepDelay);
+  }
+
+  // Loop repeats automatically
+}
+
+// ===== END OF CODE =====</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>For loops:</strong> Increment (++) and decrement (--) operators</li>
+                <li><strong>Variable delay:</strong> Dynamic timing based on input</li>
+                <li><strong>Continuous operation:</strong> Forward and reverse sweeps</li>
+                <li><strong>Inverted mapping:</strong> High input = low delay = fast speed</li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q12" class="btn">← Previous</a>
+            <a href="#q14" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 14: FORCE SENSOR + LED BRIGHTNESS -->
+        <div class="question-container" id="q14">
+            <div class="question-header">
+                <div class="question-number">QUESTION 14: FORCE SENSOR LED BRIGHTNESS</div>
+                <span class="difficulty-badge difficulty-medium">MEDIUM</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">20 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">30%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Design a pressure-sensitive lamp that adjusts its brightness based on how hard you press a force-sensing resistor (FSR). The harder you press, the brighter the LED becomes. This demonstrates analog input mapping to PWM output for variable brightness control.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li>Use a Force-Sensing Resistor (FSR) with a 10kΩ pull-down resistor</li>
+                    <li>Read force values as analog input (0-1023)</li>
+                    <li>Map force values to LED brightness (0-255 PWM)</li>
+                    <li>Use a PWM-capable pin for the LED</li>
+                    <li>Display both raw force value and brightness percentage on Serial Monitor</li>
+                    <li>Serial format: "Force: XXX | Brightness: XX%"</li>
+                    <li>Update every 100ms for smooth response</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>Force-Sensing Resistor (FSR)</li>
+                <li>10kΩ resistor (pull-down)</li>
+                <li>LED with 220Ω resistor</li>
+                <li>Breadboard and wires</li>
+            </ul>
+
+            <h3>Pin Requirements:</h3>
+            <ul>
+                <li>FSR on analog pin (A0-A5)</li>
+                <li>LED on PWM pin (3, 5, 6, 9, 10, or 11)</li>
+            </ul>
+
+            <h3>Deliverables:</h3>
+            <div class="deliverables-checklist">
+                <ul>
+                    <li>☐ Working circuit with FSR voltage divider</li>
+                    <li>☐ Code with proper map() function for PWM</li>
+                    <li>☐ Serial Monitor showing force and brightness values</li>
+                    <li>☐ Comments explaining analog-to-PWM conversion</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 14 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 14</div>
+
+            <h3>Approach:</h3>
+            <p>Map analog input (0-1023) from the FSR to PWM output (0-255) for LED brightness. Use analogWrite() to control LED intensity proportionally to applied force.</p>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">FSR Voltage Divider:</span>
+                    <div class="connection">5V → FSR → Arduino A0 → 10kΩ resistor → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">LED (PWM):</span>
+                    <div class="connection">Arduino Pin 9 → 220Ω resistor → LED Anode</div>
+                    <div class="connection">LED Cathode → GND</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// FORCE SENSOR LED BRIGHTNESS CONTROL
+// Pressure controls LED brightness via PWM
+// ============================================
+
+// ===== PIN DEFINITIONS =====
+const int fsrPin = A0;        // FSR connected to analog pin A0
+const int ledPin = 9;         // LED on PWM pin 9 (marked with ~)
+
+// ===== GLOBAL VARIABLES =====
+int forceValue;               // Raw analog reading (0-1023)
+int ledBrightness;            // PWM value for LED (0-255)
+int brightnessPercent;        // Brightness as percentage (0-100%)
+
+void setup() {
+  // Initialize Serial communication
+  Serial.begin(9600);
+
+  // Configure pin modes
+  pinMode(fsrPin, INPUT);     // FSR is an analog input
+  pinMode(ledPin, OUTPUT);    // LED is a PWM output
+
+  Serial.println("===== FORCE SENSOR LED CONTROL =====");
+  Serial.println("Press harder = brighter LED");
+  Serial.println("====================================");
+}
+
+void loop() {
+  // ===== READ FORCE VALUE =====
+  // analogRead() returns 0-1023
+  // 0 = no pressure, 1023 = maximum pressure
+  forceValue = analogRead(fsrPin);
+
+  // ===== MAP TO LED BRIGHTNESS =====
+  // Convert analog range (0-1023) to PWM range (0-255)
+  // map(value, fromLow, fromHigh, toLow, toHigh)
+  ledBrightness = map(forceValue, 0, 1023, 0, 255);
+
+  // Calculate percentage for display
+  brightnessPercent = map(forceValue, 0, 1023, 0, 100);
+
+  // ===== SET LED BRIGHTNESS =====
+  // analogWrite() sets PWM duty cycle (0-255)
+  // 0 = LED off, 255 = LED full brightness
+  analogWrite(ledPin, ledBrightness);
+
+  // ===== SERIAL OUTPUT =====
+  Serial.print("Force: ");
+  Serial.print(forceValue);
+  Serial.print(" | Brightness: ");
+  Serial.print(brightnessPercent);
+  Serial.println("%");
+
+  // Short delay for smooth response
+  delay(100);
+}
+
+// ===== END OF CODE =====
+// WHY PWM PIN?
+// - Only pins 3, 5, 6, 9, 10, 11 support analogWrite()
+// - PWM = Pulse Width Modulation (rapid on/off to simulate analog)
+// - Duty cycle controls average voltage to LED</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>map() function:</strong> Converts one range to another linearly</li>
+                <li><strong>PWM output:</strong> analogWrite() only works on PWM pins (marked with ~)</li>
+                <li><strong>FSR behavior:</strong> Resistance decreases with increased pressure</li>
+                <li><strong>Voltage divider:</strong> Creates variable voltage based on force</li>
+                <li><strong>Real-time mapping:</strong> Direct sensor-to-actuator control</li>
+            </ul>
+
+            <h3>Common Mistakes to Avoid:</h3>
+            <ul>
+                <li>❌ Using a non-PWM pin for LED (will only do ON/OFF)</li>
+                <li>❌ Forgetting pull-down resistor (FSR alone won't work)</li>
+                <li>❌ Using digitalWrite() instead of analogWrite()</li>
+                <li>❌ Not constraining values (could cause unexpected behavior)</li>
+            </ul>
+
+            <h3>Time Breakdown:</h3>
+            <ul>
+                <li>Circuit assembly: 7 minutes</li>
+                <li>Code writing: 8 minutes</li>
+                <li>Testing & debugging: 3 minutes</li>
+                <li>Comments: 2 minutes</li>
+                <li><strong>Total: 20 minutes</strong></li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q13" class="btn">← Previous</a>
+            <a href="#q15" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 15: ULTRASONIC + SERVO DISTANCE CONTROL -->
+        <div class="question-container" id="q15">
+            <div class="question-header">
+                <div class="question-number">QUESTION 15: ULTRASONIC SERVO DISTANCE CONTROL</div>
+                <span class="difficulty-badge difficulty-medium">MEDIUM</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">27 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">35%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Create an automated gate or camera tracking system where a servo motor's angle is controlled by the distance measured by an ultrasonic sensor. As objects get closer, the servo rotates to a different position. This is commonly used in automated gates, camera systems, and robotic tracking.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li>Use HC-SR04 ultrasonic sensor to measure distance (2-400cm range)</li>
+                    <li>Calculate distance using formula: distance = duration × 0.034 / 2</li>
+                    <li>Map distance (10-100cm) to servo angle (0-180°)</li>
+                    <li>Closer distance = smaller servo angle</li>
+                    <li>Display distance and servo angle on Serial Monitor</li>
+                    <li>Serial format: "Distance: XX cm → Servo: XXX°"</li>
+                    <li>Update measurements every 200ms</li>
+                    <li>Handle out-of-range values gracefully</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>HC-SR04 Ultrasonic Sensor</li>
+                <li>Servo Motor</li>
+                <li>Breadboard and wires</li>
+            </ul>
+
+            <h3>Pin Assignments:</h3>
+            <ul>
+                <li>HC-SR04 TRIG → Digital Pin</li>
+                <li>HC-SR04 ECHO → Digital Pin</li>
+                <li>Servo Signal → PWM Pin (9, 10, or 11 recommended)</li>
+            </ul>
+
+            <h3>Deliverables:</h3>
+            <div class="deliverables-checklist">
+                <ul>
+                    <li>☐ Working ultrasonic circuit (TRIG/ECHO properly connected)</li>
+                    <li>☐ Servo motor responding to distance changes</li>
+                    <li>☐ Distance calculation formula correctly implemented</li>
+                    <li>☐ map() function converting distance to angle</li>
+                    <li>☐ Serial Monitor showing real-time distance and angle</li>
+                </ul>
+            </div>
+
+            <h3>Grading Criteria:</h3>
+            <div class="grading-criteria">
+                <span>Circuit connections (TRIG, ECHO, Servo)</span><span>20%</span>
+                <span>Distance calculation accuracy</span><span>25%</span>
+                <span>Distance-to-angle mapping logic</span><span>25%</span>
+                <span>Serial output formatting</span><span>10%</span>
+                <span>Code comments and structure</span><span>20%</span>
+            </div>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 15 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 15</div>
+
+            <h3>Approach:</h3>
+            <p>Combine ultrasonic distance measurement with servo control. Use pulseIn() to measure echo duration, calculate distance, then map that distance to a servo angle. Constrain values to prevent servo damage from out-of-range commands.</p>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">HC-SR04 Ultrasonic:</span>
+                    <div class="connection">VCC → Arduino 5V</div>
+                    <div class="connection">GND → Arduino GND</div>
+                    <div class="connection">TRIG → Arduino Pin 7</div>
+                    <div class="connection">ECHO → Arduino Pin 8</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Servo Motor:</span>
+                    <div class="connection">Red (Power) → Arduino 5V</div>
+                    <div class="connection">Brown/Black (GND) → Arduino GND</div>
+                    <div class="connection">Orange/Yellow (Signal) → Arduino Pin 9</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// ULTRASONIC SERVO DISTANCE CONTROL
+// Distance controls servo angle
+// ============================================
+
+#include <Servo.h>
+
+// ===== PIN DEFINITIONS =====
+const int trigPin = 7;        // Ultrasonic TRIG pin
+const int echoPin = 8;        // Ultrasonic ECHO pin
+const int servoPin = 9;       // Servo signal pin
+
+// ===== OBJECTS =====
+Servo gateServo;              // Create servo object
+
+// ===== GLOBAL VARIABLES =====
+long duration;                // Pulse duration in microseconds
+int distance;                 // Calculated distance in cm
+int servoAngle;               // Servo angle (0-180°)
+
+void setup() {
+  // Initialize Serial communication
+  Serial.begin(9600);
+
+  // Configure ultrasonic pins
+  pinMode(trigPin, OUTPUT);   // TRIG sends signal
+  pinMode(echoPin, INPUT);    // ECHO receives signal
+
+  // Attach servo to pin
+  gateServo.attach(servoPin);
+  gateServo.write(90);        // Start at center position
+
+  Serial.println("===== ULTRASONIC SERVO CONTROL =====");
+  Serial.println("Distance controls servo angle");
+  Serial.println("====================================");
+}
+
+void loop() {
+  // ===== TRIGGER ULTRASONIC PULSE =====
+  // Send 10μs pulse to TRIG pin
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);       // Ensure clean LOW pulse
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);      // 10μs HIGH pulse
+  digitalWrite(trigPin, LOW);
+
+  // ===== READ ECHO DURATION =====
+  // pulseIn() measures how long ECHO pin stays HIGH (in microseconds)
+  // Timeout after 30000μs (30ms) to prevent hanging
+  duration = pulseIn(echoPin, HIGH, 30000);
+
+  // ===== CALCULATE DISTANCE =====
+  // Formula: distance = (duration × speed of sound) / 2
+  // Speed of sound = 343 m/s = 0.034 cm/μs
+  // Divide by 2 because sound travels to object AND back
+  distance = duration * 0.034 / 2;
+
+  // ===== MAP DISTANCE TO SERVO ANGLE =====
+  // Map distance range (10-100 cm) to angle range (0-180°)
+  // Closer object (10cm) → 0°
+  // Farther object (100cm) → 180°
+  servoAngle = map(distance, 10, 100, 0, 180);
+
+  // ===== CONSTRAIN SERVO ANGLE =====
+  // Prevent servo from receiving invalid angles
+  // Keeps angle within safe 0-180° range
+  servoAngle = constrain(servoAngle, 0, 180);
+
+  // ===== MOVE SERVO =====
+  gateServo.write(servoAngle);
+
+  // ===== SERIAL OUTPUT =====
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.print(" cm → Servo: ");
+  Serial.print(servoAngle);
+  Serial.println("°");
+
+  // Wait before next measurement
+  delay(200);
+}
+
+// ===== END OF CODE =====
+// CRITICAL CONCEPTS:
+// 1. pulseIn() measures microseconds ECHO stays HIGH
+// 2. Distance formula accounts for round-trip travel
+// 3. map() does linear conversion between ranges
+// 4. constrain() prevents servo damage from bad values</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>Ultrasonic formula:</strong> duration × 0.034 / 2 (accounts for round-trip)</li>
+                <li><strong>pulseIn():</strong> Measures pulse duration on a pin</li>
+                <li><strong>map() function:</strong> Linear conversion between input/output ranges</li>
+                <li><strong>constrain():</strong> Limits values to safe range (prevents servo damage)</li>
+                <li><strong>Integration:</strong> Combining sensor input with actuator output</li>
+            </ul>
+
+            <h3>Common Mistakes:</h3>
+            <ul>
+                <li>❌ Forgetting to divide by 2 in distance formula (counts round trip twice)</li>
+                <li>❌ Not constraining servo angle (can send invalid angles like 250°)</li>
+                <li>❌ Wrong map() range (distance in mm instead of cm)</li>
+                <li>❌ No timeout on pulseIn() (code hangs if no echo)</li>
+            </ul>
+
+            <h3>Testing Checklist:</h3>
+            <ul>
+                <li>☐ Hold hand 10cm away → servo should be at ~0°</li>
+                <li>☐ Move hand to 100cm → servo should be at ~180°</li>
+                <li>☐ Serial Monitor shows smooth distance/angle changes</li>
+                <li>☐ No jittery servo movement (if jittery, increase delay)</li>
+            </ul>
+
+            <h3>Time Breakdown:</h3>
+            <ul>
+                <li>Circuit assembly: 10 minutes</li>
+                <li>Code writing: 10 minutes</li>
+                <li>Testing & calibration: 5 minutes</li>
+                <li>Comments: 2 minutes</li>
+                <li><strong>Total: 27 minutes</strong></li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q14" class="btn">← Previous</a>
+            <a href="#q16" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 16: SMART SECURITY SYSTEM -->
+        <div class="question-container" id="q16">
+            <div class="question-header">
+                <div class="question-number">QUESTION 16: SMART SECURITY SYSTEM</div>
+                <span class="difficulty-badge difficulty-hard">HARD</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">35 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">40%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Design a comprehensive security system that detects both motion and proximity. The system uses a PIR motion sensor to detect movement and an ultrasonic sensor to measure distance to intruders. It provides multi-level alerts: green LED for safe, yellow LED for motion detected, red LED and buzzer for close proximity threat.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li><strong>Motion Detection:</strong> PIR sensor detects movement</li>
+                    <li><strong>Distance Measurement:</strong> Ultrasonic sensor measures proximity</li>
+                    <li><strong>Three Security States:</strong>
+                        <ul>
+                            <li>SAFE: No motion, distance > 50cm → Green LED only</li>
+                            <li>ALERT: Motion detected OR distance 20-50cm → Yellow LED</li>
+                            <li>DANGER: Motion AND distance < 20cm → Red LED + Buzzer</li>
+                        </ul>
+                    </li>
+                    <li>Serial Monitor displays: status, motion state, and distance</li>
+                    <li>Serial format: "Status: [SAFE/ALERT/DANGER] | Motion: [YES/NO] | Distance: XX cm"</li>
+                    <li>Update every 500ms</li>
+                    <li>Buzzer beeps continuously in DANGER state</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>HC-SR04 Ultrasonic Sensor</li>
+                <li>PIR Motion Sensor</li>
+                <li>3 LEDs (Red, Yellow, Green) with 220Ω resistors</li>
+                <li>Piezo Buzzer</li>
+                <li>Breadboard and wires</li>
+            </ul>
+
+            <h3>Logic Requirements:</h3>
+            <ul>
+                <li>DANGER state requires BOTH motion AND close distance</li>
+                <li>ALERT state requires motion OR moderate distance</li>
+                <li>Only ONE LED should be on at a time</li>
+                <li>Buzzer only active in DANGER state</li>
+            </ul>
+
+            <h3>Deliverables:</h3>
+            <div class="deliverables-checklist">
+                <ul>
+                    <li>☐ Complete circuit with all sensors and outputs</li>
+                    <li>☐ Boolean logic for three security states</li>
+                    <li>☐ Proper LED state management (only one on at a time)</li>
+                    <li>☐ Serial output showing all relevant data</li>
+                    <li>☐ Extensive comments explaining state logic</li>
+                </ul>
+            </div>
+
+            <h3>Grading Criteria:</h3>
+            <div class="grading-criteria">
+                <span>Circuit complexity (all components working)</span><span>20%</span>
+                <span>State logic (SAFE/ALERT/DANGER)</span><span>30%</span>
+                <span>Boolean conditions (AND/OR logic)</span><span>20%</span>
+                <span>Output control (LEDs, buzzer)</span><span>15%</span>
+                <span>Code comments and Serial output</span><span>15%</span>
+            </div>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 16 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 16</div>
+
+            <h3>Approach:</h3>
+            <p>Combine two sensors (PIR digital + ultrasonic analog) with complex Boolean logic to determine security state. Use if-else structure to prioritize states: check DANGER first (most critical), then ALERT, then SAFE. Ensure only one LED is active at a time by turning all off before setting the appropriate one.</p>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">HC-SR04 Ultrasonic:</span>
+                    <div class="connection">VCC → 5V | GND → GND | TRIG → Pin 7 | ECHO → Pin 8</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">PIR Motion Sensor:</span>
+                    <div class="connection">VCC → 5V | GND → GND | OUT → Pin 2</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">LEDs:</span>
+                    <div class="connection">Green: Pin 11 → 220Ω → LED → GND</div>
+                    <div class="connection">Yellow: Pin 12 → 220Ω → LED → GND</div>
+                    <div class="connection">Red: Pin 13 → 220Ω → LED → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Buzzer:</span>
+                    <div class="connection">Pin 10 → Buzzer(+) | Buzzer(-) → GND</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// SMART SECURITY SYSTEM
+// PIR + Ultrasonic multi-sensor integration
+// ============================================
+
+// ===== PIN DEFINITIONS =====
+const int trigPin = 7;
+const int echoPin = 8;
+const int pirPin = 2;
+const int greenLED = 11;
+const int yellowLED = 12;
+const int redLED = 13;
+const int buzzerPin = 10;
+
+// ===== GLOBAL VARIABLES =====
+long duration;
+int distance;
+bool motionDetected;
+
+void setup() {
+  Serial.begin(9600);
+
+  // Ultrasonic pins
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  // PIR input
+  pinMode(pirPin, INPUT);
+
+  // LED outputs
+  pinMode(greenLED, OUTPUT);
+  pinMode(yellowLED, OUTPUT);
+  pinMode(redLED, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+
+  // Start with all outputs OFF
+  digitalWrite(greenLED, LOW);
+  digitalWrite(yellowLED, LOW);
+  digitalWrite(redLED, LOW);
+  digitalWrite(buzzerPin, LOW);
+
+  Serial.println("===== SMART SECURITY SYSTEM =====");
+  Serial.println("Multi-sensor threat detection");
+  Serial.println("=================================");
+}
+
+void loop() {
+  // ===== READ PIR MOTION SENSOR =====
+  // PIR output: HIGH = motion detected, LOW = no motion
+  motionDetected = digitalRead(pirPin);
+
+  // ===== MEASURE DISTANCE =====
+  // Trigger ultrasonic pulse
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Read echo duration and calculate distance
+  duration = pulseIn(echoPin, HIGH, 30000);
+  distance = duration * 0.034 / 2;
+
+  // ===== TURN OFF ALL OUTPUTS FIRST =====
+  // Ensures only one LED is on at a time
+  digitalWrite(greenLED, LOW);
+  digitalWrite(yellowLED, LOW);
+  digitalWrite(redLED, LOW);
+  digitalWrite(buzzerPin, LOW);
+
+  // ===== DETERMINE SECURITY STATE =====
+  // Check in priority order: DANGER → ALERT → SAFE
+
+  if (motionDetected == HIGH && distance < 20) {
+    // ===== DANGER STATE =====
+    // Both conditions met: motion AND close proximity
+    digitalWrite(redLED, HIGH);
+    digitalWrite(buzzerPin, HIGH);
+
+    Serial.print("Status: DANGER | Motion: YES | Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm");
+
+  } else if (motionDetected == HIGH || (distance >= 20 && distance <= 50)) {
+    // ===== ALERT STATE =====
+    // Either condition: motion OR moderate distance
+    digitalWrite(yellowLED, HIGH);
+
+    Serial.print("Status: ALERT | Motion: ");
+    Serial.print(motionDetected == HIGH ? "YES" : "NO");
+    Serial.print(" | Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm");
+
+  } else {
+    // ===== SAFE STATE =====
+    // No motion AND distance > 50cm (or out of range)
+    digitalWrite(greenLED, HIGH);
+
+    Serial.print("Status: SAFE | Motion: NO | Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm");
+  }
+
+  // Wait before next scan
+  delay(500);
+}
+
+// ===== END OF CODE =====
+// BOOLEAN LOGIC SUMMARY:
+// DANGER = motion AND distance < 20
+// ALERT = motion OR (20 <= distance <= 50)
+// SAFE = NOT motion AND distance > 50</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>Multi-sensor integration:</strong> Combining digital (PIR) and analog (ultrasonic) inputs</li>
+                <li><strong>Boolean logic:</strong> AND (&&) requires both, OR (||) requires either</li>
+                <li><strong>Priority checking:</strong> Most critical state checked first</li>
+                <li><strong>State exclusivity:</strong> Turn all outputs OFF before setting desired state</li>
+                <li><strong>Complex conditions:</strong> Nested logic for multi-level decision making</li>
+            </ul>
+
+            <h3>Common Mistakes:</h3>
+            <ul>
+                <li>❌ Not turning off all LEDs first (multiple LEDs on simultaneously)</li>
+                <li>❌ Wrong Boolean operators (AND vs OR)</li>
+                <li>❌ Not checking DANGER state first (lower priority overrides)</li>
+                <li>❌ Comparing boolean to 1 instead of HIGH/true</li>
+            </ul>
+
+            <h3>Time Breakdown:</h3>
+            <ul>
+                <li>Circuit assembly: 15 minutes</li>
+                <li>Code writing: 12 minutes</li>
+                <li>Testing all states: 5 minutes</li>
+                <li>Comments & Serial output: 3 minutes</li>
+                <li><strong>Total: 35 minutes</strong></li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q15" class="btn">← Previous</a>
+            <a href="#q17" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 17: AUTOMATED GREENHOUSE MONITOR -->
+        <div class="question-container" id="q17">
+            <div class="question-header">
+                <div class="question-number">QUESTION 17: AUTOMATED GREENHOUSE MONITOR</div>
+                <span class="difficulty-badge difficulty-hard">HARD</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">38 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">40%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Design an automated greenhouse monitoring and control system that maintains optimal growing conditions. The system monitors temperature and light levels, automatically controlling a fan (simulated with DC motor) for cooling and a grow light (LED) for supplemental lighting based on environmental conditions.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li><strong>Temperature Monitoring (TMP36):</strong>
+                        <ul>
+                            <li>Read temperature sensor</li>
+                            <li>Convert to Celsius: tempC = (voltage - 0.5) × 100</li>
+                            <li>Turn fan ON when temperature > 25°C</li>
+                            <li>Turn fan OFF when temperature ≤ 25°C</li>
+                        </ul>
+                    </li>
+                    <li><strong>Light Monitoring (LDR):</strong>
+                        <ul>
+                            <li>Read light level (0-1023)</li>
+                            <li>Turn grow light ON when light < 400</li>
+                            <li>Turn grow light OFF when light ≥ 400</li>
+                        </ul>
+                    </li>
+                    <li><strong>Status Indicator LED:</strong>
+                        <ul>
+                            <li>Green: Both conditions optimal (temp ≤ 25°C AND light ≥ 400)</li>
+                            <li>Yellow: One condition suboptimal</li>
+                            <li>Red: Both conditions suboptimal (temp > 25°C AND light < 400)</li>
+                        </ul>
+                    </li>
+                    <li>Serial format: "Temp: XX.X°C | Light: XXX | Fan: ON/OFF | Grow Light: ON/OFF | Status: OPTIMAL/CAUTION/CRITICAL"</li>
+                    <li>Update every 2 seconds</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>TMP36 Temperature Sensor</li>
+                <li>LDR (Photoresistor) with 10kΩ resistor</li>
+                <li>DC Motor (represents fan)</li>
+                <li>LED (represents grow light) with 220Ω resistor</li>
+                <li>3 Status LEDs (Red, Yellow, Green) with 220Ω resistors</li>
+                <li>Breadboard and wires</li>
+            </ul>
+
+            <h3>Deliverables:</h3>
+            <div class="deliverables-checklist">
+                <ul>
+                    <li>☐ TMP36 circuit with correct voltage-to-temperature conversion</li>
+                    <li>☐ LDR voltage divider circuit</li>
+                    <li>☐ Both sensors controlling independent outputs</li>
+                    <li>☐ Three-state status LED logic</li>
+                    <li>☐ Comprehensive Serial output with all values</li>
+                    <li>☐ Comments explaining threshold logic and formulas</li>
+                </ul>
+            </div>
+
+            <h3>Grading Criteria:</h3>
+            <div class="grading-criteria">
+                <span>Temperature sensor circuit & formula</span><span>25%</span>
+                <span>LDR circuit & threshold logic</span><span>20%</span>
+                <span>Fan & grow light control logic</span><span>20%</span>
+                <span>Status LED three-state logic</span><span>15%</span>
+                <span>Serial output completeness</span><span>10%</span>
+                <span>Code comments & structure</span><span>10%</span>
+            </div>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 17 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 17</div>
+
+            <h3>Approach:</h3>
+            <p>Multi-sensor environmental monitoring with independent threshold-based control for each output. Temperature and light sensors each control one actuator. A third logic layer evaluates both conditions to set status indicator. Demonstrates parallel threshold checking and multi-level output control.</p>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">TMP36 Temperature Sensor:</span>
+                    <div class="connection">Left pin (looking at flat face) → 5V</div>
+                    <div class="connection">Center pin → Arduino A0</div>
+                    <div class="connection">Right pin → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">LDR Voltage Divider:</span>
+                    <div class="connection">5V → LDR → Arduino A1 → 10kΩ → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Outputs:</span>
+                    <div class="connection">DC Motor: Pin 3 → Motor(+), Motor(-) → GND</div>
+                    <div class="connection">Grow Light LED: Pin 5 → 220Ω → LED → GND</div>
+                    <div class="connection">Status LEDs: Green Pin 9, Yellow Pin 10, Red Pin 11 (each with 220Ω)</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// AUTOMATED GREENHOUSE MONITOR
+// Temp + Light dual-sensor environmental control
+// ============================================
+
+// ===== PIN DEFINITIONS =====
+const int tempPin = A0;       // TMP36 temperature sensor
+const int ldrPin = A1;        // LDR light sensor
+const int fanPin = 3;         // DC motor (fan)
+const int growLightPin = 5;   // LED (grow light)
+const int greenLED = 9;       // Status: optimal
+const int yellowLED = 10;     // Status: caution
+const int redLED = 11;        // Status: critical
+
+// ===== THRESHOLD VALUES =====
+const float TEMP_THRESHOLD = 25.0;    // °C
+const int LIGHT_THRESHOLD = 400;       // Analog value
+
+// ===== GLOBAL VARIABLES =====
+int tempReading;              // Raw analog value from TMP36
+float voltage;                // Converted voltage
+float tempC;                  // Temperature in Celsius
+int lightLevel;               // Raw analog value from LDR
+bool fanState;                // Fan ON/OFF
+bool growLightState;          // Grow light ON/OFF
+
+void setup() {
+  Serial.begin(9600);
+
+  // Configure pins
+  pinMode(tempPin, INPUT);
+  pinMode(ldrPin, INPUT);
+  pinMode(fanPin, OUTPUT);
+  pinMode(growLightPin, OUTPUT);
+  pinMode(greenLED, OUTPUT);
+  pinMode(yellowLED, OUTPUT);
+  pinMode(redLED, OUTPUT);
+
+  Serial.println("===== GREENHOUSE MONITOR =====");
+  Serial.println("Temp Threshold: 25°C | Light Threshold: 400");
+  Serial.println("==============================");
+}
+
+void loop() {
+  // ===== READ TEMPERATURE SENSOR =====
+  tempReading = analogRead(tempPin);
+
+  // Convert analog reading to voltage
+  // Arduino ADC: 0-1023 maps to 0-5V
+  voltage = (tempReading / 1024.0) * 5.0;
+
+  // Convert voltage to temperature (TMP36 formula)
+  // TMP36: 0.5V = 0°C, +10mV per degree
+  // Formula: tempC = (voltage - 0.5) * 100
+  tempC = (voltage - 0.5) * 100.0;
+
+  // ===== READ LIGHT SENSOR =====
+  lightLevel = analogRead(ldrPin);
+
+  // ===== CONTROL FAN (based on temperature) =====
+  if (tempC > TEMP_THRESHOLD) {
+    digitalWrite(fanPin, HIGH);   // Turn fan ON
+    fanState = true;
+  } else {
+    digitalWrite(fanPin, LOW);    // Turn fan OFF
+    fanState = false;
+  }
+
+  // ===== CONTROL GROW LIGHT (based on light level) =====
+  if (lightLevel < LIGHT_THRESHOLD) {
+    digitalWrite(growLightPin, HIGH);   // Turn grow light ON
+    growLightState = true;
+  } else {
+    digitalWrite(growLightPin, LOW);    // Turn grow light OFF
+    growLightState = false;
+  }
+
+  // ===== SET STATUS INDICATOR =====
+  // Turn all status LEDs off first
+  digitalWrite(greenLED, LOW);
+  digitalWrite(yellowLED, LOW);
+  digitalWrite(redLED, LOW);
+
+  // Determine status based on both conditions
+  if (tempC <= TEMP_THRESHOLD && lightLevel >= LIGHT_THRESHOLD) {
+    // OPTIMAL: Both conditions good
+    digitalWrite(greenLED, HIGH);
+    Serial.print("Temp: ");
+    Serial.print(tempC, 1);
+    Serial.print("°C | Light: ");
+    Serial.print(lightLevel);
+    Serial.print(" | Fan: OFF | Grow Light: OFF | Status: OPTIMAL");
+
+  } else if (tempC > TEMP_THRESHOLD && lightLevel < LIGHT_THRESHOLD) {
+    // CRITICAL: Both conditions bad
+    digitalWrite(redLED, HIGH);
+    Serial.print("Temp: ");
+    Serial.print(tempC, 1);
+    Serial.print("°C | Light: ");
+    Serial.print(lightLevel);
+    Serial.print(" | Fan: ON | Grow Light: ON | Status: CRITICAL");
+
+  } else {
+    // CAUTION: One condition suboptimal
+    digitalWrite(yellowLED, HIGH);
+    Serial.print("Temp: ");
+    Serial.print(tempC, 1);
+    Serial.print("°C | Light: ");
+    Serial.print(lightLevel);
+    Serial.print(" | Fan: ");
+    Serial.print(fanState ? "ON" : "OFF");
+    Serial.print(" | Grow Light: ");
+    Serial.print(growLightState ? "ON" : "OFF");
+    Serial.print(" | Status: CAUTION");
+  }
+
+  Serial.println();
+
+  // Update every 2 seconds
+  delay(2000);
+}
+
+// ===== END OF CODE =====
+// TMP36 FORMULA EXPLANATION:
+// - Output: 10mV per °C with 500mV offset
+// - 0°C = 0.5V, 25°C = 0.75V
+// - Formula: tempC = (voltage - 0.5) * 100</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>TMP36 formula:</strong> (voltage - 0.5) × 100 for temperature in Celsius</li>
+                <li><strong>Independent control:</strong> Each sensor controls its own output</li>
+                <li><strong>Multi-condition logic:</strong> Status based on combination of both sensors</li>
+                <li><strong>Float precision:</strong> Using float for temperature (decimal places)</li>
+                <li><strong>Voltage conversion:</strong> analogRead() to voltage to physical unit</li>
+            </ul>
+
+            <h3>Common Mistakes:</h3>
+            <ul>
+                <li>❌ Wrong TMP36 pin connections (pins in wrong order)</li>
+                <li>❌ Incorrect formula (forgetting -0.5 offset or ×100 factor)</li>
+                <li>❌ Not using float for temperature (loses decimal precision)</li>
+                <li>❌ Status LED logic errors (wrong Boolean combinations)</li>
+            </ul>
+
+            <h3>Time Breakdown:</h3>
+            <ul>
+                <li>Circuit assembly (2 sensors + outputs): 15 minutes</li>
+                <li>Code writing: 14 minutes</li>
+                <li>Testing & calibration: 6 minutes</li>
+                <li>Comments & Serial formatting: 3 minutes</li>
+                <li><strong>Total: 38 minutes</strong></li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q16" class="btn">← Previous</a>
+            <a href="#q18" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 18: JOYSTICK-CONTROLLED DUAL SERVO -->
+        <div class="question-container" id="q18">
+            <div class="question-header">
+                <div class="question-number">QUESTION 18: JOYSTICK-CONTROLLED DUAL SERVO</div>
+                <span class="difficulty-badge difficulty-hard">HARD</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">32 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">40%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Create a 2-axis pan-tilt camera control system using two potentiometers (simulating a joystick) to independently control two servo motors. One pot controls horizontal rotation (pan), the other controls vertical rotation (tilt). This is commonly used in camera gimbals, robotic arms, and automated tracking systems.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li>Use two potentiometers as X and Y axis controls</li>
+                    <li>X-axis pot (horizontal) controls pan servo (0-180°)</li>
+                    <li>Y-axis pot (vertical) controls tilt servo (0-180°)</li>
+                    <li>Map pot values (0-1023) to servo angles (0-180°)</li>
+                    <li>Both servos operate independently and simultaneously</li>
+                    <li>Display both angles on Serial Monitor</li>
+                    <li>Serial format: "Pan: XXX° | Tilt: XXX°"</li>
+                    <li>Smooth response with minimal delay</li>
+                    <li>Include center position indicators (when both pots at ~512, servos at 90°)</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>2 × Potentiometers (10kΩ)</li>
+                <li>2 × Servo Motors</li>
+                <li>LED (center indicator) with 220Ω resistor</li>
+                <li>Breadboard and wires</li>
+            </ul>
+
+            <h3>Bonus Feature:</h3>
+            <ul>
+                <li>Turn on LED when BOTH servos are in center position (85-95°)</li>
+                <li>This indicates "neutral/home" position</li>
+            </ul>
+
+            <h3>Deliverables:</h3>
+            <div class="deliverables-checklist">
+                <ul>
+                    <li>☐ Two potentiometers properly connected (outer pins to 5V/GND, center to analog)</li>
+                    <li>☐ Two servos independently controlled</li>
+                    <li>☐ Correct map() function for each axis</li>
+                    <li>☐ Serial output showing both angles</li>
+                    <li>☐ Center position indicator LED (bonus feature)</li>
+                    <li>☐ Comments explaining dual-axis control</li>
+                </ul>
+            </div>
+
+            <h3>Grading Criteria:</h3>
+            <div class="grading-criteria">
+                <span>Circuit (2 pots + 2 servos correctly wired)</span><span>20%</span>
+                <span>Independent dual-axis control</span><span>25%</span>
+                <span>Correct mapping for both axes</span><span>20%</span>
+                <span>Center position detection & LED</span><span>15%</span>
+                <span>Serial output & code structure</span><span>20%</span>
+            </div>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 18 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 18</div>
+
+            <h3>Approach:</h3>
+            <p>Dual independent control loops - read both potentiometers, map each to servo angles, and write to respective servos. Add bonus logic to detect when both servos are centered (within ±5° of 90°) and illuminate indicator LED.</p>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">Potentiometer 1 (Pan/X-axis):</span>
+                    <div class="connection">Outer pin 1 → 5V</div>
+                    <div class="connection">Center pin (wiper) → Arduino A0</div>
+                    <div class="connection">Outer pin 2 → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Potentiometer 2 (Tilt/Y-axis):</span>
+                    <div class="connection">Outer pin 1 → 5V</div>
+                    <div class="connection">Center pin (wiper) → Arduino A1</div>
+                    <div class="connection">Outer pin 2 → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Servo Motors:</span>
+                    <div class="connection">Pan Servo: Signal → Pin 9, VCC → 5V, GND → GND</div>
+                    <div class="connection">Tilt Servo: Signal → Pin 10, VCC → 5V, GND → GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Center Indicator LED:</span>
+                    <div class="connection">Pin 13 → 220Ω → LED(+) → LED(-) → GND</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// JOYSTICK-CONTROLLED DUAL SERVO
+// 2-axis pan-tilt control system
+// ============================================
+
+#include <Servo.h>
+
+// ===== PIN DEFINITIONS =====
+const int xPotPin = A0;       // X-axis pot (pan control)
+const int yPotPin = A1;       // Y-axis pot (tilt control)
+const int panServoPin = 9;    // Pan servo (horizontal)
+const int tiltServoPin = 10;  // Tilt servo (vertical)
+const int centerLED = 13;     // Center position indicator
+
+// ===== SERVO OBJECTS =====
+Servo panServo;               // Horizontal rotation
+Servo tiltServo;              // Vertical rotation
+
+// ===== GLOBAL VARIABLES =====
+int xValue;                   // Raw pot reading (0-1023)
+int yValue;                   // Raw pot reading (0-1023)
+int panAngle;                 // Pan servo angle (0-180°)
+int tiltAngle;                // Tilt servo angle (0-180°)
+bool atCenter;                // True when both servos centered
+
+void setup() {
+  Serial.begin(9600);
+
+  // Attach servos to pins
+  panServo.attach(panServoPin);
+  tiltServo.attach(tiltServoPin);
+
+  // Configure LED pin
+  pinMode(centerLED, OUTPUT);
+
+  // Start at center position
+  panServo.write(90);
+  tiltServo.write(90);
+
+  Serial.println("===== DUAL SERVO JOYSTICK CONTROL =====");
+  Serial.println("X-axis = Pan | Y-axis = Tilt");
+  Serial.println("=======================================");
+}
+
+void loop() {
+  // ===== READ POTENTIOMETERS =====
+  // analogRead() returns 0-1023
+  // 0 = fully counter-clockwise
+  // 512 = center position
+  // 1023 = fully clockwise
+  xValue = analogRead(xPotPin);
+  yValue = analogRead(yPotPin);
+
+  // ===== MAP TO SERVO ANGLES =====
+  // Convert pot range (0-1023) to servo range (0-180°)
+  panAngle = map(xValue, 0, 1023, 0, 180);
+  tiltAngle = map(yValue, 0, 1023, 0, 180);
+
+  // ===== CONTROL SERVOS =====
+  panServo.write(panAngle);
+  tiltServo.write(tiltAngle);
+
+  // ===== CHECK CENTER POSITION =====
+  // Both servos centered when angles are 85-95° (±5° tolerance)
+  // This creates a "neutral zone" for the indicator
+  if (panAngle >= 85 && panAngle <= 95 &&
+      tiltAngle >= 85 && tiltAngle <= 95) {
+    digitalWrite(centerLED, HIGH);
+    atCenter = true;
+  } else {
+    digitalWrite(centerLED, LOW);
+    atCenter = false;
+  }
+
+  // ===== SERIAL OUTPUT =====
+  Serial.print("Pan: ");
+  Serial.print(panAngle);
+  Serial.print("° | Tilt: ");
+  Serial.print(tiltAngle);
+  Serial.print("°");
+
+  // Show center indicator status
+  if (atCenter) {
+    Serial.print(" [CENTER]");
+  }
+
+  Serial.println();
+
+  // Short delay for smooth control
+  delay(50);
+}
+
+// ===== END OF CODE =====
+// DUAL CONTROL CONCEPT:
+// - Each pot independently controls one servo
+// - No interaction between axes (fully independent)
+// - Center detection uses range check (85-95°) for tolerance
+// - Real joystick would use 2 pots in one physical package</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>Multiple servos:</strong> Create separate Servo objects for each motor</li>
+                <li><strong>Independent control:</strong> Each input directly controls one output</li>
+                <li><strong>Range detection:</strong> Using logical AND with upper/lower bounds</li>
+                <li><strong>Tolerance zones:</strong> ±5° range allows for slight variations</li>
+                <li><strong>Real-time control:</strong> Short delay (50ms) for responsive feel</li>
+            </ul>
+
+            <h3>Common Mistakes:</h3>
+            <ul>
+                <li>❌ Swapping pot outer pins (servo moves opposite direction)</li>
+                <li>❌ Using same pin for both servos (only one works)</li>
+                <li>❌ Center detection using == 90 (too precise, never triggers)</li>
+                <li>❌ Long delay (>100ms) makes control feel sluggish</li>
+            </ul>
+
+            <h3>Testing Checklist:</h3>
+            <ul>
+                <li>☐ X pot left → pan servo 0° | X pot right → pan servo 180°</li>
+                <li>☐ Y pot left → tilt servo 0° | Y pot right → tilt servo 180°</li>
+                <li>☐ Both pots centered → LED lights up</li>
+                <li>☐ Servos move smoothly without jittering</li>
+            </ul>
+
+            <h3>Time Breakdown:</h3>
+            <ul>
+                <li>Circuit assembly (2 pots + 2 servos): 12 minutes</li>
+                <li>Code writing: 10 minutes</li>
+                <li>Center detection logic: 5 minutes</li>
+                <li>Testing & calibration: 3 minutes</li>
+                <li>Comments: 2 minutes</li>
+                <li><strong>Total: 32 minutes</strong></li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q17" class="btn">← Previous</a>
+            <a href="#q19" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 19: ADVANCED MOTOR CONTROL SYSTEM -->
+        <div class="question-container" id="q19">
+            <div class="question-header">
+                <div class="question-number">QUESTION 19: ADVANCED MOTOR CONTROL SYSTEM</div>
+                <span class="difficulty-badge difficulty-hard">HARD</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">40 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">40%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Design a comprehensive DC motor control system using the L293D H-bridge driver. The system features bidirectional control (forward/reverse) with variable speed, emergency stop, and direction locking. Use two buttons for direction, a potentiometer for speed control, and an emergency stop button.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li><strong>Direction Control (2 buttons):</strong>
+                        <ul>
+                            <li>Button A: Set FORWARD direction</li>
+                            <li>Button B: Set REVERSE direction</li>
+                            <li>Only one direction active at a time</li>
+                            <li>Buttons set direction but don't start motor</li>
+                        </ul>
+                    </li>
+                    <li><strong>Speed Control (Potentiometer):</strong>
+                        <ul>
+                            <li>Pot value (0-1023) maps to speed (0-255 PWM)</li>
+                            <li>Pot at 0 = motor stopped</li>
+                            <li>Pot at max = full speed in selected direction</li>
+                        </ul>
+                    </li>
+                    <li><strong>Emergency Stop Button:</strong>
+                        <ul>
+                            <li>Immediately stops motor regardless of pot position</li>
+                            <li>Latching behavior: stays stopped until button pressed again</li>
+                            <li>Red LED indicates emergency stop active</li>
+                        </ul>
+                    </li>
+                    <li><strong>Status LEDs:</strong>
+                        <ul>
+                            <li>Green LED: Forward direction active</li>
+                            <li>Yellow LED: Reverse direction active</li>
+                            <li>Red LED: Emergency stop engaged</li>
+                        </ul>
+                    </li>
+                    <li>Serial format: "Direction: [FWD/REV] | Speed: XXX | E-STOP: [ACTIVE/INACTIVE]"</li>
+                    <li>Update every 200ms</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>L293D Motor Driver IC</li>
+                <li>DC Motor</li>
+                <li>3 Push Buttons (Direction A, Direction B, E-Stop)</li>
+                <li>Potentiometer (10kΩ)</li>
+                <li>3 LEDs (Green, Yellow, Red) with 220Ω resistors</li>
+                <li>Breadboard and wires</li>
+            </ul>
+
+            <h3>L293D Connections:</h3>
+            <ul>
+                <li>Enable pin (1,2EN) → Arduino PWM pin (speed control)</li>
+                <li>Input 1A → Arduino digital pin (direction bit 1)</li>
+                <li>Input 2A → Arduino digital pin (direction bit 2)</li>
+                <li>Output 1Y and 2Y → DC Motor terminals</li>
+            </ul>
+
+            <h3>Deliverables:</h3>
+            <div class="deliverables-checklist">
+                <ul>
+                    <li>☐ L293D correctly wired with motor</li>
+                    <li>☐ Three buttons with debouncing</li>
+                    <li>☐ Direction logic (IN1/IN2 control)</li>
+                    <li>☐ PWM speed control on Enable pin</li>
+                    <li>☐ Emergency stop with latching toggle</li>
+                    <li>☐ Status LEDs matching system state</li>
+                    <li>☐ Comprehensive Serial output</li>
+                </ul>
+            </div>
+
+            <h3>Grading Criteria:</h3>
+            <div class="grading-criteria">
+                <span>L293D circuit & motor wiring</span><span>20%</span>
+                <span>Direction control logic (IN1/IN2)</span><span>20%</span>
+                <span>Variable speed (PWM on Enable)</span><span>15%</span>
+                <span>Emergency stop latching behavior</span><span>20%</span>
+                <span>Button debouncing</span><span>10%</span>
+                <span>Code comments & Serial output</span><span>15%</span>
+            </div>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 19 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 19</div>
+
+            <h3>Approach:</h3>
+            <p>Implement H-bridge control using L293D with separate direction (IN1/IN2) and speed (Enable PWM) control. Use button state detection with basic debouncing. Emergency stop uses toggle flag that overrides speed control. Direction LEDs update on button press, E-stop LED follows emergency state.</p>
+
+            <h3>L293D Truth Table:</h3>
+            <table>
+                <thead>
+                    <tr><th>IN1</th><th>IN2</th><th>Motor State</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>LOW</td><td>LOW</td><td>STOP</td></tr>
+                    <tr><td>HIGH</td><td>LOW</td><td>FORWARD</td></tr>
+                    <tr><td>LOW</td><td>HIGH</td><td>REVERSE</td></tr>
+                    <tr><td>HIGH</td><td>HIGH</td><td>BRAKE</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Circuit Connections:</h3>
+            <div class="connections-list">
+                <div class="component">
+                    <span class="component-name">L293D Motor Driver:</span>
+                    <div class="connection">Pin 1 (1,2EN) → Arduino Pin 3 (PWM - speed control)</div>
+                    <div class="connection">Pin 2 (IN1) → Arduino Pin 4 (direction bit 1)</div>
+                    <div class="connection">Pin 7 (IN2) → Arduino Pin 5 (direction bit 2)</div>
+                    <div class="connection">Pin 3 (OUT1) → Motor wire 1</div>
+                    <div class="connection">Pin 6 (OUT2) → Motor wire 2</div>
+                    <div class="connection">Pin 8 (VCC2) → External 9V supply (+)</div>
+                    <div class="connection">Pin 16 (VCC1) → Arduino 5V</div>
+                    <div class="connection">Pins 4, 5, 12, 13 (GND) → Common GND</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Buttons:</span>
+                    <div class="connection">Button A (Forward) → Pin 8, other terminal → GND</div>
+                    <div class="connection">Button B (Reverse) → Pin 9, other terminal → GND</div>
+                    <div class="connection">E-Stop Button → Pin 10, other terminal → GND</div>
+                    <div class="connection">All button pins configured with INPUT_PULLUP</div>
+                </div>
+                <div class="component">
+                    <span class="component-name">Speed Pot:</span>
+                    <div class="connection">Outer pins: 5V and GND | Center → A0</div>
+                </div>
+            </div>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// ADVANCED MOTOR CONTROL SYSTEM
+// L293D H-bridge with direction, speed, E-stop
+// ============================================
+
+// ===== PIN DEFINITIONS =====
+const int enablePin = 3;      // PWM to L293D Enable (speed)
+const int in1Pin = 4;         // L293D IN1 (direction bit 1)
+const int in2Pin = 5;         // L293D IN2 (direction bit 2)
+const int buttonFwd = 8;      // Forward direction button
+const int buttonRev = 9;      // Reverse direction button
+const int buttonStop = 10;    // Emergency stop button
+const int potPin = A0;        // Speed control pot
+const int greenLED = 11;      // Forward indicator
+const int yellowLED = 12;     // Reverse indicator
+const int redLED = 13;        // E-stop indicator
+
+// ===== GLOBAL VARIABLES =====
+int speedValue;               // Raw pot reading (0-1023)
+int motorSpeed;               // Mapped PWM value (0-255)
+bool directionForward = true; // Current direction
+bool eStopActive = false;     // Emergency stop state
+bool lastStopButton = HIGH;   // Previous E-stop button state
+
+void setup() {
+  Serial.begin(9600);
+
+  // Configure motor control pins
+  pinMode(enablePin, OUTPUT);
+  pinMode(in1Pin, OUTPUT);
+  pinMode(in2Pin, OUTPUT);
+
+  // Configure button pins (INPUT_PULLUP = HIGH when not pressed)
+  pinMode(buttonFwd, INPUT_PULLUP);
+  pinMode(buttonRev, INPUT_PULLUP);
+  pinMode(buttonStop, INPUT_PULLUP);
+
+  // Configure LED pins
+  pinMode(greenLED, OUTPUT);
+  pinMode(yellowLED, OUTPUT);
+  pinMode(redLED, OUTPUT);
+
+  // Initial state: stopped, forward direction
+  digitalWrite(in1Pin, LOW);
+  digitalWrite(in2Pin, LOW);
+  analogWrite(enablePin, 0);
+  digitalWrite(greenLED, HIGH);  // Forward is default
+
+  Serial.println("===== MOTOR CONTROL SYSTEM =====");
+  Serial.println("Buttons: FWD/REV | Pot: Speed | E-STOP: Toggle");
+  Serial.println("================================");
+}
+
+void loop() {
+  // ===== READ SPEED POTENTIOMETER =====
+  speedValue = analogRead(potPin);
+  motorSpeed = map(speedValue, 0, 1023, 0, 255);
+
+  // ===== DIRECTION BUTTON LOGIC =====
+  // Read buttons (LOW = pressed due to INPUT_PULLUP)
+  if (digitalRead(buttonFwd) == LOW) {
+    directionForward = true;
+    digitalWrite(greenLED, HIGH);
+    digitalWrite(yellowLED, LOW);
+    delay(50);  // Simple debounce
+  }
+
+  if (digitalRead(buttonRev) == LOW) {
+    directionForward = false;
+    digitalWrite(greenLED, LOW);
+    digitalWrite(yellowLED, HIGH);
+    delay(50);  // Simple debounce
+  }
+
+  // ===== EMERGENCY STOP TOGGLE LOGIC =====
+  // Detect button press (HIGH → LOW transition)
+  bool currentStopButton = digitalRead(buttonStop);
+
+  if (currentStopButton == LOW && lastStopButton == HIGH) {
+    // Button just pressed - toggle E-stop state
+    eStopActive = !eStopActive;
+    delay(200);  // Debounce delay
+  }
+
+  lastStopButton = currentStopButton;
+
+  // Update E-stop LED
+  digitalWrite(redLED, eStopActive ? HIGH : LOW);
+
+  // ===== MOTOR CONTROL LOGIC =====
+  if (eStopActive) {
+    // EMERGENCY STOP: Motor off regardless of pot
+    digitalWrite(in1Pin, LOW);
+    digitalWrite(in2Pin, LOW);
+    analogWrite(enablePin, 0);
+
+  } else {
+    // Normal operation: set direction and speed
+    if (directionForward) {
+      // FORWARD: IN1=HIGH, IN2=LOW
+      digitalWrite(in1Pin, HIGH);
+      digitalWrite(in2Pin, LOW);
+    } else {
+      // REVERSE: IN1=LOW, IN2=HIGH
+      digitalWrite(in1Pin, LOW);
+      digitalWrite(in2Pin, HIGH);
+    }
+
+    // Set speed via PWM on Enable pin
+    analogWrite(enablePin, motorSpeed);
+  }
+
+  // ===== SERIAL OUTPUT =====
+  Serial.print("Direction: ");
+  Serial.print(directionForward ? "FWD" : "REV");
+  Serial.print(" | Speed: ");
+  Serial.print(motorSpeed);
+  Serial.print(" | E-STOP: ");
+  Serial.println(eStopActive ? "ACTIVE" : "INACTIVE");
+
+  delay(200);
+}
+
+// ===== END OF CODE =====
+// L293D H-BRIDGE CONTROL:
+// - Enable pin controls speed (0-255 PWM)
+// - IN1/IN2 control direction:
+//   * HIGH/LOW = Forward
+//   * LOW/HIGH = Reverse
+//   * LOW/LOW = Stop
+//   * HIGH/HIGH = Brake (not used here)</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>H-bridge operation:</strong> IN1/IN2 pins control polarity (direction)</li>
+                <li><strong>Enable PWM:</strong> Speed controlled separately from direction</li>
+                <li><strong>INPUT_PULLUP:</strong> Internal resistor, button press = LOW</li>
+                <li><strong>Toggle logic:</strong> Detect state changes (edge detection)</li>
+                <li><strong>Override logic:</strong> E-stop takes precedence over all other inputs</li>
+            </ul>
+
+            <h3>Common Mistakes:</h3>
+            <ul>
+                <li>❌ PWM on IN pins instead of Enable (direction flickers, no speed control)</li>
+                <li>❌ Not using INPUT_PULLUP (floating inputs cause erratic behavior)</li>
+                <li>❌ No debouncing (buttons trigger multiple times)</li>
+                <li>❌ Wrong L293D power connections (VCC1≠VCC2)</li>
+            </ul>
+
+            <h3>Time Breakdown:</h3>
+            <ul>
+                <li>L293D circuit assembly: 15 minutes</li>
+                <li>Button & pot connections: 8 minutes</li>
+                <li>Code writing: 12 minutes</li>
+                <li>Testing all modes: 3 minutes</li>
+                <li>Comments: 2 minutes</li>
+                <li><strong>Total: 40 minutes</strong></li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q18" class="btn">← Previous</a>
+            <a href="#q20" class="btn">Next Question →</a>
+        </div>
+
+        <!-- QUESTION 20: COMPLETE SMART ROOM SYSTEM -->
+        <div class="question-container" id="q20">
+            <div class="question-header">
+                <div class="question-number">QUESTION 20: COMPLETE SMART ROOM SYSTEM</div>
+                <span class="difficulty-badge difficulty-hard">HARD</span>
+                <span class="meta-item"><span class="meta-label">Time:</span> <span class="meta-value">45 minutes</span></span>
+                <span class="meta-item"><span class="meta-label">Marks:</span> <span class="meta-value">40%</span></span>
+            </div>
+
+            <h3>Scenario:</h3>
+            <p>Design a comprehensive smart room automation system that integrates multiple sensors and actuators. The system monitors occupancy (PIR), temperature (TMP36), and light levels (LDR), automatically controlling room lighting, temperature regulation (fan), and security alerts. This represents a realistic integration challenge combining everything learned in the course.</p>
+
+            <h3>Task Requirements:</h3>
+            <div class="requirements-list">
+                <ul>
+                    <li><strong>Occupancy Detection (PIR Sensor):</strong>
+                        <ul>
+                            <li>Detect if room is occupied</li>
+                            <li>Reset 30-second timer when motion detected</li>
+                            <li>Room considered "unoccupied" if no motion for 30 seconds</li>
+                        </ul>
+                    </li>
+                    <li><strong>Automatic Lighting (LDR + LED):</strong>
+                        <ul>
+                            <li>IF room occupied AND light < 400 → Turn light ON</li>
+                            <li>IF room unoccupied OR light ≥ 400 → Turn light OFF</li>
+                            <li>Saves energy by not lighting empty rooms</li>
+                        </ul>
+                    </li>
+                    <li><strong>Temperature Control (TMP36 + DC Motor/Fan):</strong>
+                        <ul>
+                            <li>Read temperature continuously</li>
+                            <li>IF occupied AND temp > 24°C → Fan ON</li>
+                            <li>IF unoccupied OR temp ≤ 24°C → Fan OFF</li>
+                        </ul>
+                    </li>
+                    <li><strong>Security Alert (Buzzer):</strong>
+                        <ul>
+                            <li>IF light < 200 (very dark) AND motion detected → Security alert</li>
+                            <li>Buzzer beeps 3 times (200ms ON, 200ms OFF pattern)</li>
+                            <li>Simulates intrusion detection in dark conditions</li>
+                        </ul>
+                    </li>
+                    <li><strong>Status Display:</strong>
+                        <ul>
+                            <li>RGB LED shows system status:
+                                <ul>
+                                    <li>Green: Normal operation, room occupied</li>
+                                    <li>Blue: Energy-save mode (unoccupied)</li>
+                                    <li>Red: Security alert</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>Serial format: "Occupied: [YES/NO] | Temp: XX.X°C | Light: XXX | Outputs: Light[ON/OFF] Fan[ON/OFF] | Status: [NORMAL/ENERGY_SAVE/ALERT]"</li>
+                    <li>Update every 1 second</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components:</h3>
+            <ul>
+                <li>Arduino Uno</li>
+                <li>PIR Motion Sensor</li>
+                <li>TMP36 Temperature Sensor</li>
+                <li>LDR with 10kΩ resistor</li>
+                <li>LED (room light) with 220Ω resistor</li>
+                <li>DC Motor (fan)</li>
+                <li>RGB LED (status indicator) with 3×220Ω resistors</li>
+                <li>Piezo Buzzer</li>
+                <li>Breadboard and wires</li>
+            </ul>
+
+            <h3>System Logic Summary:</h3>
+            <ul>
+                <li>Light control: Requires occupancy AND darkness</li>
+                <li>Fan control: Requires occupancy AND high temperature</li>
+                <li>Security alert: Triggered by motion in very dark conditions</li>
+                <li>Energy saving: All non-essential outputs OFF when unoccupied</li>
+            </ul>
+
+            <h3>Deliverables:</h3>
+            <div class="deliverables-checklist">
+                <ul>
+                    <li>☐ All three sensors correctly connected and reading</li>
+                    <li>☐ Occupancy timer logic (30-second timeout)</li>
+                    <li>☐ Conditional light control (occupancy AND darkness)</li>
+                    <li>☐ Conditional fan control (occupancy AND temperature)</li>
+                    <li>☐ Security alert logic and buzzer pattern</li>
+                    <li>☐ RGB LED status indication</li>
+                    <li>☐ Comprehensive Serial output with all values</li>
+                    <li>☐ Extensive comments explaining integration logic</li>
+                </ul>
+            </div>
+
+            <h3>Grading Criteria:</h3>
+            <div class="grading-criteria">
+                <span>Circuit complexity (all sensors/outputs working)</span><span>20%</span>
+                <span>Occupancy timer logic (millis() implementation)</span><span>15%</span>
+                <span>Conditional control (light & fan logic)</span><span>20%</span>
+                <span>Security alert detection & buzzer pattern</span><span>15%</span>
+                <span>RGB status indication</span><span>10%</span>
+                <span>Serial output completeness</span><span>10%</span>
+                <span>Code structure & comments</span><span>10%</span>
+            </div>
+        </div>
+
+        <!-- SOLUTION TO QUESTION 20 -->
+        <div class="solution-container">
+            <div class="solution-header">SOLUTION TO QUESTION 20</div>
+
+            <h3>Approach:</h3>
+            <p>Integration challenge combining three sensors with complex conditional logic. Use millis() for non-blocking occupancy timeout. Implement priority-based state system: check security alert first (highest priority), then normal operation, then energy-save mode. Each output has its own conditional logic based on multiple sensor inputs.</p>
+
+            <h3>Complete Arduino Code:</h3>
+            <div class="code-container">
+                <pre><code>// ============================================
+// COMPLETE SMART ROOM SYSTEM
+// Multi-sensor integration with automation
+// ============================================
+
+// ===== PIN DEFINITIONS =====
+const int pirPin = 2;         // PIR motion sensor
+const int tempPin = A0;       // TMP36 temperature
+const int ldrPin = A1;        // LDR light sensor
+const int roomLight = 5;      // LED (room light)
+const int fanPin = 3;         // DC motor (fan)
+const int buzzerPin = 10;     // Security buzzer
+const int rgbRed = 11;        // RGB status - Red
+const int rgbGreen = 9;       // RGB status - Green
+const int rgbBlue = 6;        // RGB status - Blue
+
+// ===== CONSTANTS =====
+const float TEMP_THRESHOLD = 24.0;    // °C
+const int LIGHT_THRESHOLD = 400;      // Normal darkness
+const int ALERT_THRESHOLD = 200;      // Very dark (security)
+const unsigned long OCCUPANCY_TIMEOUT = 30000;  // 30 seconds
+
+// ===== GLOBAL VARIABLES =====
+bool motionDetected;
+bool roomOccupied = false;
+unsigned long lastMotionTime = 0;
+float tempC;
+int lightLevel;
+bool lightOn = false;
+bool fanOn = false;
+bool securityAlert = false;
+
+void setup() {
+  Serial.begin(9600);
+
+  // Configure pins
+  pinMode(pirPin, INPUT);
+  pinMode(tempPin, INPUT);
+  pinMode(ldrPin, INPUT);
+  pinMode(roomLight, OUTPUT);
+  pinMode(fanPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(rgbRed, OUTPUT);
+  pinMode(rgbGreen, OUTPUT);
+  pinMode(rgbBlue, OUTPUT);
+
+  Serial.println("===== SMART ROOM SYSTEM =====");
+  Serial.println("Automated lighting, climate, security");
+  Serial.println("=============================");
+}
+
+void loop() {
+  // ===== READ SENSORS =====
+
+  // Read PIR motion sensor
+  motionDetected = digitalRead(pirPin);
+
+  // Read temperature
+  int tempReading = analogRead(tempPin);
+  float voltage = (tempReading / 1024.0) * 5.0;
+  tempC = (voltage - 0.5) * 100.0;
+
+  // Read light level
+  lightLevel = analogRead(ldrPin);
+
+  // ===== OCCUPANCY LOGIC (with 30-second timeout) =====
+  if (motionDetected == HIGH) {
+    // Motion detected - room is occupied
+    roomOccupied = true;
+    lastMotionTime = millis();  // Reset timer
+  } else {
+    // No current motion - check timeout
+    if (millis() - lastMotionTime > OCCUPANCY_TIMEOUT) {
+      // No motion for 30 seconds - room unoccupied
+      roomOccupied = false;
+    }
+    // If within 30 seconds, roomOccupied stays true
+  }
+
+  // ===== SECURITY ALERT DETECTION =====
+  // Very dark + motion = potential intrusion
+  if (lightLevel < ALERT_THRESHOLD && motionDetected == HIGH) {
+    securityAlert = true;
+
+    // Sound alarm (3 beeps)
+    for (int i = 0; i < 3; i++) {
+      digitalWrite(buzzerPin, HIGH);
+      delay(200);
+      digitalWrite(buzzerPin, LOW);
+      delay(200);
+    }
+  } else {
+    securityAlert = false;
+    digitalWrite(buzzerPin, LOW);
+  }
+
+  // ===== AUTOMATIC LIGHTING CONTROL =====
+  // Light ON if: occupied AND dark
+  if (roomOccupied && lightLevel < LIGHT_THRESHOLD) {
+    digitalWrite(roomLight, HIGH);
+    lightOn = true;
+  } else {
+    digitalWrite(roomLight, LOW);
+    lightOn = false;
+  }
+
+  // ===== CLIMATE CONTROL (FAN) =====
+  // Fan ON if: occupied AND temperature high
+  if (roomOccupied && tempC > TEMP_THRESHOLD) {
+    digitalWrite(fanPin, HIGH);
+    fanOn = true;
+  } else {
+    digitalWrite(fanPin, LOW);
+    fanOn = false;
+  }
+
+  // ===== RGB STATUS INDICATOR =====
+  // Turn off all RGB colors first
+  digitalWrite(rgbRed, LOW);
+  digitalWrite(rgbGreen, LOW);
+  digitalWrite(rgbBlue, LOW);
+
+  if (securityAlert) {
+    // RED = Security Alert
+    digitalWrite(rgbRed, HIGH);
+  } else if (roomOccupied) {
+    // GREEN = Normal operation (occupied)
+    digitalWrite(rgbGreen, HIGH);
+  } else {
+    // BLUE = Energy-save mode (unoccupied)
+    digitalWrite(rgbBlue, HIGH);
+  }
+
+  // ===== SERIAL OUTPUT =====
+  Serial.print("Occupied: ");
+  Serial.print(roomOccupied ? "YES" : "NO");
+  Serial.print(" | Temp: ");
+  Serial.print(tempC, 1);
+  Serial.print("°C | Light: ");
+  Serial.print(lightLevel);
+  Serial.print(" | Outputs: Light[");
+  Serial.print(lightOn ? "ON" : "OFF");
+  Serial.print("] Fan[");
+  Serial.print(fanOn ? "ON" : "OFF");
+  Serial.print("] | Status: ");
+
+  if (securityAlert) {
+    Serial.println("ALERT");
+  } else if (roomOccupied) {
+    Serial.println("NORMAL");
+  } else {
+    Serial.println("ENERGY_SAVE");
+  }
+
+  delay(1000);
+}
+
+// ===== END OF CODE =====
+// INTEGRATION CONCEPTS:
+// 1. millis() for non-blocking timeout (vs delay)
+// 2. Multiple sensors → complex Boolean conditions
+// 3. Priority states (alert > normal > energy-save)
+// 4. Conditional outputs (require multiple conditions)
+// 5. Energy efficiency (outputs OFF when unoccupied)</code></pre>
+            </div>
+
+            <h3>Key Learning Points:</h3>
+            <ul>
+                <li><strong>millis() timing:</strong> Non-blocking 30-second occupancy timeout</li>
+                <li><strong>Multi-sensor integration:</strong> Combining digital + 2 analog sensors</li>
+                <li><strong>Conditional logic:</strong> Outputs require multiple conditions (AND logic)</li>
+                <li><strong>State prioritization:</strong> Security alert > normal > energy-save</li>
+                <li><strong>Energy efficiency:</strong> Smart automation reduces waste</li>
+                <li><strong>RGB LED:</strong> Turn off all colors before setting desired color</li>
+            </ul>
+
+            <h3>Common Mistakes:</h3>
+            <ul>
+                <li>❌ Using delay() for timeout (blocks all other operations)</li>
+                <li>❌ Not resetting timer on each motion detection</li>
+                <li>❌ Wrong conditional operators (OR instead of AND)</li>
+                <li>❌ Not turning off all RGB colors first (color mixing)</li>
+                <li>❌ Security alert delay blocking main loop</li>
+            </ul>
+
+            <h3>Testing Checklist:</h3>
+            <ul>
+                <li>☐ Wave hand near PIR → occupied status activates</li>
+                <li>☐ Wait 30 seconds without motion → unoccupied</li>
+                <li>☐ Cover LDR when occupied → room light turns ON</li>
+                <li>☐ Heat TMP36 when occupied → fan turns ON</li>
+                <li>☐ Motion in darkness → security alert (buzzer + red LED)</li>
+                <li>☐ Unoccupied → all outputs OFF (blue LED)</li>
+            </ul>
+
+            <h3>Time Breakdown:</h3>
+            <ul>
+                <li>Circuit assembly (3 sensors + outputs): 18 minutes</li>
+                <li>Code writing: 15 minutes</li>
+                <li>Testing all modes: 7 minutes</li>
+                <li>Debugging & refinement: 3 minutes</li>
+                <li>Comments & Serial output: 2 minutes</li>
+                <li><strong>Total: 45 minutes</strong></li>
+            </ul>
+
+            <h3>Why This Question Matters:</h3>
+            <p>This integration challenge tests your ability to combine multiple concepts:</p>
+            <ul>
+                <li>Reading both digital and analog sensors</li>
+                <li>Converting sensor readings to physical units</li>
+                <li>Implementing complex Boolean logic</li>
+                <li>Using non-blocking timing (millis)</li>
+                <li>Managing multiple outputs based on multiple inputs</li>
+                <li>Creating a realistic, useful automation system</li>
+            </ul>
+            <p>This represents the type of real-world embedded systems project you'll encounter as an engineer!</p>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="#q19" class="btn">← Previous</a>
+            <a href="#toc" class="btn">Back to Index</a>
+        </div>
+
+        <div class="content-section">
+            <h2 id="toc">Complete Question Index</h2>
+            <p>This practice exam contains 20 questions organized by difficulty and topic. Each question includes full solutions with code, circuit diagrams, and explanations.</p>
+
+            <h3>Questions 1-5: EASY (15-20 minutes each)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Topic</th>
+                        <th>Key Concepts</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#q2">Q2</a></td>
+                        <td>Automatic Night Light</td>
+                        <td>LDR, Threshold, Analog Input</td>
+                        <td>15 min</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#q3">Q3</a></td>
+                        <td>Potentiometer Servo Control</td>
+                        <td>Servo Library, map() function</td>
+                        <td>18 min</td>
+                    </tr>
+                    <tr>
+                        <td>Q5</td>
+                        <td>Button Toggle LED</td>
+                        <td>Digital Input, Debouncing</td>
+                        <td>15 min</td>
+                    </tr>
+                    <tr>
+                        <td>Q6</td>
+                        <td>PIR Motion Sensor</td>
+                        <td>Digital Sensor, Simple I/O</td>
+                        <td>12 min</td>
+                    </tr>
+                    <tr>
+                        <td>Q7</td>
+                        <td>Temperature Alert (TMP36)</td>
+                        <td>Analog Sensor, Conversion Formula</td>
+                        <td>20 min</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Questions 6-15: MEDIUM (20-30 minutes each)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Topic</th>
+                        <th>Key Concepts</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#q1">Q1</a></td>
+                        <td>Parking Assist System</td>
+                        <td>Multi-threshold, Buzzer Timing</td>
+                        <td>25 min</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#q4">Q4</a></td>
+                        <td>3-Axis Accelerometer Simulation</td>
+                        <td>Multi-axis, G-force Conversion</td>
+                        <td>25 min</td>
+                    </tr>
+                    <tr>
+                        <td>Q8</td>
+                        <td>DC Motor Control (L293D)</td>
+                        <td>H-Bridge, PWM Speed, Direction</td>
+                        <td>30 min</td>
+                    </tr>
+                    <tr>
+                        <td>Q9</td>
+                        <td>LDR + Servo State Machine</td>
+                        <td>State Flags, Conditional Rotation</td>
+                        <td>28 min</td>
+                    </tr>
+                    <tr>
+                        <td>Q10</td>
+                        <td>Traffic Light Sequence</td>
+                        <td>Arrays, Timing, Sequential Logic</td>
+                        <td>22 min</td>
+                    </tr>
+                    <tr>
+                        <td>Q11</td>
+                        <td>RGB LED Color Control</td>
+                        <td>Multiple PWM, Color Mixing</td>
+                        <td>25 min</td>
+                    </tr>
+                    <tr>
+                        <td>Q12</td>
+                        <td>Two-Button Logic Gates</td>
+                        <td>Boolean Logic, AND/OR</td>
+                        <td>18 min</td>
+                    </tr>
+                    <tr>
+                        <td>Q13</td>
+                        <td>Servo Sweep with Pot Speed</td>
+                        <td>For Loops, Variable Speed</td>
+                        <td>23 min</td>
+                    </tr>
+                    <tr>
+                        <td>Q14</td>
+                        <td>Force Sensor + LED Brightness</td>
+                        <td>Analog Input, PWM Output</td>
+                        <td>20 min</td>
+                    </tr>
+                    <tr>
+                        <td>Q15</td>
+                        <td>Ultrasonic + Servo (Distance Control)</td>
+                        <td>Sensor Input, Actuator Control</td>
+                        <td>27 min</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Questions 16-20: HARD (30-45 minutes each)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Topic</th>
+                        <th>Key Concepts</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Q16</td>
+                        <td>Smart Security System</td>
+                        <td>PIR + Ultrasonic + Multi-output</td>
+                        <td>35 min</td>
+                    </tr>
+                    <tr>
+                        <td>Q17</td>
+                        <td>Automated Greenhouse Monitor</td>
+                        <td>Temp + LDR + Multiple Thresholds</td>
+                        <td>38 min</td>
+                    </tr>
+                    <tr>
+                        <td>Q18</td>
+                        <td>Joystick-Controlled Dual Servo</td>
+                        <td>2 Pots, 2 Servos, Independent Control</td>
+                        <td>32 min</td>
+                    </tr>
+                    <tr>
+                        <td>Q19</td>
+                        <td>Advanced Motor Control System</td>
+                        <td>L293D + Multiple Inputs + LCD</td>
+                        <td>40 min</td>
+                    </tr>
+                    <tr>
+                        <td>Q20</td>
+                        <td>Complete Smart Room System</td>
+                        <td>Integration Challenge</td>
+                        <td>45 min</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Exam Strategy Tips -->
+        <div class="content-section">
+            <h2>Using These Questions for Exam Practice</h2>
+
+            <h3>Study Strategy:</h3>
+            <ol>
+                <li><strong>Week 1:</strong> Master all EASY questions (Q2, Q3, Q5-Q7)</li>
+                <li><strong>Week 2:</strong> Practice MEDIUM questions (Q1, Q4, Q8-Q15)</li>
+                <li><strong>Week 3:</strong> Challenge yourself with HARD questions (Q16-Q20)</li>
+                <li><strong>Final Week:</strong> Time-trial full exam simulations</li>
+            </ol>
+
+            <h3>Simulating the Actual Exam:</h3>
+            <div class="tip-box">
+                <div class="box-title">Mock Exam Format (2 hours total):</div>
+                <ul>
+                    <li><strong>Pick 1 HARD question</strong> (40 marks, 40-45 min)</li>
+                    <li><strong>Pick 1 MEDIUM question</strong> (35 marks, 25-30 min)</li>
+                    <li><strong>Pick 1 EASY question</strong> (25 marks, 15-20 min)</li>
+                    <li><strong>Reserve 10-15 minutes</strong> for review and comments</li>
+                </ul>
+            </div>
+
+            <h3>Grading Your Own Work:</h3>
+            <ul>
+                <li><strong>Circuit (30%):</strong> All connections correct? Components properly wired?</li>
+                <li><strong>Functionality (40%):</strong> Does it work as specified? All requirements met?</li>
+                <li><strong>Code Quality (30%):</strong> Comments clear? Good structure? Correct logic?</li>
+            </ul>
+        </div>
+
+        <!-- Quick Formula Reference -->
+        <div class="content-section">
+            <h2>Quick Formula Reference</h2>
+            <p>Memorize these formulas - they appear frequently in questions:</p>
+
+            <div class="formula">
+                <div class="formula-label">Ultrasonic Distance (HC-SR04):</div>
+                <div class="formula-code">distance (cm) = duration (μs) × 0.034 / 2</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Temperature (TMP36):</div>
+                <div class="formula-code">voltage = (analogValue / 1024.0) × 5.0<br>tempC = (voltage - 0.5) × 100</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">Map Function:</div>
+                <div class="formula-code">output = map(input, inputMin, inputMax, outputMin, outputMax)</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">LED Resistor:</div>
+                <div class="formula-code">R = (Vs - Vf) / If = (5V - 2V) / 0.02A = 150Ω → use 220Ω</div>
+            </div>
+
+            <div class="formula">
+                <div class="formula-label">PWM Pins on Arduino Uno:</div>
+                <div class="formula-code">Pins 3, 5, 6, 9, 10, 11 (marked with ~)</div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <p><a href="index.html">← Back to Circuit List</a></p>
+        <p>Arduino Exam Reference for MEU33EM3 Design II | Good Luck!</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
